@@ -20,3 +20,15 @@ def user():
 @pytest.fixture
 def api_client():
     return APIClient()
+
+
+@pytest.fixture
+def jwt_token(api_client):
+    payload = dict(
+        email="bobrobinson@example.com",
+        password="simplepassword",
+    )
+
+    response = api_client.post("/api/token", payload, headers={"User-Agent": "Mobile"})
+
+    return response.data["access"], response.data["refresh"]
