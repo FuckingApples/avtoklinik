@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import check_password
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -40,6 +41,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
+    is_email_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255)
     username = None
 
@@ -47,3 +49,27 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+class UserOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    otp_secret = models.CharField(max_length=32, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    lifetime = models.IntegerField(default=60 * 60 * 12)
+    is_verified = models.BooleanField(default=False)
+
+    def is_expired(self):
+        from django.utils.timezone import now
+
+        return (now() - self.created_at).total_seconds() > self.lifetime
+
+    #    def save(self, *args, **kwargs):
+    #        if not self.pk or not self.otp_secret.startswith("pbkdf2_"):
+    #            self.otp_secret = make_password(self.otp_secret)
+    #        super().save(*args, **kwargs)
+
+    def verify_otp_secret(self, raw_otp_secret):
+        return check_password(raw_otp_secret, self.otp_secret)
