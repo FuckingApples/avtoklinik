@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 
-class CustomTokenObtainPairView(TokenObtainPairView):
+class CustomTokenObtainPairAPI(TokenObtainPairView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         response = super().post(request, *args, **kwargs)
         if "Mobile" in request.headers.get("User-Agent", ""):
@@ -24,7 +24,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return response
 
 
-class CustomTokenRefreshView(TokenRefreshView):
+class CustomTokenRefreshAPI(TokenRefreshView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         data = request.data.copy()
         is_mobile = "Mobile" in request.headers.get("User-Agent", "")
