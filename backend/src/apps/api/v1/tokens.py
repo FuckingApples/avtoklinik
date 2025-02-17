@@ -17,7 +17,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 refresh_token,
                 httponly=True,
                 secure=True,
-                samesite="Strict",
+                samesite="None",
                 path="/api/token/refresh",
             )
 
@@ -51,7 +51,7 @@ class CustomTokenRefreshView(TokenRefreshView):
                     new_refresh_token,
                     httponly=True,
                     secure=True,
-                    samesite="Strict",
+                    samesite="None",
                     path="/api/token/refresh",
                 )
 
