@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from apps.users.models import User
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
