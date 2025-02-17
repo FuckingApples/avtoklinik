@@ -1,9 +1,25 @@
 from django.contrib import admin
-from .models import User
+from .models import User, UserOTP
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name", "email")
+    list_display = (
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "is_active",
+        "is_email_verified",
+    )
+    list_filter = ("is_active", "is_email_verified", "is_staff")
+    search_fields = ("email", "first_name", "last_name", "id")
+
+
+class UserOTPAdmin(admin.ModelAdmin):
+    list_display = ("user", "otp_secret", "lifetime", "is_verified")
+    list_filter = ("is_verified",)
+    readonly_fields = ("otp_secret", "is_verified")
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(UserOTP, UserOTPAdmin)
