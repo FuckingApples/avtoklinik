@@ -7,7 +7,7 @@ from apps.users.models import User
 
 def create_user(user: "UserDTO") -> "UserDTO":
     if User.objects.filter(email=user.email).exists():
-        raise ValidationError("User already exists")
+        raise ValidationError({"email": "This email is already in use."})
 
     try:
         instance = User(
