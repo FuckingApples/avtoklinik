@@ -1,4 +1,5 @@
 from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
@@ -8,6 +9,10 @@ from apps.api.v1.users import RegisterAPI
 router = DefaultRouter()
 # router.register("users", UserViewSet, basename="users")
 urlpatterns = [
+    path("schema", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "docs", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-docs"
+    ),
     path("v1/", include(router.urls)),
     path("v1/users/register", RegisterAPI.as_view(), name="register"),
     path("v1/email/verify", VerifyEmailOTPAPI.as_view(), name="verify_email"),
