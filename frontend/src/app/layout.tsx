@@ -1,7 +1,11 @@
 import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "next-themes";
+import ReactQueryProvider from "~/components/providers/react-query-provider";
+import { Toaster } from "~/components/ui/toaster";
+import CsrfTokenHandler from "~/components/csrf-token-handler";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -9,12 +13,37 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${GeistSans.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          enableColorScheme
+        >
+          <ReactQueryProvider>
+            {children}
+            <Toaster richColors />
+            <CsrfTokenHandler />
+          </ReactQueryProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
