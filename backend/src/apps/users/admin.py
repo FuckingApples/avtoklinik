@@ -1,5 +1,11 @@
 from django.contrib import admin
 from .models import User, UserOTP
+from ..organizations.models import Membership
+
+
+class MembershipInline(admin.StackedInline):
+    model = Membership
+    extra = 1
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -13,6 +19,7 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active", "is_email_verified", "is_staff")
     search_fields = ("email", "first_name", "last_name", "id")
+    inlines = [MembershipInline]
 
 
 class UserOTPAdmin(admin.ModelAdmin):

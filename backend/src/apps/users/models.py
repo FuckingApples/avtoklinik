@@ -43,6 +43,13 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     is_email_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255)
+    organizations = models.ManyToManyField(
+        "organizations.Organization",
+        blank=True,
+        through="organizations.Membership",
+        related_name="users",
+    )
+
     username = None
 
     objects = UserManager()
