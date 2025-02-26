@@ -3,8 +3,9 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
-import ReactQueryProvider from "~/components/providers/ReactQueryProvider";
+import ReactQueryProvider from "~/components/providers/react-query-provider";
 import { Toaster } from "~/components/ui/toaster";
+import CsrfTokenHandler from "~/components/csrf-token-handler";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             {children}
             <Toaster richColors />
+            <CsrfTokenHandler />
           </ReactQueryProvider>
         </ThemeProvider>
       </body>

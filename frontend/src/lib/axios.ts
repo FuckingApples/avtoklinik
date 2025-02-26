@@ -13,6 +13,15 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    const csrfCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken="))
+      ?.split("=")[1];
+
+    if (csrfCookie) {
+      config.headers["X-CSRFToken"] = csrfCookie;
+    }
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
@@ -20,19 +29,32 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
+  async (error: AxiosError<{ detail?: string }>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
 
-    if (error.response?.status === 401 && !originalRequest?._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest?._retry &&
+      error.response?.data?.detail !==
+        "No active account found with the given credentials"
+    ) {
       originalRequest._retry = true;
 
       try {
+        const csrfCookie = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("csrftoken="))
+          ?.split("=")[1];
+
         const { data }: { data: { access: string } } = await axios.post(
           `${env.NEXT_PUBLIC_API_URL}/token/refresh`,
           {},
-          { withCredentials: true },
+          {
+            withCredentials: true,
+            headers: { "X-CSRFToken": csrfCookie ?? "" },
+          },
         );
 
         useAuthStore.getState().setAccessToken(data.access);
@@ -42,7 +64,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         useAuthStore.getState().logout();
 
-        return Promise.reject(refreshError);
+        return Promise.reject(refreshError as Error);
       }
     }
 
