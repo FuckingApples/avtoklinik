@@ -3,15 +3,18 @@
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type TSignUpSchema } from "~/utils/validation/auth";
 import { useMutation } from "@tanstack/react-query";
-import { LoaderCircle } from "lucide-react";
-import { useAuthStore } from "~/store/auth";
+import { AlertCircle, LoaderCircle } from "lucide-react";
 import { loginUser, registerUser } from "~/api/auth";
+import type { AxiosError } from "axios";
+import { toast } from "sonner";
+import { useAuthStore } from "~/store/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,37 +28,42 @@ export default function RegisterPage() {
 
   const mutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: async (_, variables: TSignUpSchema) => {
-      try {
-        const token = await loginUser({
-          email: variables.email,
-          password: variables.password,
-        });
-        setAccessToken(token.access);
-        router.push("/dashboard");
-      } catch {
-        setError("root", { message: "Ошибка при входе" });
-      }
+    onSuccess: async (_, variables) => {
+      const token = await loginUser({
+        email: variables.email,
+        password: variables.password,
+      });
+      setAccessToken(token.access);
+      router.push("/register/verify");
     },
-    onError: (error: Error) => {
-      setError("root", { message: error.message });
-      return Promise.reject(error);
+    onError: (error: AxiosError<{ code: string; message: string }>) => {
+      if (error.response?.data?.code === "user_already_exists") {
+        setError("root", { message: "Пользователь уже зарегистрирован" });
+      } else {
+        toast.error(error.message, {});
+      }
     },
   });
 
-  const onSubmit = async (data: TSignUpSchema): Promise<void> => {
+  const onSubmit = async (data: TSignUpSchema) => {
     await mutation.mutateAsync(data);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      {errors.root && errors.root.message}
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Создайте новый аккаунт</h1>
-        <p className="text-balance text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm text-balance">
           Введите свои данные, чтобы создать аккаунт
         </p>
       </div>
+      {errors.root && (
+        <Alert variant="destructive">
+          <AlertCircle className="size-4" />
+          <AlertTitle>Ошибка</AlertTitle>
+          <AlertDescription>{errors.root.message}</AlertDescription>
+        </Alert>
+      )}
       <div className="grid gap-6">
         <div className="grid gap-6">
           <div className="grid grid-cols-2 gap-2">
@@ -136,7 +144,7 @@ export default function RegisterPage() {
               "Продолжить"
             )}
           </Button>
-          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+          <div className="text-muted-foreground [&_a]:hover:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
             Нажимая «Продолжить», вы принимаете{" "}
             <Link href="terms">пользовательское соглашение</Link> и{" "}
             <Link href="privacy">политику конфиденциальности</Link>
