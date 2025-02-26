@@ -7,30 +7,46 @@ import { Button } from "~/components/ui/button";
 import { useForm } from "react-hook-form";
 import { signInSchema, type TSignInSchema } from "~/utils/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "~/store/auth";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "~/api/auth";
+import { type LoginResponse, loginUser } from "~/api/auth";
+import type { AxiosError } from "axios";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<TSignInSchema>({ resolver: zodResolver(signInSchema) });
+
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
   const mutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: (data: { access: string }) => {
+    onSuccess: (data: LoginResponse) => {
       setAccessToken(data.access);
-      router.push("/dashboard");
+      if (data.is_email_verified) {
+        const redirect = searchParams.get("redirect");
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        router.push("/register/verify");
+      }
     },
-    onError: (error: Error) => {
-      setError("root", { message: error.message });
-      return Promise.reject(error);
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 401) {
+        setError("root", { message: "Пароль или email указаны неверно" });
+      }
     },
   });
 
@@ -42,10 +58,17 @@ export default function LoginPage() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Войдите в свой аккаунт</h1>
-        <p className="text-balance text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm text-balance">
           Введите свой email, чтобы войти в аккаунт
         </p>
       </div>
+      {errors.root && (
+        <Alert variant="destructive">
+          <AlertCircle className="size-4" />
+          <AlertTitle>Ошибка</AlertTitle>
+          <AlertDescription>{errors.root.message}</AlertDescription>
+        </Alert>
+      )}
       <div className="grid gap-6">
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
