@@ -12,9 +12,9 @@ from apps.users.services.otp import generate_otp, verify_otp, generate_otp_secre
 
 
 class RequestEmailOTPAPI(generics.GenericAPIView):
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = (JWTAuthentication,)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         user = request.user
         last_otp = UserOTP.objects.filter(user=user).first()
 
@@ -42,7 +42,7 @@ class RequestEmailOTPAPI(generics.GenericAPIView):
 
 
 class VerifyEmailOTPAPI(generics.GenericAPIView):
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = (JWTAuthentication,)
     serializer_class = VerifyEmailOTPSerializer
 
     def post(self, request, *args, **kwargs):
@@ -56,22 +56,26 @@ class VerifyEmailOTPAPI(generics.GenericAPIView):
             email_otp = UserOTP.objects.get(user=user)
         except UserOTP.DoesNotExist:
             return Response(
-                {"message": "OTP not found"}, status=status.HTTP_404_NOT_FOUND
+                {"code": "otp_not_found", "message": "OTP not found"},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         if email_otp.is_expired():
             return Response(
-                {"message": "OTP expired"}, status=status.HTTP_400_BAD_REQUEST
+                {"code": "otp_expired", "message": "OTP expired"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if email_otp.is_verified:
             return Response(
-                {"message": "OTP was used"}, status=status.HTTP_400_BAD_REQUEST
+                {"code": "otp_was_used", "message": "OTP was used"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not verify_otp(email_otp.otp_secret, otp, lifetime=email_otp.lifetime):
             return Response(
-                {"message": "OTP not valid"}, status=status.HTTP_400_BAD_REQUEST
+                {"code": "otp_invalid", "message": "OTP not valid"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         email_otp.is_verified = True
