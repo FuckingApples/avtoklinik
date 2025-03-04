@@ -1,8 +1,7 @@
 import React from "react";
-import { DashboardSidebar } from "~/components/dashboard-sidebar";
-import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cookies } from "next/headers";
 import ProtectedRoute from "~/components/protected-route";
+import DashboardClientLayout from "~/app/dashboard/org/[org_id]/client-layout";
 
 export default async function DashboardLayout({
   children,
@@ -12,10 +11,9 @@ export default async function DashboardLayout({
 
   return (
     <ProtectedRoute>
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <DashboardSidebar />
-        <SidebarInset>{children}</SidebarInset>
-      </SidebarProvider>
+      <DashboardClientLayout defaultOpen={defaultOpen}>
+        {children}
+      </DashboardClientLayout>
     </ProtectedRoute>
   );
 }
