@@ -16,18 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { ChevronsUpDown, Plus } from "lucide-react";
-import type { GetOrganizationInfo } from "~/api/user";
 import { cn } from "~/lib/utils";
 import { useParams, useRouter } from "next/navigation";
+import { useUserStore } from "~/store/user";
 
-export function OrganizationSwitcher({
-  organizations,
-}: {
-  organizations: GetOrganizationInfo[] | undefined;
-}) {
+export function OrganizationSwitcher() {
   const { isMobile } = useSidebar();
   const router = useRouter();
-  const { organization_id } = useParams<{ organization_id: string }>();
+  const { org_id } = useParams<{ org_id: string }>();
+  const { user } = useUserStore();
 
   return (
     <SidebarMenu>
@@ -44,9 +41,9 @@ export function OrganizationSwitcher({
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {
-                    organizations?.find((organization) => {
-                      console.log(organization.public_id, organization_id);
-                      return organization.public_id === organization_id;
+                    user?.organizations.find((organization) => {
+                      console.log(organization.public_id, org_id);
+                      return organization.public_id === org_id;
                     })?.name
                   }
                 </span>
@@ -64,17 +61,15 @@ export function OrganizationSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Организации
             </DropdownMenuLabel>
-            {organizations?.map((organization) => (
+            {user?.organizations.map((organization) => (
               <DropdownMenuItem
                 key={organization.public_id}
                 onClick={() =>
-                  router.push(`/dashboard/${organization.public_id}`)
+                  router.push(`/dashboard/org/${organization.public_id}`)
                 }
                 className={cn(
                   "gap-2 truncate p-2",
-                  organization.public_id === organization_id
-                    ? "bg-accent"
-                    : null,
+                  organization.public_id === org_id ? "bg-accent" : null,
                 )}
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
@@ -86,7 +81,7 @@ export function OrganizationSwitcher({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2 p-2"
-              onClick={() => router.push("/dashboard/create")}
+              onClick={() => router.push("/dashboard/new")}
             >
               <div className="bg-background flex size-6 items-center justify-center rounded-md border">
                 <Plus className="size-4" />

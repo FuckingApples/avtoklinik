@@ -25,17 +25,12 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "~/store/auth";
 import { logoutUser } from "~/api/auth";
-import { GlowEffect } from "~/components/ui/glow-effect";
+import { useUserStore } from "~/store/user";
 
-type NavUserProps = {
-  first_name: string | undefined;
-  last_name: string | undefined;
-  email: string | undefined;
-};
-
-export function NavUser({ first_name, last_name, email }: NavUserProps) {
+export function NavUser() {
   const { isMobile } = useSidebar();
   const { logout } = useAuthStore();
+  const { user } = useUserStore();
 
   const onLogoutClick = async () => {
     await logoutUser();
@@ -54,15 +49,15 @@ export function NavUser({ first_name, last_name, email }: NavUserProps) {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage />
                 <AvatarFallback className="rounded-lg">
-                  {first_name?.charAt(0)}
-                  {last_name?.charAt(0)}
+                  {user?.first_name.charAt(0)}
+                  {user?.last_name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {first_name} {last_name}
+                  {user?.first_name} {user?.last_name}
                 </span>
-                <span className="truncate text-xs">{email}</span>
+                <span className="truncate text-xs">{user?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
