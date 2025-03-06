@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.organizations",
     "apps.core",
+    "apps.oauth",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",
@@ -162,3 +163,6 @@ CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+OAUTH_YANDEX_CLIENT_ID = os.getenv("OAUTH_YANDEX_CLIENT_ID")
+OAUTH_YANDEX_CLIENT_SECRET = os.getenv("OAUTH_YANDEX_CLIENT_SECRET")
