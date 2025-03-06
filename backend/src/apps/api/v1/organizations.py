@@ -1,12 +1,11 @@
-from pyexpat.errors import messages
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.api.serializers.organizations import OrganizationSerializer
-from apps.organizations.models import Organization, PermissionFlags
-from apps.organizations.permissions import HasPermissions
+from apps.organizations.models import Organization
+from apps.organizations.permissions import HasRole
 from apps.organizations.services import organizations
 from apps.organizations.services.organizations import delete_organization
 
@@ -27,8 +26,8 @@ class CreateOrgAPI(APIView):
 
 
 class DeleteOrgAPI(APIView):
-    permission_classes = [HasPermissions]
-    required_permissions = PermissionFlags.OWNER
+    permission_classes = [HasRole]
+    required_role = 1
 
     def delete(self, request, organization_id):
         try:
