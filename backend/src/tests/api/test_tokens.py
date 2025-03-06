@@ -10,7 +10,7 @@ def test_obtain_token_web(api_client, user):
         password="simplepassword",
     )
 
-    response = api_client.post("/api/token", payload)
+    response = api_client.post("/api/token", payload, headers={"User-Agent": "Chrome"})
     assert "refresh" in response.cookies
     assert "access" in response.data
 
@@ -22,7 +22,7 @@ def test_obtain_token_mobile(api_client, user):
         password="simplepassword",
     )
 
-    response = api_client.post("/api/token", payload, headers={"User-Agent": "Mobile"})
+    response = api_client.post("/api/token", payload)
 
     assert "refresh" not in response.cookies
     assert "access" in response.data
@@ -36,6 +36,7 @@ def test_refresh_token_web(api_client, user, jwt_token):
     response = api_client.post(
         "/api/token/refresh",
         {"refresh": refresh_token},
+        headers={"User-Agent": "Chrome"},
     )
 
     assert "refresh" in response.cookies
@@ -49,7 +50,6 @@ def test_refresh_token_mobile(api_client, user, jwt_token):
     response = api_client.post(
         "/api/token/refresh",
         {"refresh": refresh_token},
-        headers={"User-Agent": "Mobile"},
     )
 
     assert "refresh" not in response.cookies
