@@ -3,12 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { CarFront } from "lucide-react";
 import { env } from "~/env";
+import Script from "next/script";
 
 export default function AuthLayout({
   children,
 }: Readonly<React.PropsWithChildren>) {
   return (
     <div className="grid min-h-svh p-2 lg:grid-cols-2">
+      <Script
+        src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
+        strategy="beforeInteractive"
+      />
       <div className="bg-muted relative hidden rounded-lg lg:block">
         <Image
           width={0} // Width & height will be ignored, but they are required
