@@ -1,5 +1,3 @@
-"use client";
-
 import { Form } from "~/components/ui/form";
 import type { UseFormReturn } from "react-hook-form";
 import { type TOrganizationCreationSchema } from "~/utils/validation/organization-creation";
@@ -28,7 +26,11 @@ export const OrganizationCreationForm = ({
             <FormItem>
               <FormLabel>Название</FormLabel>
               <FormControl>
-                <Input placeholder="ООО «Рога и Копыта»" {...field} />
+                <Input
+                  placeholder="ООО «Рога и Копыта»"
+                  autoComplete="organization"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

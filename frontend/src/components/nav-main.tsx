@@ -47,6 +47,7 @@ const menuItems = (org_id: string) => [
     exact: true,
   },
 ];
+
 export function NavMain() {
   const pathname = usePathname();
   const params = useParams();
