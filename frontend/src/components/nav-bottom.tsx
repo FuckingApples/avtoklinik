@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import Link from "next/link";
-import { LifeBuoy } from "lucide-react";
+import { Bug, LifeBuoy } from "lucide-react";
 
 export function NavBottom({
   ...props
@@ -16,6 +16,14 @@ export function NavBottom({
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild size="sm">
+              <Link href="mailto:support@autoklinik.ru">
+                <Bug />
+                <span>Нашли ошибку?</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="sm">
               <Link href="mailto:support@autoklinik.ru">

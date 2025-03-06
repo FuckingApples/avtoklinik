@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-[350px]">
+      <Card className="flex h-screen min-w-[350px] justify-center sm:h-fit sm:w-[500px]">
         <CardHeader>
           <CardTitle>С возвращением, {user?.first_name}!</CardTitle>
           <CardDescription>Ваши организации</CardDescription>
@@ -47,7 +47,12 @@ export default function DashboardPage() {
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-10 items-center justify-center rounded-lg">
                   ТО
                 </div>
-                <CardTitle>{organization.name}</CardTitle>
+                <div className="flex flex-col justify-center gap-0.5">
+                  <CardTitle className="line-clamp-2">
+                    {organization.name}
+                  </CardTitle>
+                  <CardDescription>{organization.user_role}</CardDescription>
+                </div>
               </CardHeader>
             </Card>
           ))}
@@ -55,6 +60,7 @@ export default function DashboardPage() {
         <CardFooter>
           <Button
             className="w-full"
+            size="lg"
             onClick={() => {
               router.push(`/dashboard/new`);
             }}

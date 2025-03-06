@@ -13,10 +13,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { ChevronsUpDown, Plus } from "lucide-react";
-import { cn } from "~/lib/utils";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "~/store/user";
 
@@ -42,7 +42,6 @@ export function OrganizationSwitcher() {
                 <span className="truncate font-semibold">
                   {
                     user?.organizations.find((organization) => {
-                      console.log(organization.public_id, org_id);
                       return organization.public_id === org_id;
                     })?.name
                   }
@@ -67,15 +66,17 @@ export function OrganizationSwitcher() {
                 onClick={() =>
                   router.push(`/dashboard/org/${organization.public_id}`)
                 }
-                className={cn(
-                  "gap-2 truncate p-2",
-                  organization.public_id === org_id ? "bg-accent" : null,
-                )}
+                className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-sm border">
+                <div className="flex size-6 min-w-6 items-center justify-center rounded-sm border">
                   TO
                 </div>
-                {organization.name}
+                <span className="truncate">{organization.name}</span>
+                {organization.public_id === org_id && (
+                  <DropdownMenuShortcut>
+                    <Check />
+                  </DropdownMenuShortcut>
+                )}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
