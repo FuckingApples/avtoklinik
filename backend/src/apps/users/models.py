@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
+# Менеджер пользователей с методами создания обычного пользователя и суперпользователя
+# При создании суперпользователя устанавливаются флаги is_staff и is_superuser
 class UserManager(BaseUserManager):
     def create_user(
         self, email, first_name, last_name, password=None, **extra_fields
@@ -37,6 +39,9 @@ class UserManager(BaseUserManager):
         return user
 
 
+# Модель пользователя с расширенным полем email и убранным полем username
+# Поле email уникально и используется в качестве логина
+# Поле organizations - связь с моделью организаций
 class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -61,6 +66,10 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
 
+# Модель для хранения OTP-кодов пользователей для подтверждения email
+# Поле otp_secret - хэш-код OTP-кода
+# Поле is_verified - флаг использования OTP-кода
+# Поле lifetime - время жизни OTP-кода в секундах по умолчанию 12 часов
 class UserOTP(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     otp_secret = models.CharField(max_length=32, unique=True)
@@ -68,6 +77,7 @@ class UserOTP(models.Model):
     lifetime = models.IntegerField(default=60 * 60 * 12)
     is_verified = models.BooleanField(default=False)
 
+    # Проверка на истечение времени жизни OTP-кода
     def is_expired(self):
         from django.utils.timezone import now
 
