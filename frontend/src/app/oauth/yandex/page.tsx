@@ -4,8 +4,6 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { yandexOAuth } from "~/api/auth";
 import { useAuthStore } from "~/store/auth";
-import type { AxiosError } from "axios";
-import type { ErrorResponse } from "~/types/api";
 
 export default function YandexOAuthPage() {
   const { setAccessToken } = useAuthStore();
@@ -33,10 +31,10 @@ export default function YandexOAuthPage() {
             router.push("/dashboard");
           }
         })
-        .catch((error: AxiosError<ErrorResponse>) => {
+        .catch(() => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
           window.opener?.postMessage(
-            { type: "AUTH_ERROR", error },
+            { type: "AUTH_ERROR" },
             window.location.origin,
           );
         });
