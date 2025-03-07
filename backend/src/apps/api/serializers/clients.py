@@ -12,6 +12,7 @@ class ClientDTO:
     first_name: str
     last_name: str
     phone: str
+    id: int = None
     middle_name: str = None
     email: str = None
 
@@ -21,6 +22,7 @@ class ClientDTO:
             first_name=client.first_name,
             last_name=client.last_name,
             phone=client.phone,
+            id=client.id,
             middle_name=client.middle_name,
             email=client.email,
         )
