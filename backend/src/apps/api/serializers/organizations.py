@@ -37,7 +37,6 @@ class OrganizationSerializer(serializers.Serializer):
 
     def get_user_role(self, obj) -> Optional[str]:
         request = self.context.get("request")
-        print(self)
         if not request or not request.user.is_authenticated:
             return None
 

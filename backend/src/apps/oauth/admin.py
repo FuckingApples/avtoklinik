@@ -3,11 +3,14 @@ from django.contrib import admin
 from apps.oauth.models import OAuthProvider
 
 
+@admin.register(OAuthProvider)
 class OAuthProviderAdmin(admin.ModelAdmin):
-    readonly_fields = ("user", "provider", "uid")
     list_display = ("user", "provider", "created_at")
-    list_filter = ("user", "provider")
+    list_filter = ("provider",)
     search_fields = ("user__email", "user__first_name", "user__last_name")
 
+    def has_add_permission(self, request, obj=None):
+        return False
 
-admin.site.register(OAuthProvider, OAuthProviderAdmin)
+    def has_change_permission(self, request, obj=None):
+        return False
