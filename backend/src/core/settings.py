@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.organizations",
     "apps.core",
+    "apps.clients",
+    "apps.cars",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",
