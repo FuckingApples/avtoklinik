@@ -13,7 +13,7 @@ class OAuthProvider(models.Model):
         "users.User", on_delete=models.CASCADE, related_name="social_accounts"
     )
     provider = models.CharField(max_length=20, choices=OAUTH_CHOICES)
-    uid = models.CharField(max_length=255, unique=True)
+    uid = models.TextField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

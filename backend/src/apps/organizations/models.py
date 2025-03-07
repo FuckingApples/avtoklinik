@@ -22,7 +22,7 @@ class OrganizationManager(models.Manager):
 # - deleted_at - дата удаления
 class Organization(models.Model):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
+    name = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)

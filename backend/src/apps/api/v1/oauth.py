@@ -26,6 +26,7 @@ class OAuthProviderViewSet(viewsets.ModelViewSet):
 
 class YandexOAuthAPI(views.APIView):
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
 
     def post(self, request):
         serializer = YandexOAuthSerializer(data=request.data)

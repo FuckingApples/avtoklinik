@@ -43,11 +43,11 @@ class UserManager(BaseUserManager):
 # Поле email уникально и используется в качестве логина
 # Поле organizations - связь с моделью организаций
 class User(AbstractUser):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.TextField()
+    last_name = models.TextField()
     email = models.EmailField(max_length=255, unique=True)
     is_email_verified = models.BooleanField(default=False)
-    password = models.CharField(max_length=255)
+    password = models.TextField()
     organizations = models.ManyToManyField(
         "organizations.Organization",
         blank=True,
