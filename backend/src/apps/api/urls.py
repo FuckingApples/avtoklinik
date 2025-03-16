@@ -7,7 +7,7 @@ from apps.api.v1.oauth import OAuthProviderViewSet, YandexOAuthAPI
 from apps.api.v1.organizations import CreateOrgAPI, DeleteOrgAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
-from apps.api.v1.users import RegisterUserAPI, LogoutUserAPI, UserInfoAPI
+from apps.api.v1.users import LogoutUserAPI, UserAPI
 
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
@@ -18,8 +18,7 @@ urlpatterns = [
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-docs"
     ),
     # Users routes
-    path("v1/user/", UserInfoAPI.as_view(), name="user_info"),
-    path("v1/user/register/", RegisterUserAPI.as_view(), name="register"),
+    path("v1/user/", UserAPI.as_view(), name="user_info"),
     path("v1/user/logout/", LogoutUserAPI.as_view(), name="logout"),
     path("v1/user/email/verify/", VerifyEmailOTPAPI.as_view(), name="verify_email"),
     path(

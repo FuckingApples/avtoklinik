@@ -1,40 +1,63 @@
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.request import Request
-from rest_framework import status
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import status, permissions, views
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.api.serializers.users import UserSerializer, UserFullInfoSerializer
+from apps.api.serializers.users import UserSerializer, UserDTO
 from apps.users.services import users
 
 
-# Эндпоинт для регистрации пользователя
-class RegisterUserAPI(APIView):
-    permission_classes = (AllowAny,)
-    authentication_classes = ()
+@extend_schema(tags=["Users"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Регистрация пользователя",
+        request=UserSerializer,
+        responses={status.HTTP_201_CREATED: UserSerializer},
+        auth=[],
+    ),
+    get=extend_schema(
+        summary="Получение информации о текущем пользователе",
+        responses={status.HTTP_200_OK: UserSerializer},
+    ),
+)
+class UserAPI(views.APIView):
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return (permissions.AllowAny(),)
+        return (permissions.IsAuthenticated(),)
+
+    def get(self, request):
+        serializer = UserSerializer(request.user, context={"request": request})
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        data = serializer.validated_data
+        data = UserDTO(**serializer.validated_data)
         serializer.instance = users.create_user(user=data)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-
-# Эндпоинт для получения информации о пользователе
-class UserInfoAPI(APIView):
-    def get(self, request):
-        serializer = UserFullInfoSerializer(request.user, context={"request": request})
+    def patch(self, request):
+        serializer = UserSerializer(
+            instance=request.user,
+            data=request.data,
+            partial=True,
+            context={"request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-# Эндпоинт для выхода пользователя из системы
-class LogoutUserAPI(APIView):
+@extend_schema(tags=["Users"])
+class LogoutUserAPI(views.APIView):
     def post(self, request: Request):
         data = request.data.copy()
         browser_keywords = ["Mozilla/5.0", "Chrome", "Safari", "Firefox"]
