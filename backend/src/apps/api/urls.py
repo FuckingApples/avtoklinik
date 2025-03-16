@@ -45,11 +45,29 @@ urlpatterns = [
         name="delete_org",
     ),
     # Clients routes
-    path("v1/client/<int:organization_id>/", ClientListView.as_view(), name="client-list"),
-    path("v1/client/<int:organization_id>/create/", ClientCreateView.as_view(), name="client-create"),
-    path("v1/client/<int:organization_id>/<int:client_id>/", ClientDetailView.as_view(), name="client-detail"),
-    path("v1/client/<int:organization_id>/<int:client_id>/update/", ClientUpdateView.as_view(), name="client-update"),
-    path("v1/client/<int:organization_id>/<int:client_id>/delete/", ClientDeleteView.as_view(), name="client-delete"),
+    path(
+        "v1/client/<int:organization_id>/", ClientListView.as_view(), name="client-list"
+    ),
+    path(
+        "v1/client/<int:organization_id>/create/",
+        ClientCreateView.as_view(),
+        name="client-create",
+    ),
+    path(
+        "v1/client/<int:organization_id>/<int:client_id>/",
+        ClientDetailView.as_view(),
+        name="client-detail",
+    ),
+    path(
+        "v1/client/<int:organization_id>/<int:client_id>/update/",
+        ClientUpdateView.as_view(),
+        name="client-update",
+    ),
+    path(
+        "v1/client/<int:organization_id>/<int:client_id>/delete/",
+        ClientDeleteView.as_view(),
+        name="client-delete",
+    ),
     # JWT tokens routes
     path("token", CustomTokenObtainPairAPI.as_view(), name="token_obtain_pair"),
     path("token/refresh", CustomTokenRefreshAPI.as_view(), name="token_refresh"),
