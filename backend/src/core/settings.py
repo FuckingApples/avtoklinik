@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "apps.oauth",
     "apps.clients",
     "apps.cars",
+    "apps.workplaces",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",
