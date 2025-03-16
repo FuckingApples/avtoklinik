@@ -41,7 +41,7 @@ export default function DetailsTab({
       <Form {...form}>
         <form
           id="user-settings"
-          className="flex flex-col gap-4"
+          className="mb-3 flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
