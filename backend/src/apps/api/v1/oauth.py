@@ -78,6 +78,9 @@ class YandexOAuthAPI(views.APIView):
         last_name = user_data.get("last_name")
         uid = user_data.get("psuid")
 
+        is_avatar_empty = user_data.get("is_avatar_empty", True)
+        default_avatar_id = user_data.get("default_avatar_id", None)
+
         if not email:
             return Response(
                 {"code": "no_email", "message": "No email provided"},
@@ -113,6 +116,8 @@ class YandexOAuthAPI(views.APIView):
             )
             user.set_unusable_password()
             user.is_email_verified = True
+            if default_avatar_id and not is_avatar_empty:
+                user.avatar = f"https://avatars.yandex.net/get-yapic/{default_avatar_id}/islands-200"
             user.save()
             OAuthProvider.objects.create(user=user, provider="yandex", uid=uid)
 
