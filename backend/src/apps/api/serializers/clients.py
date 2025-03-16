@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from rest_framework import serializers
-
-if TYPE_CHECKING:
-    from apps.clients.models import Client
+from apps.clients.models import Client
 
 
 @dataclass
@@ -35,7 +32,6 @@ class ClientSerializer(serializers.ModelSerializer):
     phone = serializers.RegexField(regex=r"^(\+7|8)\d{10}$")
     email = serializers.EmailField(required=False, allow_blank=True)
 
-    def to_internal_value(self, data: "Client") -> "ClientDTO":
-        data = super().to_internal_value(data)
-
-        return ClientDTO(**data)
+    class Meta:
+        model = Client
+        fields = ("id", "first_name", "last_name", "middle_name", "phone", "email")
