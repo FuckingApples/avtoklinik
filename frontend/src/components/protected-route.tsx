@@ -15,7 +15,6 @@ export default function ProtectedRoute({ children }: React.PropsWithChildren) {
     const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
       setIsHydrated(true);
     });
-    console.log("SDSDD");
     if (useAuthStore.persist.hasHydrated()) {
       setIsHydrated(true);
     }

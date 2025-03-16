@@ -1,12 +1,12 @@
 import pytest
-from apps.api.serializers.users import RegisterUserDTO
+from apps.api.serializers.users import UserDTO
 from apps.users.services import users
 from rest_framework.test import APIClient
 
 
 @pytest.fixture
 def user():
-    user_dto = RegisterUserDTO(
+    user_dto = UserDTO(
         first_name="Bob",
         last_name="Robinson",
         email="bobrobinson@example.com",

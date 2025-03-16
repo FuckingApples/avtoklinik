@@ -90,7 +90,6 @@ const EmailVerificationForm = ({
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
-              <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
           )}

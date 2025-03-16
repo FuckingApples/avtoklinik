@@ -87,7 +87,7 @@ export function SlidingNumber({
   decimalSeparator = ".",
 }: SlidingNumberProps) {
   const absValue = Math.abs(value);
-  const [integerPart, decimalPart] = absValue.toString().split(".");
+  const [integerPart = "", decimalPart = ""] = absValue.toString().split(".");
   const integerValue = parseInt(integerPart, 10);
   const paddedInteger =
     padStart && integerValue < 10 ? `0${integerPart}` : integerPart;
@@ -103,7 +103,7 @@ export function SlidingNumber({
         <Digit
           key={`pos-${integerPlaces[index]}`}
           value={integerValue}
-          place={integerPlaces[index]}
+          place={integerPlaces[index]!}
         />
       ))}
       {decimalPart && (

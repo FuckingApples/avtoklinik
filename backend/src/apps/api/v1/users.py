@@ -6,16 +6,17 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.api.serializers.users import RegisterUserSerializer, UserInfoSerializer
+from apps.api.serializers.users import UserSerializer, UserFullInfoSerializer
 from apps.users.services import users
 
 
+# Эндпоинт для регистрации пользователя
 class RegisterUserAPI(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
     def post(self, request):
-        serializer = RegisterUserSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
@@ -24,13 +25,15 @@ class RegisterUserAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
+# Эндпоинт для получения информации о пользователе
 class UserInfoAPI(APIView):
     def get(self, request):
-        serializer = UserInfoSerializer(request.user)
+        serializer = UserFullInfoSerializer(request.user, context={"request": request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+# Эндпоинт для выхода пользователя из системы
 class LogoutUserAPI(APIView):
     def post(self, request: Request):
         data = request.data.copy()

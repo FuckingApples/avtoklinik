@@ -7,7 +7,7 @@ export const signUpSchema = z
     email: z.string().email({ message: "Неверный email" }),
     password: z
       .string()
-      .min(8, { message: "Пароль должен содержать 8 символов" }),
+      .min(8, { message: "Пароль должен быть от 8 символов" }),
     re_password: z.string(),
   })
   .refine((data) => data.password === data.re_password, {
@@ -19,9 +19,7 @@ export type TSignUpSchema = z.infer<typeof signUpSchema>;
 
 export const signInSchema = z.object({
   email: z.string().email({ message: "Неверный email" }),
-  password: z
-    .string()
-    .min(8, { message: "Пароль должен содержать 8 символов" }),
+  password: z.string().min(8, { message: "Пароль должен быть от 8 символов" }),
 });
 
 export type TSignInSchema = z.infer<typeof signInSchema>;

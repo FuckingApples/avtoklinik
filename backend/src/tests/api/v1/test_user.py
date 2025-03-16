@@ -9,7 +9,7 @@ def test_user_registration(api_client):
         email="johndoe@example.com",
         password="qwerty",
     )
-    response = api_client.post("/api/v1/users/register", data=payload)
+    response = api_client.post("/api/v1/user/register", data=payload)
 
     data = response.data
     assert data["email"] == payload["email"]
@@ -27,6 +27,6 @@ def test_user_registration_with_existing_email(user, api_client):
         email="bobrobinson@example.com",
         password="simplepassword",
     )
-    response = api_client.post("/api/v1/users/register", data=payload)
+    response = api_client.post("/api/v1/user/register", data=payload)
 
     assert response.status_code == 400
