@@ -15,17 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import {
-  Bell,
-  ChevronsUpDown,
-  Gem,
-  LogOut,
-  Settings,
-  User,
-} from "lucide-react";
+import { Bell, ChevronsUpDown, Gem, LogOut, Settings } from "lucide-react";
 import { useAuthStore } from "~/store/auth";
 import { logoutUser } from "~/api/auth";
 import { useUserStore } from "~/store/user";
+import Link from "next/link";
+import React from "react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -47,7 +42,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage />
+                <AvatarImage src={user?.avatar} />
                 <AvatarFallback className="rounded-lg">
                   {user?.first_name.charAt(0)}
                   {user?.last_name.charAt(0)}
@@ -77,16 +72,14 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <User />
-                Профиль
-              </DropdownMenuItem>
-              <DropdownMenuItem>
                 <Bell />
                 Уведомления
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings />
-                Настройки
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings">
+                  <Settings />
+                  Настройки
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
