@@ -7,13 +7,13 @@ type AuthState = {
   logout: () => void;
 };
 
-export const useAuthStore = create(
-  persist<AuthState>(
-    (set, get) => ({
-      accessToken: null,
-      setAccessToken: (token: string | null) => set({ accessToken: token }),
-      logout: () => set({ accessToken: null }),
-    }),
-    { name: "auth-storage" },
-  ),
+const authPersist = persist<AuthState>(
+  (set) => ({
+    accessToken: null,
+    setAccessToken: (token: string | null) => set({ accessToken: token }),
+    logout: () => set({ accessToken: null }),
+  }),
+  { name: "auth-storage" },
 );
+
+export const useAuthStore = create<AuthState>()(authPersist);

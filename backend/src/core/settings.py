@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+
 from dotenv import load_dotenv
 import os
+import dj_database_url
 
 load_dotenv()
 
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.organizations",
     "apps.core",
+    "apps.oauth",
     "apps.clients",
     "apps.cars",
     "rest_framework_simplejwt.token_blacklist",
@@ -105,6 +108,9 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+if os.getenv("DATABASE_URL"):
+    DATABASES["default"] = dj_database_url.config()
 
 
 # Password validation
@@ -164,3 +170,6 @@ CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+OAUTH_YANDEX_CLIENT_ID = os.getenv("OAUTH_YANDEX_CLIENT_ID")
+OAUTH_YANDEX_CLIENT_SECRET = os.getenv("OAUTH_YANDEX_CLIENT_SECRET")

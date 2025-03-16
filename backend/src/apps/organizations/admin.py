@@ -1,26 +1,40 @@
 from django.contrib import admin
 
-from apps.organizations.models import Organization, Membership, PermissionFlags
+from apps.organizations.models import Organization, Membership, PermissionFlags, Role
 
 
+# Классы для отображения моделей в админке
+@admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "created_at")
     search_fields = ("name",)
+    date_hierarchy = "created_at"
 
 
+@admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
-    list_display = ("user", "organization", "get_roles_display")
+    list_display = ("user", "organization", "role", "get_permissions_display")
+    search_fields = ("organization__name", "role__name", "user__email")
+    list_filter = ("role", "organization")
 
-    def get_roles_display(self, obj):
-
+    @admin.display(description="Permissions")
+    def get_permissions_display(self, obj: "Membership"):
         return ", ".join(
             permission
             for bit, permission in PermissionFlags.PERMISSION_CHOICES
             if obj.has_permission(bit)
         )
 
-    get_roles_display.short_description = "Permissions"
 
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "get_permissions_display")
+    search_fields = ("name",)
 
-admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Membership, MembershipAdmin)
+    @admin.display(description="Permissions")
+    def get_permissions_display(self, obj: "Role"):
+        return ", ".join(
+            permission
+            for bit, permission in PermissionFlags.PERMISSION_CHOICES
+            if (obj.default_permissions & bit) == bit
+        )

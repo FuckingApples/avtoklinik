@@ -49,7 +49,7 @@ api.interceptors.response.use(
           ?.split("=")[1];
 
         const { data }: { data: { access: string } } = await axios.post(
-          `${env.NEXT_PUBLIC_API_URL}/token/refresh`,
+          `${env.NEXT_PUBLIC_API_URL}/token/refresh/`,
           {},
           {
             withCredentials: true,

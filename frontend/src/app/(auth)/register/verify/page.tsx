@@ -1,7 +1,7 @@
 "use client";
 
 import { type TEmailVerificationSchema } from "~/utils/validation/email-verification";
-import { EmailVerificationForm } from "~/components/email-verification-form";
+import { EmailVerificationForm } from "~/components/forms/email-verification";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { sendEmailVerification } from "~/api/auth";

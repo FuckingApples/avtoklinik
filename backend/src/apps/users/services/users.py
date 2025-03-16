@@ -1,11 +1,12 @@
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
 
-from apps.api.serializers.users import RegisterUserDTO
+from apps.api.serializers.users import UserDTO
 from apps.users.models import User
 
 
-def create_user(user: "RegisterUserDTO") -> "RegisterUserDTO":
+# Бизнес-логика для создания пользователя
+def create_user(user: "UserDTO") -> "UserDTO":
     if User.objects.filter(email=user.email).exists():
         raise ValidationError(
             {
@@ -24,7 +25,7 @@ def create_user(user: "RegisterUserDTO") -> "RegisterUserDTO":
         if user.password:
             instance.set_password(user.password)
         instance.save()
-        return RegisterUserDTO.from_instance(instance)
+        return UserDTO.from_instance(instance)
     except IntegrityError:
         raise ValidationError(
             {
