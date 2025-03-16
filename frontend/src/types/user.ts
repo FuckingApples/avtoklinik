@@ -5,6 +5,7 @@ export type User = {
   first_name: string;
   last_name: string;
   email: string;
+  avatar?: string;
   is_email_verified: boolean;
   organizations: Organization[];
 };
