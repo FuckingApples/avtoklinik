@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from rest_framework import serializers
 from apps.workplaces.models import Workplace
-import re
 
 
 @dataclass
@@ -32,14 +31,14 @@ class WorkplaceSerializer(serializers.ModelSerializer):
 
         if qs.exists():
             raise serializers.ValidationError(
-                "Workplace with this name already exists."
+                {
+                    "message": "A workplace with this name already exists.",
+                    "code": "workplace_already_exists",
+                }
             )
         return data
 
-    def validate_color(self, value):
-        if len(value) != 7 or not re.fullmatch(r"^#[0-9A-Fa-f]{6}$", value):
-            raise serializers.ValidationError("Color must be a valid HEX format.")
-        return value
+    color = serializers.RegexField(regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$")
 
     class Meta:
         model = Workplace
