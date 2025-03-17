@@ -10,9 +10,11 @@ if TYPE_CHECKING:
 @dataclass
 class CarDTO:
     vin: str
+    frame: str
     brand: str
     model: str
     year: int
+    color: str
     license_plate: str
     license_plate_region: str
     mileage: int
@@ -22,9 +24,11 @@ class CarDTO:
     def from_instance(cls, car: "Car") -> "CarDTO":
         return CarDTO(
             vin=car.vin,
+            frame=car.frame,
             brand=car.brand,
             model=car.model,
             year=car.year,
+            color=car.color,
             license_plate=car.license_plate,
             license_plate_region=car.license_plate_region,
             mileage=car.mileage,
