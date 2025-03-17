@@ -22,6 +22,7 @@ class CarAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "vin",
+                    "frame",
                     "year",
                     "mileage",
                     ("brand", "model", "color"),

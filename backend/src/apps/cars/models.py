@@ -29,7 +29,7 @@ class Car(models.Model):
     )
 
     vin = models.CharField(max_length=17, unique=True)
-    frame = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    frame = models.TextField(unique=True, null=True, blank=True)
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     year = models.PositiveIntegerField()
