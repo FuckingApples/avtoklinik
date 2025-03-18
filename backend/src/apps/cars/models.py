@@ -29,9 +29,11 @@ class Car(models.Model):
     )
 
     vin = models.CharField(max_length=17, unique=True)
+    frame = models.TextField(unique=True, null=True, blank=True)
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     year = models.PositiveIntegerField()
+    color = models.CharField(max_length=30, null=True, blank=True)
     license_plate = models.CharField(max_length=15)
     license_plate_region = models.CharField(max_length=5, choices=REGION_CHOICES)
     mileage = models.PositiveIntegerField()

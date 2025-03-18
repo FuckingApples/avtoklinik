@@ -7,6 +7,7 @@ from apps.cars.models import Car
 class CarAdmin(admin.ModelAdmin):
     list_display = (
         "vin",
+        "frame",
         "__str__",
         "mileage",
         "license_plate",
@@ -21,9 +22,10 @@ class CarAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "vin",
+                    "frame",
                     "year",
                     "mileage",
-                    ("brand", "model"),
+                    ("brand", "model", "color"),
                     ("license_plate", "license_plate_region"),
                 ),
             },
