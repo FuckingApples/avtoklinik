@@ -44,10 +44,20 @@ class CarSerializer(serializers.Serializer):
 
     def validate_mileage(self, value):
         if value < 0:
-            raise serializers.ValidationError("Mileage cannot be negative.")
+            raise serializers.ValidationError(
+                {
+                    "message": "Mileage cannot be negative.",
+                    "code": "car_mileage_negative",
+                }
+            )
         return value
 
     def validate_plate_number(self, value):
         if len(value) < 5:
-            raise serializers.ValidationError("Plate number is too short.")
+            raise serializers.ValidationError(
+                {
+                    "message": "Plate number is too short.",
+                    "code": "car_plate_too_short",
+                }
+            )
         return value
