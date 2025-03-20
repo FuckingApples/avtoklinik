@@ -5,8 +5,6 @@ name: Generate requirements.txt
 
 on:
   push:
-    branches: [ "develop", "main" ]
-    tags: ["backend"]
   pull_request:
     branches: [ "develop", "main" ]
     tags: ["backend"]
