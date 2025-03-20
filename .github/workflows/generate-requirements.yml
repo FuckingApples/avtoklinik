@@ -7,7 +7,6 @@ on:
   push:
   pull_request:
     branches: [ "develop", "main" ]
-    tags: ["backend"]
 
 permissions:
   contents: read
