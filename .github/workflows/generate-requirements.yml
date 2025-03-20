@@ -9,7 +9,8 @@ on:
     branches: [ "develop", "main" ]
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   generate-requirements:
@@ -19,13 +20,10 @@ jobs:
       run:
           working-directory: ./backend
 
-    permissions: 
-      pull-requests: write
-
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
-        persist-credentials: false
+        ref: ${{ github.head_ref }}
         fetch-depth: 0
 
     - name: Set up Python 3.10
@@ -71,5 +69,4 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+        branch: ${{ github.head_ref }}
