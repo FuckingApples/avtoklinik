@@ -5,6 +5,7 @@ name: Generate requirements.txt
 
 on:
   push:
+    branches: ["develop", "main" ]
   pull_request:
     branches: [ "develop", "main" ]
 
@@ -41,11 +42,11 @@ jobs:
     - name: Install latest version of Poetry
       if: steps.cache-poetry.outputs.cache-hit != 'true'
       run: |
-        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+        python -m pip install poetry
 
-    - name: Add Poetry to $PATH
+    - name: Install plugins
       run: |
-        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+        poetry self add poetry-plugin-export
 
     - name: Get Poetry version
       run: poetry --version
