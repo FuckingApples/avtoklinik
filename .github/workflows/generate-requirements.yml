@@ -1,0 +1,75 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application
+
+on:
+  push:
+  pull_request:
+    branches: [ "develop", "main" ]
+    tags: ["backend"]
+
+permissions:
+  contents: read
+
+jobs:
+  generate-requirements:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+          working-directory: ./backend
+
+    permissions: 
+      pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.13"
+
+    - name: Cache Poetry
+      id: cache-poetry
+      uses: actions/cache@v4
+      with:
+          path: ~/.poetry
+          key: ubuntu-poetry
+
+    - name: Install latest version of Poetry
+      if: steps.cache-poetry.outputs.cache-hit != 'true'
+      run: |
+        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+
+    - name: Add Poetry to $PATH
+      run: |
+        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+    - name: Get Poetry version
+      run: poetry --version
+
+    - name: Check pyproject.toml validity
+      run: poetry check --no-interaction
+
+    - name: Add plugins
+      run: poetry self add poetry-plugin-export
+
+    - name: Export requirements
+      run: |
+        poetry export -f requirements.txt --output requirements.txt
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -a -m "ci(poetry): update requirements.txt file"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: ${{ github.head_ref }}
