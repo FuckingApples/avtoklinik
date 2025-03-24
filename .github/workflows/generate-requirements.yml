@@ -1,0 +1,75 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Generate requirements.txt
+
+on:
+  push:
+    branches: ["develop", "main" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-requirements:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+          working-directory: ./backend
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.13"
+
+    - name: Cache Poetry
+      id: cache-poetry
+      uses: actions/cache@v4
+      with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.local/share/pypoetry
+            ~/.local/bin
+          key: ${{ runner.os }}-poetry
+
+    - name: Install latest version of Poetry
+      if: steps.cache-poetry.outputs.cache-hit != 'true'
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install plugins
+      run: |
+        poetry self add poetry-plugin-export
+
+    - name: Get Poetry version
+      run: poetry --version
+
+    - name: Check pyproject.toml validity
+      run: poetry check --no-interaction
+
+    - name: Export requirements
+      run: |
+        poetry export -f requirements.txt --output requirements.txt
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add requirements.txt
+        git diff-index --quiet HEAD || git commit -a -m "ci(poetry): update requirements.txt file"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: ${{ github.head_ref }}
