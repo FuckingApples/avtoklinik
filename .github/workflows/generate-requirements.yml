@@ -36,13 +36,13 @@ jobs:
       id: cache-poetry
       uses: actions/cache@v4
       with:
-          path: ~/.poetry
+          path: ~/.cache/pip
           key: poetry-ubuntu
 
     - name: Install latest version of Poetry
       if: steps.cache-poetry.outputs.cache-hit != 'true'
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
+        python -m pip install poetry
 
     - name: Install plugins
       run: |
@@ -58,7 +58,7 @@ jobs:
       id: cache-deps
       uses: actions/cache@v4
       with:
-        path: ${{github.workspace}}/.venv
+        path: ${{github.workspace}}/backend/.venv
         key: poetry-${{ hashFiles('**/poetry.lock') }}
 
     - name: Add plugins
