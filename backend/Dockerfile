@@ -12,8 +12,7 @@ RUN apt-get update && \
 
 
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --user --no-cache-dir -r requirements.txt --require-hashes
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt --require-hashes
 
 
 FROM python:3.13-slim-bookworm
@@ -22,9 +21,9 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/app/.local/bin:${PATH}"0
+    PATH="/app/.local/bin:${PATH}"
 
-COPY --from=builder /root/.local /root/.local
+COPY --from=builder /install /usr/local
 COPY --from=builder /app/requirements.txt .
 
 COPY /src .
