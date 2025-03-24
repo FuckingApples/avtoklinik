@@ -54,16 +54,6 @@ jobs:
     - name: Check pyproject.toml validity
       run: poetry check --no-interaction
 
-    - name: Cache dependencies
-      id: cache-deps
-      uses: actions/cache@v4
-      with:
-        path: ${{github.workspace}}/backend/.venv
-        key: poetry-${{ hashFiles('**/poetry.lock') }}
-
-    - name: Add plugins
-      run: poetry self add poetry-plugin-export
-
     - name: Export requirements
       run: |
         poetry export -f requirements.txt --output requirements.txt
