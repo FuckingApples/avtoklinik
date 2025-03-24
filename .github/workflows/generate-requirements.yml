@@ -36,8 +36,13 @@ jobs:
       id: cache-poetry
       uses: actions/cache@v4
       with:
-          path: ~/.cache/pip
-          key: poetry-ubuntu
+          path: |
+            ~/.cache/pypoetry
+            ~/.local/share/pypoetry
+            .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
 
     - name: Install latest version of Poetry
       if: steps.cache-poetry.outputs.cache-hit != 'true'
