@@ -17,8 +17,6 @@ services:
       DJANGO_CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
       OAUTH_YANDEX_CLIENT_ID: ${OAUTH_YANDEX_CLIENT_ID}
       OAUTH_YANDEX_CLIENT_SECRET: ${OAUTH_YANDEX_CLIENT_SECRET}
-    ports:
-      - "8000:8000"
     volumes:
       - static_volume:/app/static
 
