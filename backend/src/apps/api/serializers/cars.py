@@ -1,10 +1,7 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from rest_framework import serializers
-
-if TYPE_CHECKING:
-    from apps.cars.models import Car
+from apps.cars.models import Car
 
 
 @dataclass
@@ -36,11 +33,31 @@ class CarDTO:
         )
 
 
-class CarSerializer(serializers.Serializer):
+class CarSerializer(serializers.ModelSerializer):
+    vin = serializers.CharField()
+    frame = serializers.CharField(required=False, allow_blank=True)
+    brand = serializers.CharField()
+    model = serializers.CharField()
+    year = serializers.IntegerField()
+    color = serializers.CharField(required=False, allow_blank=True)
+    license_plate = serializers.CharField()
+    license_plate_region = serializers.CharField()
+    mileage = serializers.IntegerField()
 
-    def to_internal_value(self, data: "Car") -> "CarDTO":
-        data = super().to_internal_value(data)
-        return CarDTO(**data)
+    class Meta:
+        model = Car
+        fields = (
+            "id",
+            "vin",
+            "frame",
+            "brand",
+            "model",
+            "year",
+            "color",
+            "license_plate",
+            "license_plate_region",
+            "mileage",
+        )
 
     def validate_mileage(self, value):
         if value < 0:
