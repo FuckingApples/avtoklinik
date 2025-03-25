@@ -23,6 +23,10 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/app/.local/bin:${PATH}"
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libpq5 && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /install /usr/local
 COPY --from=builder /app/requirements.txt .
 
