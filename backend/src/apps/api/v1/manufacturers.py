@@ -8,15 +8,13 @@ from apps.organizations.models import Organization
 from apps.api.serializers.manufacturers import ManufacturerSerializer
 
 class ManufacturerBaseView:
-    """Базовый класс для проверки доступа к организации"""
     permission_classes = [IsAuthenticated]
 
     def get_organization(self):
         org = get_object_or_404(
-            Organization.all_objects,  # Используем all_objects для доступа ко всем организациям
+            Organization.all_objects,
             pk=self.kwargs['organization_id']
         )
-        # Здесь можно добавить проверку прав пользователя
         return org
 
 class ManufacturerListView(ManufacturerBaseView, generics.ListAPIView):
@@ -67,4 +65,4 @@ class ManufacturerDeleteView(ManufacturerBaseView, generics.DestroyAPIView):
         )
 
     def perform_destroy(self, instance):
-        instance.soft_delete()  # Мягкое удаление вместо физического
+        instance.soft_delete()

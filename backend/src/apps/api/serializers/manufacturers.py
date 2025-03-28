@@ -41,7 +41,7 @@ class ManufacturerSerializer(serializers.ModelSerializer):
         ).exists():
             raise serializers.ValidationError(
                 {
-                    "message": "Производитель с таким названием уже существует в этой организации",
+                    "message": "A manufacturer with that name already exists in this organization.",
                     "code": "manufacturer_already_exists"
                 }
             )

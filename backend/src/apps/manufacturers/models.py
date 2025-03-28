@@ -4,27 +4,27 @@ from apps.organizations.models import Organization
 class Manufacturer(models.Model):
     name = models.CharField(
         max_length=255,
-        verbose_name="Название производителя",
-        help_text="Обязательное поле"
+        verbose_name="Manufacturer's name",
+        help_text="Required field"
     )
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
-        verbose_name="Организация",
+        verbose_name="Organization",
         related_name="manufacturers"
     )
     description = models.TextField(
         blank=True,
         null=True,
-        verbose_name="Описание"
+        verbose_name="Description"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_deleted = models.BooleanField(default=False)  # Для согласованности с Organization
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = "Производитель"
-        verbose_name_plural = "Производители"
+        verbose_name = "Manufacturer"
+        verbose_name_plural = "Manufacturer's"
         ordering = ['name']
         constraints = [
             models.UniqueConstraint(
@@ -37,11 +37,9 @@ class Manufacturer(models.Model):
         return f"{self.name} (Org: {self.organization.public_id})"
 
     def soft_delete(self):
-        """Мягкое удаление (аналогично Organization)"""
         self.is_deleted = True
         self.save()
 
     def restore(self):
-        """Восстановление (аналогично Organization)"""
         self.is_deleted = False
         self.save()
