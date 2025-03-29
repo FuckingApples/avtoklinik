@@ -1,9 +1,7 @@
 backend:
-  - changed-files:
-    - any-glob-to-any-file: backend/**
+  - 'backend/**'
 frontend:
-  - changed-files:
-    - any-glob-to-any-file: frontend/**
+  - 'frontend/**'
 "repository changes":
-  - changed-files:
-    - any-glob-to-any-file: ['*', '.github/**']
+  - '*'
+  - '.github/**'
