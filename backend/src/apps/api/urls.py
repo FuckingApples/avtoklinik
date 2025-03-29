@@ -25,6 +25,14 @@ from apps.api.v1.cars import (
     CarDeleteView,
 )
 
+from apps.api.v1.warehouses import (
+    WarehouseListView,
+    WarehouseCreateView,
+    WarehouseDetailView,
+    WarehouseUpdateView,
+    WarehouseDeleteView,
+)
+
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
@@ -96,6 +104,32 @@ urlpatterns = [
         "v1/auto/<int:organization_id>/<int:car_id>/delete/",
         CarDeleteView.as_view(),
         name="car-delete",
+    ),
+    # Warehouses routes
+    path(
+        "v1/warehouse/<int:organization_id>/",
+        WarehouseListView.as_view(),
+        name="warehouse-list",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/create/",
+        WarehouseCreateView.as_view(),
+        name="warehouse-create",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/",
+        WarehouseDetailView.as_view(),
+        name="warehouse-detail",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/update/",
+        WarehouseUpdateView.as_view(),
+        name="warehouse-update",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/delete/",
+        WarehouseDeleteView.as_view(),
+        name="warehouse-delete",
     ),
     # JWT tokens routes
     path("token/", CustomTokenObtainPairAPI.as_view(), name="token_obtain_pair"),
