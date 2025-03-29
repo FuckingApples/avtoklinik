@@ -105,6 +105,7 @@ urlpatterns = [
         CarDeleteView.as_view(),
         name="car-delete",
     ),
+    # Workplaces routes
     path(
         "v1/workplace/<int:organization_id>/",
         WorkplaceListView.as_view(),
