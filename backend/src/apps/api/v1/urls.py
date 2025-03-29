@@ -8,5 +8,6 @@ router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
 urlpatterns = [
     path("deals/", include("apps.api.v1.deals")),
+    path("registries/", include("apps.api.v1.registries")),
     path("", include(router.urls)),
 ]
