@@ -6,8 +6,8 @@ from apps.warehouses.models import Warehouse
 
 @dataclass
 class WarehouseDTO:
-    id: int
     name: str
+    id: int = None
     comment: str = None
     is_trade: bool = False
 
