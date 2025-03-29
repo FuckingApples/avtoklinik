@@ -25,6 +25,14 @@ from apps.api.v1.cars import (
     CarDeleteView,
 )
 
+from apps.api.v1.workplaces import (
+    WorkplaceListView,
+    WorkplaceCreateView,
+    WorkplaceDetailView,
+    WorkplaceUpdateView,
+    WorkplaceDeleteView,
+)
+
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
@@ -96,6 +104,31 @@ urlpatterns = [
         "v1/auto/<int:organization_id>/<int:car_id>/delete/",
         CarDeleteView.as_view(),
         name="car-delete",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/",
+        WorkplaceListView.as_view(),
+        name="workplace-list",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/create/",
+        WorkplaceCreateView.as_view(),
+        name="workplace-create",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/",
+        WorkplaceDetailView.as_view(),
+        name="workplace-detail",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/update/",
+        WorkplaceUpdateView.as_view(),
+        name="workplace-update",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/delete/",
+        WorkplaceDeleteView.as_view(),
+        name="workplace-delete",
     ),
     # JWT tokens routes
     path("token/", CustomTokenObtainPairAPI.as_view(), name="token_obtain_pair"),
