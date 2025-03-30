@@ -1,9 +1,8 @@
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework.routers import DefaultRouter
 
 from apps.api.v1.core import get_csrf_token
-from apps.api.v1.oauth import OAuthProviderViewSet, YandexOAuthAPI
+from apps.api.v1.oauth import YandexOAuthAPI
 from apps.api.v1.organizations import CreateOrgAPI, DeleteOrgAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
@@ -31,6 +30,14 @@ from apps.api.v1.warehouses import (
     WarehouseDetailView,
     WarehouseUpdateView,
     WarehouseDeleteView,
+)
+
+from apps.api.v1.workplaces import (
+    WorkplaceListView,
+    WorkplaceCreateView,
+    WorkplaceDetailView,
+    WorkplaceUpdateView,
+    WorkplaceDeleteView,
 )
 
 router = DefaultRouter()
@@ -131,6 +138,32 @@ urlpatterns = [
         WarehouseDeleteView.as_view(),
         name="warehouse-delete",
     ),
+    # Workplaces routes
+    path(
+        "v1/workplace/<int:organization_id>/",
+        WorkplaceListView.as_view(),
+        name="workplace-list",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/create/",
+        WorkplaceCreateView.as_view(),
+        name="workplace-create",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/",
+        WorkplaceDetailView.as_view(),
+        name="workplace-detail",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/update/",
+        WorkplaceUpdateView.as_view(),
+        name="workplace-update",
+    ),
+    path(
+        "v1/workplace/<int:organization_id>/<int:workplace_id>/delete/",
+        WorkplaceDeleteView.as_view(),
+        name="workplace-delete",
+    ),
     # JWT tokens routes
     path("token/", CustomTokenObtainPairAPI.as_view(), name="token_obtain_pair"),
     path("token/refresh/", CustomTokenRefreshAPI.as_view(), name="token_refresh"),
@@ -138,6 +171,5 @@ urlpatterns = [
     path("csrf_token/", get_csrf_token, name="get_csrf_token"),
     # OAuth routes
     path("v1/oauth/yandex/", YandexOAuthAPI.as_view(), name="yandex_oauth"),
-    # ViewSets routes
-    path("v1/", include(router.urls)),
+    path("v1/", include("apps.api.v1.urls")),
 ]
