@@ -58,6 +58,3 @@ class ManufacturerSerializer(serializers.ModelSerializer):
             }
         return super().to_representation(instance)
 
-    def to_internal_value(self, data):
-        ret = super().to_internal_value(data)
-        return ret

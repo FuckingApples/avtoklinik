@@ -2,8 +2,7 @@ from django.db import models
 from apps.organizations.models import Organization
 
 class Manufacturer(models.Model):
-    name = models.CharField(
-        max_length=255,
+    name = models.TextField(
         verbose_name="Manufacturer's name",
         help_text="Required field"
     )

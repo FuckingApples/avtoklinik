@@ -107,27 +107,27 @@ urlpatterns = [
     ),
 
     path(
-        "v1/manufacturer/<uuid:organization_id>/",
+        "v1/manufacturer/<int:organization_id>/",
         ManufacturerListView.as_view(),
         name="manufacturer-list"
     ),
     path(
-        "v1/manufacturer/<uuid:organization_id>/create/",
+        "v1/manufacturer/<int:organization_id>/create/",
         ManufacturerCreateView.as_view(),
         name="manufacturer-create"
     ),
     path(
-        "v1/manufacturer/<uuid:organization_id>/<int:manufacturer_id>/",
+        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/",
         ManufacturerDetailView.as_view(),
         name="manufacturer-detail"
     ),
     path(
-        "v1/manufacturer/<uuid:organization_id>/<int:manufacturer_id>/update/",
+        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/update/",
         ManufacturerUpdateView.as_view(),
         name="manufacturer-update"
     ),
     path(
-        "v1/manufacturer/<uuid:organization_id>/<int:manufacturer_id>/delete/",
+        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/delete/",
         ManufacturerDeleteView.as_view(),
         name="manufacturer-delete"
     ),
