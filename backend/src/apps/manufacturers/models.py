@@ -1,34 +1,38 @@
 from django.db import models
 from apps.organizations.models import Organization
 
+
+class ManufacturerManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
+
+
 class Manufacturer(models.Model):
     name = models.TextField(
-        verbose_name="Manufacturer's name",
-        help_text="Required field"
+        verbose_name="Manufacturer's name", help_text="Required field"
     )
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
         verbose_name="Organization",
-        related_name="manufacturers"
+        related_name="manufacturers",
     )
-    description = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Description"
-    )
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
 
+    objects = ManufacturerManager()
+    all_objects = models.Manager()
+
     class Meta:
         verbose_name = "Manufacturer"
         verbose_name_plural = "Manufacturer's"
-        ordering = ['name']
+        ordering = ["name"]
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'organization'],
-                name='unique_manufacturer_name_per_organization'
+                fields=["name", "organization"],
+                name="unique_manufacturer_name_per_organization",
             )
         ]
 
