@@ -1,8 +1,9 @@
-from django.urls import include, path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from apps.api.v1.core import get_csrf_token
-from apps.api.v1.oauth import YandexOAuthAPI
+from apps.api.v1.oauth import YandexOAuthAPI, OAuthProviderViewSet
 from apps.api.v1.organizations import CreateOrgAPI, DeleteOrgAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
@@ -40,6 +41,7 @@ from apps.api.v1.workplaces import (
     WorkplaceDeleteView,
 )
 
+# Default router
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
@@ -171,5 +173,6 @@ urlpatterns = [
     path("csrf_token/", get_csrf_token, name="get_csrf_token"),
     # OAuth routes
     path("v1/oauth/yandex/", YandexOAuthAPI.as_view(), name="yandex_oauth"),
-    path("v1/", include("apps.api.v1.urls")),
+    path("v1/", include("apps.api.v1.urls")),  # Include v1 urls
+    path("api/", include(router.urls)),  # OAuth router
 ]
