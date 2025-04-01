@@ -15,6 +15,10 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    if sys.argv[1] == "startapp":
+        app_path = os.path.join("apps", sys.argv[2])
+        os.makedirs(app_path, exist_ok=True)
+        sys.argv.append(app_path)
     execute_from_command_line(sys.argv)
 
 
