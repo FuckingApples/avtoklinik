@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from rest_framework import serializers
 from apps.manufacturers.models import Manufacturer
 
+
 @dataclass
 class ManufacturerDTO:
     name: str
@@ -29,20 +30,15 @@ class ManufacturerSerializer(serializers.ModelSerializer):
         model = Manufacturer
         fields = ("id", "name", "organization", "description", "is_deleted")
         read_only_fields = ("id", "is_deleted")
-        extra_kwargs = {
-            'organization': {'required': True}
-        }
 
     def validate(self, data):
         if Manufacturer.objects.filter(
-            name=data['name'],
-            organization=data['organization'],
-            is_deleted=False
+            name=data["name"], organization=data["organization"], is_deleted=False
         ).exists():
             raise serializers.ValidationError(
                 {
                     "message": "A manufacturer with that name already exists in this organization.",
-                    "code": "manufacturer_already_exists"
+                    "code": "manufacturer_already_exists",
                 }
             )
         return data
@@ -50,11 +46,10 @@ class ManufacturerSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         if isinstance(instance, ManufacturerDTO):
             return {
-                'id': instance.id,
-                'name': instance.name,
-                'organization_id': instance.organization_id,
-                'description': instance.description,
-                'is_deleted': instance.is_deleted
+                "id": instance.id,
+                "name": instance.name,
+                "organization_id": instance.organization_id,
+                "description": instance.description,
+                "is_deleted": instance.is_deleted,
             }
         return super().to_representation(instance)
-
