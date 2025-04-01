@@ -1,8 +1,9 @@
-from django.urls import include, path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from apps.api.v1.core import get_csrf_token
-from apps.api.v1.oauth import YandexOAuthAPI
+from apps.api.v1.oauth import YandexOAuthAPI, OAuthProviderViewSet
 from apps.api.v1.organizations import CreateOrgAPI, DeleteOrgAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
@@ -24,6 +25,14 @@ from apps.api.v1.cars import (
     CarDeleteView,
 )
 
+from apps.api.v1.warehouses import (
+    WarehouseListView,
+    WarehouseCreateView,
+    WarehouseDetailView,
+    WarehouseUpdateView,
+    WarehouseDeleteView,
+)
+
 from apps.api.v1.workplaces import (
     WorkplaceListView,
     WorkplaceCreateView,
@@ -32,6 +41,9 @@ from apps.api.v1.workplaces import (
     WorkplaceDeleteView,
 )
 
+# Default router
+router = DefaultRouter()
+router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
 urlpatterns = [
     # Swagger documentation routes
@@ -102,6 +114,32 @@ urlpatterns = [
         CarDeleteView.as_view(),
         name="car-delete",
     ),
+    # Warehouses routes
+    path(
+        "v1/warehouse/<int:organization_id>/",
+        WarehouseListView.as_view(),
+        name="warehouse-list",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/create/",
+        WarehouseCreateView.as_view(),
+        name="warehouse-create",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/",
+        WarehouseDetailView.as_view(),
+        name="warehouse-detail",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/update/",
+        WarehouseUpdateView.as_view(),
+        name="warehouse-update",
+    ),
+    path(
+        "v1/warehouse/<int:organization_id>/<int:warehouse_id>/delete/",
+        WarehouseDeleteView.as_view(),
+        name="warehouse-delete",
+    ),
     # Workplaces routes
     path(
         "v1/workplace/<int:organization_id>/",
@@ -135,5 +173,6 @@ urlpatterns = [
     path("csrf_token/", get_csrf_token, name="get_csrf_token"),
     # OAuth routes
     path("v1/oauth/yandex/", YandexOAuthAPI.as_view(), name="yandex_oauth"),
-    path("v1/", include("apps.api.v1.urls")),
+    path("v1/", include("apps.api.v1.urls")),  # Include v1 urls
+    path("api/", include(router.urls)),  # OAuth router
 ]

@@ -1,7 +1,13 @@
-from rest_framework import viewsets
-from .models import MeasurementUnit
-from .serializers import MeasurementUnitSerializer
+from rest_framework import generics
+from apps.measurements.models import MeasurementUnit
+from apps.api.serializers.measurements import MeasurementUnitSerializer
 
-class MeasurementUnitViewSet(viewsets.ModelViewSet):
+
+class MeasurementUnitListCreateView(generics.ListCreateAPIView):
+    queryset = MeasurementUnit.objects.all()
+    serializer_class = MeasurementUnitSerializer
+
+
+class MeasurementUnitRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MeasurementUnit.objects.all()
     serializer_class = MeasurementUnitSerializer

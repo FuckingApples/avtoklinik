@@ -1,13 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-from apps.api.v1.oauth import OAuthProviderViewSet
-
-router = DefaultRouter()
-router.register("oauth", OAuthProviderViewSet, basename="oauth")
+from django.urls import path
+from . import measurements
 
 urlpatterns = [
-    path("deals/", include("apps.api.v1.deals")),
-    path("registries/", include("apps.api.v1.registries")),
-    path("", include(router.urls)),
+    path('measurements/', measurements.MeasurementUnitListCreateView.as_view(), name='measurementunit-list-create'),
+    path('measurements/<int:pk>/', measurements.MeasurementUnitRetrieveUpdateDestroyView.as_view(), name='measurementunit-detail'),
 ]

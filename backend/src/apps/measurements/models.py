@@ -1,10 +1,19 @@
 from django.db import models
+from apps.organizations.models import Organization
+
 
 class MeasurementUnit(models.Model):
     name = models.CharField(max_length=100)
     abbreviation = models.CharField(max_length=20)
-    okei_code = models.CharField(max_length=10, blank=True, null=True)
-    organization = models.CharField(max_length=100)  # Dummy field, replace with ForeignKey if needed
+    okei_code = models.PositiveIntegerField(blank=True, null=True)  # ✅ ОКЕИ: positive integer
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name='measurement_units'
+    )
 
     def __str__(self):
-        return f"{self.abbreviation} ({self.name})"
+        return self.name
+
+    class Meta:
+        app_label = 'measurements'
