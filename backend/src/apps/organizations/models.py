@@ -4,13 +4,8 @@ from typing import Optional
 from django.db import models
 from django.utils import timezone
 
+from apps.core.models import SafeDeleteManager
 from apps.users.models import User
-
-
-# Менеджер для модели Organization с фильтрацией по is_deleted
-class OrganizationManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_deleted=False)
 
 
 # Модель организации
@@ -27,7 +22,7 @@ class Organization(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
-    objects = OrganizationManager()
+    objects = SafeDeleteManager()
     all_objects = models.Manager()
 
     # Метод для мягкого удаления организации (помечает организацию как удаленную)

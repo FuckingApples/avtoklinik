@@ -24,14 +24,6 @@ from apps.api.v1.cars import (
     CarDeleteView,
 )
 
-from apps.api.v1.manufacturers import (
-    ManufacturerListView,
-    ManufacturerCreateView,
-    ManufacturerDetailView,
-    ManufacturerUpdateView,
-    ManufacturerDeleteView,
-)
-
 from apps.api.v1.warehouses import (
     WarehouseListView,
     WarehouseCreateView,
@@ -120,33 +112,6 @@ urlpatterns = [
         CarDeleteView.as_view(),
         name="car-delete",
     ),
-
-    path(
-        "v1/manufacturer/<int:organization_id>/",
-        ManufacturerListView.as_view(),
-        name="manufacturer-list"
-    ),
-    path(
-        "v1/manufacturer/<int:organization_id>/create/",
-        ManufacturerCreateView.as_view(),
-        name="manufacturer-create"
-    ),
-    path(
-        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/",
-        ManufacturerDetailView.as_view(),
-        name="manufacturer-detail"
-    ),
-    path(
-        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/update/",
-        ManufacturerUpdateView.as_view(),
-        name="manufacturer-update"
-    ),
-    path(
-        "v1/manufacturer/<int:organization_id>/<int:manufacturer_id>/delete/",
-        ManufacturerDeleteView.as_view(),
-        name="manufacturer-delete"
-    ),
-
     # Warehouses routes
     path(
         "v1/warehouse/<int:organization_id>/",
@@ -199,7 +164,6 @@ urlpatterns = [
         WorkplaceDeleteView.as_view(),
         name="workplace-delete",
     ),
-  
     # JWT tokens routes
     path("token/", CustomTokenObtainPairAPI.as_view(), name="token_obtain_pair"),
     path("token/refresh/", CustomTokenRefreshAPI.as_view(), name="token_refresh"),
