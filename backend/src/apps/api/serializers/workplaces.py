@@ -27,9 +27,9 @@ class WorkplaceSerializer(serializers.ModelSerializer):
     def validate(self, data):
         organization = data.get("organization")
         name = data.get("name")
-        qs = Workplace.objects.filter(organization=organization, name=name)
+        queryset = Workplace.objects.filter(organization=organization, name=name)
 
-        if qs.exists():
+        if queryset.exists():
             raise serializers.ValidationError(
                 {
                     "message": "A workplace with this name already exists.",

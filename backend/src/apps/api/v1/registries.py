@@ -8,9 +8,10 @@ from apps.api.serializers.registries import (
     CategorySerializer,
     ManufacturerSerializer,
     ColorSerializer,
+    MeasurementUnitSerializer,
 )
 from apps.organizations.models import Organization
-from apps.registries.models import Category, Manufacturer, Color
+from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
 
 
 class OrganizationCategoriesAPI(views.APIView):
@@ -130,6 +131,72 @@ class ColorsAPI(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class OrganizationMeasurementUnitsAPI(views.APIView):
+    def get(self, request, organization_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        measurement_units = MeasurementUnit.objects.filter(organization=organization)
+        serializer = MeasurementUnitSerializer(measurement_units, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, organization_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        serializer = MeasurementUnitSerializer(
+            data=request.data,
+            context={"organization": organization, "request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MeasurementUnitsAPI(views.APIView):
+    def get(self, request, organization_id, measurement_unit_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        measurement_unit = MeasurementUnit.objects.filter(
+            organization=organization, id=measurement_unit_id
+        ).first()
+
+        if not measurement_unit:
+            return Response(
+                {
+                    "message": "Measurement unit not found.",
+                    "code": "measurement_unit_not_found",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = MeasurementUnitSerializer(measurement_unit)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, organization_id, measurement_unit_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        measurement_unit = get_object_or_404(
+            MeasurementUnit, id=measurement_unit_id, organization=organization
+        )
+        serializer = MeasurementUnitSerializer(
+            measurement_unit,
+            data=request.data,
+            partial=True,
+            context={"organization": organization, "request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, organization_id, measurement_unit_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        measurement_unit = get_object_or_404(
+            MeasurementUnit, id=measurement_unit_id, organization=organization
+        )
+        measurement_unit.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class ManufacturerBaseView:
     permission_classes = [IsAuthenticated]
 
@@ -200,11 +267,24 @@ colors_urls = [
     path(
         "<int:organization_id>/",
         OrganizationColorsAPI.as_view(),
-        name="organization_colors",
+        name="organization_measurement_units",
     ),
     path(
         "<int:organization_id>/<int:color_id>/",
         ColorsAPI.as_view(),
+        name="measurement_units",
+    ),
+]
+
+measurement_unit_urls = [
+    path(
+        "<int:organization_id>/",
+        OrganizationMeasurementUnitsAPI.as_view(),
+        name="organization_colors",
+    ),
+    path(
+        "<int:organization_id>/<int:measurement_unit_id>/",
+        MeasurementUnitsAPI.as_view(),
         name="colors",
     ),
 ]
@@ -241,4 +321,5 @@ urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturer/", include(manufacturers_urls)),
     path("colors/", include(colors_urls)),
+    path("measurement_units/", include(measurement_unit_urls)),
 ]

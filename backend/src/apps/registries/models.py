@@ -42,6 +42,18 @@ class Manufacturer(models.Model):
         self.save()
 
 
+class MeasurementUnit(models.Model):
+    unit = models.TextField()
+    abbreviation = models.CharField(max_length=100)
+    okei_code = models.PositiveSmallIntegerField(blank=True, null=True)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name="measurement_units"
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class Color(models.Model):
     name = models.TextField()
     hex = models.CharField(max_length=7, blank=True, null=True)

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from rest_framework import serializers
-from apps.registries.models import Category, Manufacturer, Color
+from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
 
 
 @dataclass
@@ -131,3 +131,26 @@ class ColorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["organization"] = self.context["organization"]
         return super().create(validated_data)
+
+
+class MeasurementUnitSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        organization = data.get("organization")
+        unit = data.get("unit")
+        abbreviation = data.get("abbreviation")
+        queryset = MeasurementUnit.objects.filter(
+            organization=organization, unit=unit, abbreviation=abbreviation
+        )
+
+        if queryset.exists():
+            raise serializers.ValidationError(
+                {
+                    "message": "A measurement unit with this name or abbreviation already exists.",
+                    "code": "measurement_unit_already_exists",
+                }
+            )
+        return data
+
+    class Meta:
+        model = MeasurementUnit
+        fields = ("id", "unit", "abbreviation", "okei_code", "organization")
