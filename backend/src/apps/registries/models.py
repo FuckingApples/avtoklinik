@@ -40,3 +40,13 @@ class Manufacturer(models.Model):
     def restore(self):
         self.is_deleted = False
         self.save()
+
+
+class Color(models.Model):
+    name = models.TextField()
+    hex = models.CharField(max_length=7, blank=True, null=True)
+    code = models.CharField(max_length=25, blank=True, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name

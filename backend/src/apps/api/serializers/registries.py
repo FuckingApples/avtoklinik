@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from rest_framework import serializers
-
-from apps.registries.models import Category, Manufacturer
+from apps.registries.models import Category, Manufacturer, Color
 
 
 @dataclass
@@ -118,3 +117,17 @@ class ManufacturerSerializer(serializers.ModelSerializer):
                 "is_deleted": instance.is_deleted,
             }
         return super().to_representation(instance)
+
+
+class ColorSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    code = serializers.CharField(max_length=25, allow_blank=True, required=False)
+    hex = serializers.CharField(max_length=7, allow_blank=True, required=False)
+
+    class Meta:
+        model = Color
+        fields = ("id", "name", "code", "hex")
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)

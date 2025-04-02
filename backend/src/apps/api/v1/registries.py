@@ -4,9 +4,13 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.api.serializers.registries import CategorySerializer, ManufacturerSerializer
+from apps.api.serializers.registries import (
+    CategorySerializer,
+    ManufacturerSerializer,
+    ColorSerializer,
+)
 from apps.organizations.models import Organization
-from apps.registries.models import Category, Manufacturer
+from apps.registries.models import Category, Manufacturer, Color
 
 
 class OrganizationCategoriesAPI(views.APIView):
@@ -65,6 +69,63 @@ class CategoriesAPI(views.APIView):
             Category, id=category_id, organization=organization
         )
         category.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class OrganizationColorsAPI(views.APIView):
+    def get(self, request, organization_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        colors = Color.objects.filter(organization=organization)
+        serializer = ColorSerializer(colors, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, organization_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        serializer = ColorSerializer(
+            data=request.data,
+            context={"organization": organization, "request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ColorsAPI(views.APIView):
+    def get(self, request, organization_id, color_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        color = Color.objects.filter(organization=organization, id=color_id).first()
+
+        if not color:
+            return Response(
+                {"message": "Color not found.", "code": "color_not_found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = ColorSerializer(color)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, organization_id, color_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        color = get_object_or_404(Color, id=color_id, organization=organization)
+        serializer = ColorSerializer(
+            color,
+            data=request.data,
+            partial=True,
+            context={"organization": organization, "request": request},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, organization_id, color_id):
+        organization = get_object_or_404(Organization, id=organization_id)
+        color = get_object_or_404(Color, id=color_id, organization=organization)
+        color.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -135,6 +196,19 @@ categories_urls = [
     ),
 ]
 
+colors_urls = [
+    path(
+        "<int:organization_id>/",
+        OrganizationColorsAPI.as_view(),
+        name="organization_colors",
+    ),
+    path(
+        "<int:organization_id>/<int:color_id>/",
+        ColorsAPI.as_view(),
+        name="colors",
+    ),
+]
+
 manufacturers_urls = [
     path(
         "<int:organization_id>/",
@@ -166,4 +240,5 @@ manufacturers_urls = [
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturer/", include(manufacturers_urls)),
+    path("colors/", include(colors_urls)),
 ]
