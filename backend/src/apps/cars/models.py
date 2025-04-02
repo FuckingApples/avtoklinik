@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.organizations.models import Organization
+from apps.registries.models import Color
 
 
 class Car(models.Model):
@@ -9,7 +10,13 @@ class Car(models.Model):
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     year = models.PositiveIntegerField()
-    color = models.CharField(max_length=30, null=True, blank=True)
+    color = models.ForeignKey(
+        Color,
+        max_length=30,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     license_plate = models.CharField(max_length=15)
     license_plate_region = models.CharField(max_length=2)
     mileage = models.PositiveIntegerField()

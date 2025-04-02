@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
 from rest_framework import serializers
+
+from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
 
 
@@ -11,7 +13,6 @@ class CarDTO:
     brand: str
     model: str
     year: int
-    color: str
     license_plate: str
     license_plate_region: str
     mileage: int
@@ -25,7 +26,6 @@ class CarDTO:
             brand=car.brand,
             model=car.model,
             year=car.year,
-            color=car.color,
             license_plate=car.license_plate,
             license_plate_region=car.license_plate_region,
             mileage=car.mileage,
@@ -39,7 +39,7 @@ class CarSerializer(serializers.ModelSerializer):
     brand = serializers.CharField()
     model = serializers.CharField()
     year = serializers.IntegerField()
-    color = serializers.CharField(required=False, allow_blank=True)
+    color = ColorSerializer()
     license_plate = serializers.CharField()
     license_plate_region = serializers.CharField()
     mileage = serializers.IntegerField()
