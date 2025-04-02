@@ -4,9 +4,9 @@ from apps.organizations.models import Organization
 
 class Client(models.Model):
     last_name = models.TextField()
-    first_name = models.TextField
-    middle_name = models.TextField(max_length=255, blank=True, null=True)
-    phone = models.CharField(max_length=12, unique=True)
+    first_name = models.TextField()
+    middle_name = models.TextField(blank=True, null=True)
+    phone = models.CharField(max_length=12)
     email = models.EmailField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)

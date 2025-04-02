@@ -20,7 +20,7 @@ class Category(models.Model):
 
 
 class Manufacturer(models.Model):
-    name = models.TextField()
+    name = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,15 +29,6 @@ class Manufacturer(models.Model):
 
     objects = SafeDeleteManager()
     all_objects = models.Manager()
-
-    class Meta:
-        ordering = ["name"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["name", "organization"],
-                name="unique_manufacturer_name_per_organization",
-            )
-        ]
 
     def __str__(self):
         return f"{self.name} (Org: {self.organization.public_id})"
