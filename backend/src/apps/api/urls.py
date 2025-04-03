@@ -1,8 +1,9 @@
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
 
 from apps.api.v1.core import get_csrf_token
-from apps.api.v1.oauth import YandexOAuthAPI
+from apps.api.v1.oauth import YandexOAuthAPI, OAuthProviderViewSet
 from apps.api.v1.organizations import CreateOrgAPI, DeleteOrgAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
