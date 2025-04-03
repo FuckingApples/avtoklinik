@@ -252,12 +252,12 @@ class ManufacturerDeleteView(ManufacturerBaseView, generics.DestroyAPIView):
 
 categories_urls = [
     path(
-        "<int:organization_id>/",
+        "",
         OrganizationCategoriesAPI.as_view(),
         name="organization_categories",
     ),
     path(
-        "<int:organization_id>/<int:category_id>/",
+        "<int:category_id>/",
         CategoriesAPI.as_view(),
         name="categories",
     ),
@@ -265,53 +265,53 @@ categories_urls = [
 
 colors_urls = [
     path(
-        "<int:organization_id>/",
+        "",
         OrganizationColorsAPI.as_view(),
-        name="organization_measurement_units",
+        name="organization_colors",
     ),
     path(
-        "<int:organization_id>/<int:color_id>/",
+        "<int:color_id>/",
         ColorsAPI.as_view(),
-        name="measurement_units",
+        name="colors",
     ),
 ]
 
 measurement_unit_urls = [
     path(
-        "<int:organization_id>/",
+        "",
         OrganizationMeasurementUnitsAPI.as_view(),
-        name="organization_colors",
+        name="organization_measurement_units",
     ),
     path(
-        "<int:organization_id>/<int:measurement_unit_id>/",
+        "<int:measurement_unit_id>/",
         MeasurementUnitsAPI.as_view(),
-        name="colors",
+        name="measurement_units",
     ),
 ]
 
 manufacturers_urls = [
     path(
-        "<int:organization_id>/",
+        "",
         ManufacturerListView.as_view(),
         name="manufacturer-list",
     ),
     path(
-        "<int:organization_id>/create/",
+        "create/",
         ManufacturerCreateView.as_view(),
         name="manufacturer-create",
     ),
     path(
-        "<int:organization_id>/<int:manufacturer_id>/",
+        "<int:manufacturer_id>/",
         ManufacturerDetailView.as_view(),
         name="manufacturer-detail",
     ),
     path(
-        "<int:organization_id>/<int:manufacturer_id>/update/",
+        "<int:manufacturer_id>/update/",
         ManufacturerUpdateView.as_view(),
         name="manufacturer-update",
     ),
     path(
-        "<int:organization_id>/<int:manufacturer_id>/delete/",
+        "<int:manufacturer_id>/delete/",
         ManufacturerDeleteView.as_view(),
         name="manufacturer-delete",
     ),

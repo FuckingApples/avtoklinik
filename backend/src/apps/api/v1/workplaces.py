@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -58,3 +59,32 @@ class WorkplaceDeleteView(generics.DestroyAPIView):
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
         return Workplace.objects.filter(organization_id=organization_id)
+
+
+urlpatterns = [
+    path(
+        "",
+        WorkplaceListView.as_view(),
+        name="workplace-list",
+    ),
+    path(
+        "create/",
+        WorkplaceCreateView.as_view(),
+        name="workplace-create",
+    ),
+    path(
+        "<int:workplace_id>/",
+        WorkplaceDetailView.as_view(),
+        name="workplace-detail",
+    ),
+    path(
+        "<int:workplace_id>/update/",
+        WorkplaceUpdateView.as_view(),
+        name="workplace-update",
+    ),
+    path(
+        "<int:workplace_id>/delete/",
+        WorkplaceDeleteView.as_view(),
+        name="workplace-delete",
+    ),
+]

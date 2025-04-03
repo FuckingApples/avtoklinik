@@ -65,12 +65,12 @@ class DealsAPI(views.APIView):
 
 urlpatterns = [
     path(
-        "<int:organization_id>/",
+        "",
         OrganizationDealsAPI.as_view(),
         name="organization_deals",
     ),
     path(
-        "<int:organization_id>/<int:deal_id>/",
+        "<int:deal_id>/",
         DealsAPI.as_view(),
         name="deals",
     ),

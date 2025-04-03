@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -42,3 +43,13 @@ class DeleteOrgAPI(APIView):
             )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+urlpatterns = [
+    path("", CreateOrgAPI.as_view(), name="create_org"),
+    path(
+        "<int:organization_id>",
+        DeleteOrgAPI.as_view(),
+        name="delete_org",
+    ),
+]

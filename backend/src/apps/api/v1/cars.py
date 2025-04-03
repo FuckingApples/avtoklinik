@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -58,3 +59,28 @@ class CarDeleteView(generics.DestroyAPIView):
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
         return Car.objects.filter(organization_id=organization_id)
+
+
+urlpatterns = [
+    path("", CarListView.as_view(), name="car-list"),
+    path(
+        "create/",
+        CarCreateView.as_view(),
+        name="car-create",
+    ),
+    path(
+        "<int:car_id>/",
+        CarDetailView.as_view(),
+        name="car-detail",
+    ),
+    path(
+        "<int:car_id>/update/",
+        CarUpdateView.as_view(),
+        name="car-update",
+    ),
+    path(
+        "<int:car_id>/delete/",
+        CarDeleteView.as_view(),
+        name="car-delete",
+    ),
+]
