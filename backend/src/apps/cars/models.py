@@ -12,7 +12,6 @@ class Car(models.Model):
     year = models.PositiveIntegerField()
     color = models.ForeignKey(
         Color,
-        max_length=30,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
