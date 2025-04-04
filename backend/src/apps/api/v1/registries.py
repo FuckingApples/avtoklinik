@@ -1,7 +1,5 @@
 from django.urls import path, include
-from rest_framework import views, status, generics
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 from rest_framework.response import Response
 
 from apps.api.serializers.registries import (
@@ -10,13 +8,11 @@ from apps.api.serializers.registries import (
     ColorSerializer,
     MeasurementUnitSerializer,
 )
-from apps.organizations.models import Organization
 from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
 
 class OrganizationCategoriesAPI(BaseOrganizationModelView):
-    permission_classes = [IsAuthenticated]
     model = Category
     serializer_class = CategorySerializer
 
@@ -25,7 +21,6 @@ class OrganizationCategoriesAPI(BaseOrganizationModelView):
 
 
 class CategoriesAPI(BaseOrganizationDetailView):
-    permission_classes = (IsAuthenticated,)
     model = Category
     serializer_class = CategorySerializer
     lookup_field = "category_id"
@@ -53,57 +48,20 @@ class MeasurementUnitsAPI(BaseOrganizationDetailView):
     lookup_field = "measurement_unit_id"
 
 
-class ManufacturerBaseView:
-    permission_classes = [IsAuthenticated]
-
-    def get_organization(self):
-        org = get_object_or_404(
-            Organization.all_objects, pk=self.kwargs["organization_id"]
-        )
-        return org
-
-
-class ManufacturerListView(ManufacturerBaseView, generics.ListAPIView):
+class OrganizationManufacturersAPI(BaseOrganizationModelView):
+    model = Manufacturer
     serializer_class = ManufacturerSerializer
 
-    def get_queryset(self):
-        return Manufacturer.objects.filter(organization=self.get_organization())
 
-
-class ManufacturerCreateView(ManufacturerBaseView, generics.CreateAPIView):
+class ManufacturersAPI(BaseOrganizationDetailView):
+    model = Manufacturer
     serializer_class = ManufacturerSerializer
+    lookup_field = "manufacturer_id"
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(organization=self.get_organization())
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class ManufacturerDetailView(ManufacturerBaseView, generics.RetrieveAPIView):
-    serializer_class = ManufacturerSerializer
-    lookup_url_kwarg = "manufacturer_id"
-
-    def get_queryset(self):
-        return Manufacturer.objects.filter(organization=self.get_organization())
-
-
-class ManufacturerUpdateView(ManufacturerBaseView, generics.UpdateAPIView):
-    serializer_class = ManufacturerSerializer
-    lookup_url_kwarg = "manufacturer_id"
-
-    def get_queryset(self):
-        return Manufacturer.objects.filter(organization=self.get_organization())
-
-
-class ManufacturerDeleteView(ManufacturerBaseView, generics.DestroyAPIView):
-    lookup_url_kwarg = "manufacturer_id"
-
-    def get_queryset(self):
-        return Manufacturer.objects.filter(organization=self.get_organization())
-
-    def perform_destroy(self, instance):
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
         instance.soft_delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 categories_urls = [
@@ -148,34 +106,19 @@ measurement_unit_urls = [
 manufacturers_urls = [
     path(
         "",
-        ManufacturerListView.as_view(),
-        name="manufacturer-list",
-    ),
-    path(
-        "create/",
-        ManufacturerCreateView.as_view(),
-        name="manufacturer-create",
+        OrganizationManufacturersAPI.as_view(),
+        name="organization_manufacturers",
     ),
     path(
         "<int:manufacturer_id>/",
-        ManufacturerDetailView.as_view(),
-        name="manufacturer-detail",
-    ),
-    path(
-        "<int:manufacturer_id>/update/",
-        ManufacturerUpdateView.as_view(),
-        name="manufacturer-update",
-    ),
-    path(
-        "<int:manufacturer_id>/delete/",
-        ManufacturerDeleteView.as_view(),
-        name="manufacturer-delete",
+        ManufacturersAPI.as_view(),
+        name="manufacturers",
     ),
 ]
 
 urlpatterns = [
     path("categories/", include(categories_urls)),
-    path("manufacturer/", include(manufacturers_urls)),
+    path("manufacturers/", include(manufacturers_urls)),
     path("colors/", include(colors_urls)),
     path("measurement_units/", include(measurement_unit_urls)),
 ]
