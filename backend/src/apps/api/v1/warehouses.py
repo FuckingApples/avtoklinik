@@ -1,90 +1,30 @@
 from django.urls import path
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.warehouses.models import Warehouse
-from apps.organizations.models import Organization
 from apps.api.serializers.warehouses import WarehouseSerializer
 
 
-class WarehouseListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+class OrganizationWarehousesAPI(BaseOrganizationModelView):
+    model = Warehouse
     serializer_class = WarehouseSerializer
 
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Warehouse.objects.filter(organization_id=organization_id)
 
-
-class WarehouseCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+class WarehousesAPI(BaseOrganizationDetailView):
+    model = Warehouse
     serializer_class = WarehouseSerializer
-
-    def create(self, request, *args, **kwargs):
-        organization_id = self.kwargs.get("organization_id")
-        organization = get_object_or_404(Organization, id=organization_id)
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(organization=organization)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class WarehouseDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = WarehouseSerializer
-    lookup_url_kwarg = "warehouse_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Warehouse.objects.filter(organization_id=organization_id)
-
-
-class WarehouseUpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = WarehouseSerializer
-    lookup_url_kwarg = "warehouse_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Warehouse.objects.filter(organization_id=organization_id)
-
-
-class WarehouseDeleteView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "warehouse_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Warehouse.objects.filter(organization_id=organization_id)
+    lookup_field = "warehouse_id"
 
 
 urlpatterns = [
     path(
         "",
-        WarehouseListView.as_view(),
-        name="warehouse-list",
-    ),
-    path(
-        "create/",
-        WarehouseCreateView.as_view(),
-        name="warehouse-create",
+        OrganizationWarehousesAPI.as_view(),
+        name="organization_warehouses",
     ),
     path(
         "<int:warehouse_id>/",
-        WarehouseDetailView.as_view(),
-        name="warehouse-detail",
-    ),
-    path(
-        "<int:warehouse_id>/update/",
-        WarehouseUpdateView.as_view(),
-        name="warehouse-update",
-    ),
-    path(
-        "<int:warehouse_id>/delete/",
-        WarehouseDeleteView.as_view(),
-        name="warehouse-delete",
+        WarehousesAPI.as_view(),
+        name="warehouses",
     ),
 ]
