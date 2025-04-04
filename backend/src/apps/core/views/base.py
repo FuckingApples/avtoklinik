@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 from apps.organizations.models import Organization
 
@@ -11,7 +12,7 @@ class OrganizationMixin:
 
 
 class BaseOrganizationModelView(OrganizationMixin, generics.GenericAPIView):
-    permission_classes = []
+    permission_classes = (IsAuthenticated,)
     model = None
     serializer_class = None
 
@@ -36,7 +37,7 @@ class BaseOrganizationModelView(OrganizationMixin, generics.GenericAPIView):
 
 
 class BaseOrganizationDetailView(OrganizationMixin, generics.GenericAPIView):
-    permission_classes = []
+    permission_classes = (IsAuthenticated,)
     model = None
     serializer_class = None
     lookup_field = "id"

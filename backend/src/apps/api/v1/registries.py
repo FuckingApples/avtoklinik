@@ -25,67 +25,21 @@ class OrganizationCategoriesAPI(BaseOrganizationModelView):
 
 
 class CategoriesAPI(BaseOrganizationDetailView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     model = Category
     serializer_class = CategorySerializer
     lookup_field = "category_id"
 
 
-class OrganizationColorsAPI(views.APIView):
-    def get(self, request, organization_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        colors = Color.objects.filter(organization=organization)
-        serializer = ColorSerializer(colors, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request, organization_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        serializer = ColorSerializer(
-            data=request.data,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class OrganizationColorsAPI(BaseOrganizationModelView):
+    model = Color
+    serializer_class = ColorSerializer
 
 
-class ColorsAPI(views.APIView):
-    def get(self, request, organization_id, color_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        color = Color.objects.filter(organization=organization, id=color_id).first()
-
-        if not color:
-            return Response(
-                {"message": "Color not found.", "code": "color_not_found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        serializer = ColorSerializer(color)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, organization_id, color_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        color = get_object_or_404(Color, id=color_id, organization=organization)
-        serializer = ColorSerializer(
-            color,
-            data=request.data,
-            partial=True,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, organization_id, color_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        color = get_object_or_404(Color, id=color_id, organization=organization)
-        color.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class ColorsAPI(BaseOrganizationDetailView):
+    model = Color
+    serializer_class = ColorSerializer
+    lookup_field = "color_id"
 
 
 class OrganizationMeasurementUnitsAPI(views.APIView):
