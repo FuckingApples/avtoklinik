@@ -1,86 +1,30 @@
 from django.urls import path
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 
 from apps.cars.models import Car
-from apps.organizations.models import Organization
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.api.serializers.cars import CarSerializer
 
 
-class CarListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+class OrganizationCarsAPI(BaseOrganizationModelView):
+    model = Car
     serializer_class = CarSerializer
 
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
 
-
-class CarCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+class CarsAPI(BaseOrganizationDetailView):
+    model = Car
     serializer_class = CarSerializer
-
-    def create(self, request, *args, **kwargs):
-        organization_id = self.kwargs.get("organization_id")
-        organization = get_object_or_404(Organization, id=organization_id)
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(organization=organization)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class CarDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CarSerializer
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
-
-
-class CarUpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CarSerializer
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
-
-
-class CarDeleteView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
+    lookup_field = "car_id"
 
 
 urlpatterns = [
-    path("", CarListView.as_view(), name="car-list"),
     path(
-        "create/",
-        CarCreateView.as_view(),
-        name="car-create",
+        "",
+        OrganizationCarsAPI.as_view(),
+        name="organization_cars",
     ),
     path(
         "<int:car_id>/",
-        CarDetailView.as_view(),
-        name="car-detail",
-    ),
-    path(
-        "<int:car_id>/update/",
-        CarUpdateView.as_view(),
-        name="car-update",
-    ),
-    path(
-        "<int:car_id>/delete/",
-        CarDeleteView.as_view(),
-        name="car-delete",
+        CarsAPI.as_view(),
+        name="cars",
     ),
 ]
