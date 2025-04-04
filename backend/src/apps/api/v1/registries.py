@@ -12,66 +12,23 @@ from apps.api.serializers.registries import (
 )
 from apps.organizations.models import Organization
 from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
 
-class OrganizationCategoriesAPI(views.APIView):
-    permission_classes = (IsAuthenticated,)
+class OrganizationCategoriesAPI(BaseOrganizationModelView):
+    permission_classes = [IsAuthenticated]
+    model = Category
+    serializer_class = CategorySerializer
 
-    def get(self, request, organization_id):
-        get_object_or_404(Organization, id=organization_id)
-        categories = Category.objects.filter(
-            organization_id=organization_id, parent__isnull=True
-        )
-        serializer = CategorySerializer(categories, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request, organization_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        serializer = CategorySerializer(
-            data=request.data,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        return super().get_queryset().filter(parent__isnull=True)
 
 
-class CategoriesAPI(views.APIView):
-    def get(self, request, organization_id, category_id):
-        get_object_or_404(Organization, id=organization_id)
-        category = Category.objects.filter(
-            organization=organization_id, id=category_id
-        ).first()
-        serializer = CategorySerializer(category)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, organization_id, category_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        category = get_object_or_404(
-            Category, id=category_id, organization=organization
-        )
-        serializer = CategorySerializer(
-            category,
-            data=request.data,
-            partial=True,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, organization_id, category_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        category = get_object_or_404(
-            Category, id=category_id, organization=organization
-        )
-        category.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class CategoriesAPI(BaseOrganizationDetailView):
+    permission_classes = [IsAuthenticated]
+    model = Category
+    serializer_class = CategorySerializer
+    lookup_field = "category_id"
 
 
 class OrganizationColorsAPI(views.APIView):
