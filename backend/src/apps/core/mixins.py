@@ -1,14 +1,26 @@
+from rest_framework.serializers import ModelSerializer
+
 from apps.organizations.models import Organization
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, GenericAPIView
 from rest_framework import serializers
 
 
-class OrganizationMixin:
+class OrganizationMixin(GenericAPIView):
     def get_organization(self):
         return get_object_or_404(Organization, id=self.kwargs["organization_id"])
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        organization = self.get_organization()
+        return queryset.filter(organization=organization)
 
-class UniqueFieldsValidatorMixin:
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["organization"] = self.get_organization()
+        return context
+
+
+class UniqueFieldsValidatorMixin(ModelSerializer):
     unique_fields = []
 
     def validate(self, data):
