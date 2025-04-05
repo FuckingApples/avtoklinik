@@ -1,25 +1,5 @@
-from dataclasses import dataclass
-from typing import Optional
-
 from rest_framework import serializers
 from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
-
-
-@dataclass
-class CategoryDTO:
-    name: Optional[str]
-    organization: Optional[int]
-    parent: Optional[int] = None
-    id: Optional[int] = None
-
-    @classmethod
-    def from_instance(cls, category: "Category") -> "CategoryDTO":
-        return CategoryDTO(
-            name=category.name,
-            parent=category.parent.id if category.parent else None,
-            organization=category.organization.id,
-            id=category.id,
-        )
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -67,23 +47,6 @@ class CategorySerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-@dataclass
-class ManufacturerDTO:
-    name: str
-    organization_id: int
-    id: int = None
-    description: str = None
-
-    @classmethod
-    def from_instance(cls, manufacturer: "Manufacturer") -> "ManufacturerDTO":
-        return cls(
-            id=manufacturer.id,
-            name=manufacturer.name,
-            organization_id=manufacturer.organization_id,
-            description=manufacturer.description,
-        )
-
-
 class ManufacturerSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(required=False, allow_blank=True)
@@ -104,16 +67,6 @@ class ManufacturerSerializer(serializers.ModelSerializer):
                 }
             )
         return data
-
-    def to_representation(self, instance):
-        if isinstance(instance, ManufacturerDTO):
-            return {
-                "id": instance.id,
-                "name": instance.name,
-                "organization_id": instance.organization_id,
-                "description": instance.description,
-            }
-        return super().to_representation(instance)
 
 
 class ColorSerializer(serializers.ModelSerializer):

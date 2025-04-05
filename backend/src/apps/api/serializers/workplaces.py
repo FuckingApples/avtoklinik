@@ -1,26 +1,5 @@
-from dataclasses import dataclass
-
 from rest_framework import serializers
 from apps.workplaces.models import Workplace
-
-
-@dataclass
-class WorkplaceDTO:
-    name: str
-    color: str
-    id: int = None
-    icon: str = None
-    description: str = None
-
-    @classmethod
-    def from_instance(cls, workplace: "Workplace") -> "WorkplaceDTO":
-        return cls(
-            id=workplace.id,
-            icon=workplace.icon,
-            name=workplace.name,
-            description=workplace.description,
-            color=workplace.color,
-        )
 
 
 class WorkplaceSerializer(serializers.ModelSerializer):

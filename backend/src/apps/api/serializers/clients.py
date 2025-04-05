@@ -1,28 +1,5 @@
-from dataclasses import dataclass
-
 from rest_framework import serializers
 from apps.clients.models import Client
-
-
-@dataclass
-class ClientDTO:
-    first_name: str
-    last_name: str
-    phone: str
-    id: int = None
-    middle_name: str = None
-    email: str = None
-
-    @classmethod
-    def from_instance(cls, client: "Client") -> "ClientDTO":
-        return cls(
-            first_name=client.first_name,
-            last_name=client.last_name,
-            phone=client.phone,
-            id=client.id,
-            middle_name=client.middle_name,
-            email=client.email,
-        )
 
 
 class ClientSerializer(serializers.ModelSerializer):

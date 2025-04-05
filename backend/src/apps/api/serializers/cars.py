@@ -1,36 +1,7 @@
-from dataclasses import dataclass
-
 from rest_framework import serializers
 
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
-
-
-@dataclass
-class CarDTO:
-    vin: str
-    frame: str
-    brand: str
-    model: str
-    year: int
-    license_plate: str
-    license_plate_region: str
-    mileage: int
-    id: int = None
-
-    @classmethod
-    def from_instance(cls, car: "Car") -> "CarDTO":
-        return CarDTO(
-            vin=car.vin,
-            frame=car.frame,
-            brand=car.brand,
-            model=car.model,
-            year=car.year,
-            license_plate=car.license_plate,
-            license_plate_region=car.license_plate_region,
-            mileage=car.mileage,
-            id=car.id,
-        )
 
 
 class CarSerializer(serializers.ModelSerializer):

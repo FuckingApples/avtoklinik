@@ -1,24 +1,5 @@
-from dataclasses import dataclass
-
 from rest_framework import serializers
 from apps.warehouses.models import Warehouse
-
-
-@dataclass
-class WarehouseDTO:
-    name: str
-    id: int = None
-    comment: str = None
-    is_trade: bool = False
-
-    @classmethod
-    def from_instance(cls, warehouse: "Warehouse") -> "WarehouseDTO":
-        return cls(
-            id=warehouse.id,
-            name=warehouse.name,
-            comment=warehouse.comment,
-            is_trade=warehouse.is_trade,
-        )
 
 
 class WarehouseSerializer(serializers.ModelSerializer):

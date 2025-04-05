@@ -1,32 +1,8 @@
-from dataclasses import dataclass
-from typing import Optional
-
 from rest_framework import serializers
 
 from apps.cars.models import Car
 from apps.clients.models import Client
 from apps.deals.models import Deal
-
-
-@dataclass
-class DealDTO:
-    number: Optional[str]
-    organization: Optional[int]
-    client: Optional[int]
-    car: Optional[int] = None
-    comment: Optional[str] = None
-    id: Optional[int] = None
-
-    @classmethod
-    def from_instance(cls, deal: "Deal") -> "DealDTO":
-        return DealDTO(
-            number=deal.number,
-            organization=deal.organization.id,
-            client=deal.client.id,
-            car=deal.car.id if deal.car else None,
-            comment=deal.comment,
-            id=deal.id,
-        )
 
 
 class DealSerializer(serializers.ModelSerializer):
