@@ -20,7 +20,7 @@ from apps.deals.models import Deal
     ),
 )
 class OrganizationDealsAPI(BaseOrganizationModelView):
-    model = Deal
+    queryset = Deal.objects.all()
     serializer_class = DealSerializer
 
 
@@ -41,9 +41,8 @@ class OrganizationDealsAPI(BaseOrganizationModelView):
     ),
 )
 class DealsAPI(BaseOrganizationDetailView):
-    model = Deal
+    queryset = Deal.objects.all()
     serializer_class = DealSerializer
-    lookup_field = "deal_id"
 
 
 urlpatterns = [
@@ -53,7 +52,7 @@ urlpatterns = [
         name="organization_deals",
     ),
     path(
-        "<int:deal_id>/",
+        "<int:id>/",
         DealsAPI.as_view(),
         name="deals",
     ),
