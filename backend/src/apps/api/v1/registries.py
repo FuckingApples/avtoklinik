@@ -171,11 +171,6 @@ class ManufacturersAPI(BaseOrganizationDetailView):
     serializer_class = ManufacturerSerializer
     lookup_field = "manufacturer_id"
 
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.soft_delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 categories_urls = [
     path(

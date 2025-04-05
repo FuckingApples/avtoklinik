@@ -2,9 +2,8 @@ import uuid
 from typing import Optional
 
 from django.db import models
-from django.utils import timezone
 
-from apps.core.models import SafeDeleteManager
+from apps.core.models import SafeDeleteManager, SoftDeleteModel
 from apps.users.models import User
 
 
@@ -15,27 +14,13 @@ from apps.users.models import User
 # - created_at - дата создания
 # - is_deleted - флаг удаления
 # - deleted_at - дата удаления
-class Organization(models.Model):
+class Organization(SoftDeleteModel):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False)
     name = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    is_deleted = models.BooleanField(default=False)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = SafeDeleteManager()
     all_objects = models.Manager()
-
-    # Метод для мягкого удаления организации (помечает организацию как удаленную)
-    def soft_delete(self):
-        self.is_deleted = True
-        self.deleted_at = timezone.now()
-        self.save()
-
-    # Метод для восстановления организации
-    def restore(self):
-        self.is_deleted = False
-        self.deleted_at = None
-        self.save()
 
     # Метод для получения роли пользователя в организации
     def get_user_role(self, user: "User") -> Optional[str]:

@@ -25,21 +25,12 @@ class Manufacturer(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_deleted = models.BooleanField(default=False)
 
     objects = SafeDeleteManager()
     all_objects = models.Manager()
 
     def __str__(self):
         return f"{self.name} (Org: {self.organization.public_id})"
-
-    def soft_delete(self):
-        self.is_deleted = True
-        self.save()
-
-    def restore(self):
-        self.is_deleted = False
-        self.save()
 
 
 class MeasurementUnit(models.Model):

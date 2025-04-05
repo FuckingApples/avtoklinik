@@ -73,7 +73,6 @@ class ManufacturerDTO:
     organization_id: int
     id: int = None
     description: str = None
-    is_deleted: bool = False
 
     @classmethod
     def from_instance(cls, manufacturer: "Manufacturer") -> "ManufacturerDTO":
@@ -82,7 +81,6 @@ class ManufacturerDTO:
             name=manufacturer.name,
             organization_id=manufacturer.organization_id,
             description=manufacturer.description,
-            is_deleted=manufacturer.is_deleted,
         )
 
 
@@ -114,7 +112,6 @@ class ManufacturerSerializer(serializers.ModelSerializer):
                 "name": instance.name,
                 "organization_id": instance.organization_id,
                 "description": instance.description,
-                "is_deleted": instance.is_deleted,
             }
         return super().to_representation(instance)
 
