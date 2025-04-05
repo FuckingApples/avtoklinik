@@ -3,12 +3,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
-from apps.organizations.models import Organization
-
-
-class OrganizationMixin:
-    def get_organization(self):
-        return get_object_or_404(Organization, id=self.kwargs["organization_id"])
+from apps.core.mixins import OrganizationMixin
 
 
 class BaseOrganizationModelView(OrganizationMixin, generics.GenericAPIView):
