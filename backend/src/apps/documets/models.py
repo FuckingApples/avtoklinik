@@ -2,12 +2,12 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.organizations.models import Organization
 
-class Documents(models.Model):
+class Product(models.Model):
     # связь с организацией
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
-        related_name="documents",
+        related_name="products",
     )
 
     # Простые поля
@@ -111,7 +111,7 @@ class Documents(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="documents",
+        related_name="products",
         verbose_name="Категория"
     )
 
@@ -134,7 +134,7 @@ class Documents(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="documents",
+        related_name="products",
         verbose_name="Производитель"
     )
 

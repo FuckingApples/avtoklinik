@@ -3,23 +3,23 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
-from apps.documets.models import Documents
+from apps.documets.models import Product
 from apps.organizations.models import Organization
-from apps.api.serializers.documents import DocumentsSerializer
+from apps.api.serializers.documents import ProductSerializer
 
 
-class DocumentsListView(generics.ListAPIView):
+class ProductListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = DocumentsSerializer
+    serializer_class = ProductSerializer
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
-        return Documents.objects.filter(organization_id=organization_id)
+        return Product.objects.filter(organization_id=organization_id)
 
 
-class DocumentsCreateView(generics.CreateAPIView):
+class ProductCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = DocumentsSerializer
+    serializer_class = ProductSerializer
 
     def create(self, request, *args, **kwargs):
         organization_id = self.kwargs.get("organization_id")
@@ -31,30 +31,30 @@ class DocumentsCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class DocumentsDetailView(generics.RetrieveAPIView):
+class ProductDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = DocumentsSerializer
-    lookup_url_kwarg = "documents_id"
+    serializer_class = ProductSerializer
+    lookup_url_kwarg = "Product_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
-        return Documents.objects.filter(organization_id=organization_id)
+        return Product.objects.filter(organization_id=organization_id)
 
 
-class DocumentsUpdateView(generics.UpdateAPIView):
+class ProductUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = DocumentsSerializer
-    lookup_url_kwarg = "documents_id"
+    serializer_class = ProductSerializer
+    lookup_url_kwarg = "Product_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
-        return Documents.objects.filter(organization_id=organization_id)
+        return Product.objects.filter(organization_id=organization_id)
 
 
-class DocumentsDeleteView(generics.DestroyAPIView):
+class ProductDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "documents_id"
+    lookup_url_kwarg = "Product_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
-        return Documents.objects.filter(organization_id=organization_id)
+        return Product.objects.filter(organization_id=organization_id)

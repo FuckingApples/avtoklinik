@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
 from rest_framework import serializers
-from apps.documets.models import Documents
+from apps.documets.models import Product
 from apps.registries.models import Category
 from apps.MeasurementUnit.models import MeasurementUnit
 from apps.manufacturers.models import Manufacturer
 
 @dataclass
-class DocumentsDTO:
+class ProductDTO:
     name: str
     cheque_Name: str
     article: str = None
@@ -29,33 +29,33 @@ class DocumentsDTO:
     id: int = 0
 
     @classmethod
-    def from_instance(cls, doc: "Documents") -> "DocumentsDTO":
+    def from_instance(cls, prod: "Product") -> "ProductDTO":
         return cls(
-            id=doc.id,
-            name=doc.name,
-            cheque_Name=doc.cheque_Name,
-            article=doc.article,
-            barcode=doc.barcode,
-            quantity=doc.quantity,
-            cost_price=doc.cost_price,
-            selling_price=doc.selling_price,
-            max_discount=doc.max_discount,
-            critical_stock=doc.critical_stock,
-            desired_stock=doc.desired_stock,
-            net_weight=doc.net_weight,
-            gross_weight=doc.gross_weight,
-            country=doc.country,
-            comment=doc.comment,
-            category_id=doc.category.id if doc.category else None,
-            sales_unit_id=doc.sales_unit.id if doc.sales_unit else None,
-            write_off_unit_id=doc.write_off_unit.id if doc.write_off_unit else None,
-            manufacturer_id=doc.manufacturer.id if doc.manufacturer else None,
+            id=prod.id,
+            name=prod.name,
+            cheque_Name=prod.cheque_Name,
+            article=prod.article,
+            barcode=prod.barcode,
+            quantity=prod.quantity,
+            cost_price=prod.cost_price,
+            selling_price=prod.selling_price,
+            max_discount=prod.max_discount,
+            critical_stock=prod.critical_stock,
+            desired_stock=prod.desired_stock,
+            net_weight=prod.net_weight,
+            gross_weight=prod.gross_weight,
+            country=prod.country,
+            comment=prod.comment,
+            category_id=prod.category.id if prod.category else None,
+            sales_unit_id=prod.sales_unit.id if prod.sales_unit else None,
+            write_off_unit_id=prod.write_off_unit.id if prod.write_off_unit else None,
+            manufacturer_id=prod.manufacturer.id if prod.manufacturer else None,
         )
 
-class DocumentsSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Documents
+        model = Product
         fields = (
             "id", "organization", "name", "cheque_Name", "article", "barcode", "quantity",
             "cost_price", "selling_price", "max_discount", "critical_stock",
@@ -69,21 +69,21 @@ class DocumentsSerializer(serializers.ModelSerializer):
         write_off_unit_data = validated_data.pop('write_off_unit', None)
         manufacturer_data = validated_data.pop('manufacturer', None)
 
-        doc = Documents.objects.create(**validated_data)
+        prod = Product.objects.create(**validated_data)
 
         if category_data:
-            doc.category = Category.objects.get(id=category_data)
+            prod.category = Category.objects.get(id=category_data)
 
         if sales_unit_data:
-            doc.sales_unit = MeasurementUnit.objects.get(id=sales_unit_data)
+            prod.sales_unit = MeasurementUnit.objects.get(id=sales_unit_data)
 
         if write_off_unit_data:
-            doc.write_off_unit = MeasurementUnit.objects.get(id=write_off_unit_data)
+            prod.write_off_unit = MeasurementUnit.objects.get(id=write_off_unit_data)
 
         if manufacturer_data:
-            doc.manufacturer = Manufacturer.objects.get(id=manufacturer_data)
+            prod.manufacturer = Manufacturer.objects.get(id=manufacturer_data)
 
-        doc.save()
+        prod.save()
 
-        return doc
+        return prod
 
