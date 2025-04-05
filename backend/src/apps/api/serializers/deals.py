@@ -2,10 +2,11 @@ from rest_framework import serializers
 
 from apps.cars.models import Car
 from apps.clients.models import Client
+from apps.core.mixins import UniqueFieldsValidatorMixin
 from apps.deals.models import Deal
 
 
-class DealSerializer(serializers.ModelSerializer):
+class DealSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
     number = serializers.CharField()
     client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.none())
     car = serializers.PrimaryKeyRelatedField(
@@ -14,6 +15,7 @@ class DealSerializer(serializers.ModelSerializer):
         required=False,
     )
     comment = serializers.CharField(required=False, allow_blank=True)
+    unique_fields = ["number"]
 
     class Meta:
         model = Deal
@@ -28,19 +30,6 @@ class DealSerializer(serializers.ModelSerializer):
                 organization=organization
             )
             self.fields["car"].queryset = Car.objects.filter(organization=organization)
-
-    def validate_number(self, value):
-        organization = self.context.get("organization")
-        queryset = Deal.objects.filter(organization=organization, number=value)
-
-        if queryset.exists():
-            raise serializers.ValidationError(
-                {
-                    "message": "A deal with this number already exists.",
-                    "code": "deal_number_already_exists",
-                }
-            )
-        return value
 
     def create(self, validated_data):
         validated_data["organization"] = self.context["organization"]

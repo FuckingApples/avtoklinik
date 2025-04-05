@@ -1,13 +1,16 @@
 from rest_framework import serializers
+
+from apps.core.mixins import UniqueFieldsValidatorMixin
 from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
     name = serializers.CharField()
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.none(), allow_null=True, required=False
     )
     subcategories = serializers.SerializerMethodField()
+    unique_fields = ["name"]
 
     class Meta:
         model = Category
@@ -28,51 +31,27 @@ class CategorySerializer(serializers.ModelSerializer):
         )
         return serializer.data
 
-    def validate_name(self, value):
-        organization = self.context.get("organization")
-        queryset = Category.objects.filter(organization=organization, name=value)
-
-        if queryset.exists():
-            raise serializers.ValidationError(
-                {
-                    "message": "A category with this name already exists.",
-                    "code": "category_already_exists",
-                }
-            )
-
-        return value
-
     def create(self, validated_data):
         validated_data["organization"] = self.context["organization"]
         return super().create(validated_data)
 
 
-class ManufacturerSerializer(serializers.ModelSerializer):
+class ManufacturerSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(required=False, allow_blank=True)
+    unique_fields = ["name"]
 
     class Meta:
         model = Manufacturer
         fields = ("id", "name", "organization", "description", "is_deleted")
         read_only_fields = ("id", "is_deleted")
 
-    def validate(self, data):
-        if Manufacturer.objects.filter(
-            name=data["name"], organization=data["organization"]
-        ).exists():
-            raise serializers.ValidationError(
-                {
-                    "message": "A manufacturer with that name already exists in this organization.",
-                    "code": "manufacturer_already_exists",
-                }
-            )
-        return data
 
-
-class ColorSerializer(serializers.ModelSerializer):
+class ColorSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
     name = serializers.CharField()
     code = serializers.CharField(max_length=25, allow_blank=True, required=False)
     hex = serializers.CharField(max_length=7, allow_blank=True, required=False)
+    unique_fields = ["name"]
 
     class Meta:
         model = Color
@@ -83,23 +62,10 @@ class ColorSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class MeasurementUnitSerializer(serializers.ModelSerializer):
-    def validate(self, data):
-        organization = data.get("organization")
-        unit = data.get("unit")
-        abbreviation = data.get("abbreviation")
-        queryset = MeasurementUnit.objects.filter(
-            organization=organization, unit=unit, abbreviation=abbreviation
-        )
-
-        if queryset.exists():
-            raise serializers.ValidationError(
-                {
-                    "message": "A measurement unit with this name or abbreviation already exists.",
-                    "code": "measurement_unit_already_exists",
-                }
-            )
-        return data
+class MeasurementUnitSerializer(
+    UniqueFieldsValidatorMixin, serializers.ModelSerializer
+):
+    unique_fields = ["unit", "abbreviation"]
 
     class Meta:
         model = MeasurementUnit
