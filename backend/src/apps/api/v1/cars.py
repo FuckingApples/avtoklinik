@@ -20,7 +20,7 @@ from apps.api.serializers.cars import CarSerializer
     ),
 )
 class OrganizationCarsAPI(BaseOrganizationModelView):
-    model = Car
+    queryset = Car.objects.all()
     serializer_class = CarSerializer
 
 
@@ -41,9 +41,8 @@ class OrganizationCarsAPI(BaseOrganizationModelView):
     ),
 )
 class CarsAPI(BaseOrganizationDetailView):
-    model = Car
+    queryset = Car.objects.all()
     serializer_class = CarSerializer
-    lookup_field = "car_id"
 
 
 urlpatterns = [
@@ -53,7 +52,7 @@ urlpatterns = [
         name="organization_cars",
     ),
     path(
-        "<int:car_id>/",
+        "<int:id>/",
         CarsAPI.as_view(),
         name="cars",
     ),

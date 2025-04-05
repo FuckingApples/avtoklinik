@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
+from apps.registries.models import Color
 
 
 class CarSerializer(serializers.ModelSerializer):
@@ -10,7 +11,10 @@ class CarSerializer(serializers.ModelSerializer):
     brand = serializers.CharField()
     model = serializers.CharField()
     year = serializers.IntegerField()
-    color = ColorSerializer()
+    color_id = serializers.PrimaryKeyRelatedField(
+        queryset=Color.objects.none(), write_only=True, source="color"
+    )
+    color = ColorSerializer(read_only=True)
     license_plate = serializers.CharField()
     license_plate_region = serializers.CharField()
     mileage = serializers.IntegerField()
@@ -25,10 +29,20 @@ class CarSerializer(serializers.ModelSerializer):
             "model",
             "year",
             "color",
+            "color_id",
             "license_plate",
             "license_plate_region",
             "mileage",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        organization = self.context.get("organization")
+
+        if organization and self.context["request"].method in ["POST", "PUT", "PATCH"]:
+            self.fields["color_id"].queryset = Color.objects.filter(
+                organization=organization
+            )
 
     def validate_mileage(self, value):
         if value < 0:
@@ -49,3 +63,7 @@ class CarSerializer(serializers.ModelSerializer):
                 }
             )
         return value
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)
