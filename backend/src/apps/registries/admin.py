@@ -5,8 +5,8 @@ from .models import Manufacturer
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
-    list_display = ("name", "organization", "is_deleted", "created_at")
-    list_filter = ("is_deleted", "organization", "created_at")
+    list_display = ("name", "organization", "created_at")
+    list_filter = ("organization", "created_at")
     search_fields = ("name", "description", "organization__name")
     list_select_related = ("organization",)
     ordering = ("name",)
@@ -18,7 +18,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
         (
             "System Information",
             {
-                "fields": ("is_deleted", "created_at", "updated_at"),
+                "fields": ("created_at", "updated_at"),
                 "classes": ("collapse",),
             },
         ),
