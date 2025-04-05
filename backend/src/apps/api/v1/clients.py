@@ -20,7 +20,7 @@ from apps.api.serializers.clients import ClientSerializer
     ),
 )
 class OrganizationClientsAPI(BaseOrganizationModelView):
-    model = Client
+    queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
 
@@ -41,9 +41,8 @@ class OrganizationClientsAPI(BaseOrganizationModelView):
     ),
 )
 class ClientsAPI(BaseOrganizationDetailView):
-    model = Client
+    queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    lookup_field = "client_id"
 
 
 urlpatterns = [
@@ -53,7 +52,7 @@ urlpatterns = [
         name="organization_clients",
     ),
     path(
-        "<int:client_id>/",
+        "<int:id>/",
         ClientsAPI.as_view(),
         name="clients",
     ),

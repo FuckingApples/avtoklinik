@@ -12,3 +12,7 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ("id", "first_name", "last_name", "middle_name", "phone", "email")
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)
