@@ -43,8 +43,8 @@ class ManufacturerSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerial
 
     class Meta:
         model = Manufacturer
-        fields = ("id", "name", "organization", "description", "is_deleted")
-        read_only_fields = ("id", "is_deleted")
+        fields = ("id", "name", "organization", "description")
+        read_only_fields = ("id",)
 
 
 class ColorSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
