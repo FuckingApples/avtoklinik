@@ -31,10 +31,10 @@ class DocumentsCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProductDetailView(generics.RetrieveAPIView):
+class DocumentsDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DocumentsSerializer
-    lookup_url_kwarg = "product_id"
+    lookup_url_kwarg = "documents_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
@@ -44,7 +44,7 @@ class ProductDetailView(generics.RetrieveAPIView):
 class DocumentsUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DocumentsSerializer
-    lookup_url_kwarg = "product_id"
+    lookup_url_kwarg = "documents_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")
@@ -53,7 +53,7 @@ class DocumentsUpdateView(generics.UpdateAPIView):
 
 class DocumentsDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "product_id"
+    lookup_url_kwarg = "documents_id"
 
     def get_queryset(self):
         organization_id = self.kwargs.get("organization_id")

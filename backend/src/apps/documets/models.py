@@ -11,25 +11,21 @@ class Documents(models.Model):
     )
 
     # Простые поля
-    name = models.CharField(
-        max_length=255,
+    name = models.TextField(
         verbose_name="Наименование"
                             )
 
-    cheque_Name = models.CharField(
-        max_length=255,
+    cheque_Name = models.TextField(
         verbose_name="Наименование в чеке"
-                                   )
+                                  )
 
-    article = models.CharField(
-        max_length=255,
+    article = models.TextField(
         verbose_name="Артикул",
         blank=True,
         null=True
-                                  )
+                              )
 
-    barcode = models.CharField(
-        max_length=255,
+    barcode = models.TextField(
         verbose_name="Штрихкод",
         blank=True,
         null=True
@@ -40,14 +36,10 @@ class Documents(models.Model):
         default=1
     )
 
-    unit = models.CharField(
-        max_length=10,
-        verbose_name="Единица измерения",
-        default='gramm'
-    )
-
     cost_price = models.DecimalField(
         verbose_name="Себестоимость (за единицу)",
+        null=True,
+        blank=True,
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
@@ -55,6 +47,8 @@ class Documents(models.Model):
 
     selling_price = models.DecimalField(
         verbose_name="Цена продажи (за единицу)",
+        null=True,
+        blank=True,
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
@@ -63,20 +57,28 @@ class Documents(models.Model):
     max_discount = models.PositiveIntegerField(
         verbose_name="Максимальная скидка (%)",
         validators=[MaxValueValidator(100)],
+        null=True,
+        blank=True,
         default=0
     )
 
     critical_stock = models.PositiveIntegerField(
         verbose_name="Критический остаток",
+        null=True,
+        blank=True,
         default=1
     )
 
     desired_stock = models.PositiveIntegerField(
-        verbose_name="Желаемый остаток"
+        verbose_name="Желаемый остаток",
+        null=True,
+        blank=True,
     )
 
     net_weight = models.DecimalField(
         verbose_name="Масса нетто",
+        null=True,
+        blank=True,
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.001)]
@@ -84,14 +86,23 @@ class Documents(models.Model):
 
     gross_weight = models.DecimalField(
         verbose_name="Масса брутто",
+        null=True,
+        blank=True,
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.001)]
     )
 
-    Country = models.CharField(
-        max_length=255,
-        verbose_name="Страна производитель"
+    country = models.TextField(
+        verbose_name="Страна производитель",
+        null = True,
+        blank = True
+    )
+
+    comment = models.TextField(
+        verbose_name="Комментарий",
+        blank = True,
+        null = True
     )
 
     # связанные поля
