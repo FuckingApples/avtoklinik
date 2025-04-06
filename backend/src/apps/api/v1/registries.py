@@ -26,7 +26,7 @@ from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDeta
     ),
 )
 class OrganizationCategoriesAPI(BaseOrganizationModelView):
-    model = Category
+    queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
     def get_queryset(self):
@@ -50,9 +50,8 @@ class OrganizationCategoriesAPI(BaseOrganizationModelView):
     ),
 )
 class CategoriesAPI(BaseOrganizationDetailView):
-    model = Category
+    queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = "category_id"
 
 
 @extend_schema(tags=["Списки"])
@@ -68,7 +67,7 @@ class CategoriesAPI(BaseOrganizationDetailView):
     ),
 )
 class OrganizationColorsAPI(BaseOrganizationModelView):
-    model = Color
+    queryset = Color.objects.all()
     serializer_class = ColorSerializer
 
 
@@ -89,9 +88,8 @@ class OrganizationColorsAPI(BaseOrganizationModelView):
     ),
 )
 class ColorsAPI(BaseOrganizationDetailView):
-    model = Color
+    queryset = Color.objects.all()
     serializer_class = ColorSerializer
-    lookup_field = "color_id"
 
 
 @extend_schema(tags=["Списки"])
@@ -107,7 +105,7 @@ class ColorsAPI(BaseOrganizationDetailView):
     ),
 )
 class OrganizationMeasurementUnitsAPI(BaseOrganizationModelView):
-    model = MeasurementUnit
+    queryset = MeasurementUnit.objects.all()
     serializer_class = MeasurementUnitSerializer
 
 
@@ -128,9 +126,8 @@ class OrganizationMeasurementUnitsAPI(BaseOrganizationModelView):
     ),
 )
 class MeasurementUnitsAPI(BaseOrganizationDetailView):
-    model = MeasurementUnit
+    queryset = MeasurementUnit.objects.all()
     serializer_class = MeasurementUnitSerializer
-    lookup_field = "measurement_unit_id"
 
 
 @extend_schema(tags=["Списки"])
@@ -146,7 +143,7 @@ class MeasurementUnitsAPI(BaseOrganizationDetailView):
     ),
 )
 class OrganizationManufacturersAPI(BaseOrganizationModelView):
-    model = Manufacturer
+    queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
 
 
@@ -167,9 +164,8 @@ class OrganizationManufacturersAPI(BaseOrganizationModelView):
     ),
 )
 class ManufacturersAPI(BaseOrganizationDetailView):
-    model = Manufacturer
+    queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
-    lookup_field = "manufacturer_id"
 
 
 categories_urls = [
@@ -179,7 +175,7 @@ categories_urls = [
         name="organization_categories",
     ),
     path(
-        "<int:category_id>/",
+        "<int:id>/",
         CategoriesAPI.as_view(),
         name="categories",
     ),
@@ -192,7 +188,7 @@ colors_urls = [
         name="organization_colors",
     ),
     path(
-        "<int:color_id>/",
+        "<int:id>/",
         ColorsAPI.as_view(),
         name="colors",
     ),
@@ -205,7 +201,7 @@ measurement_unit_urls = [
         name="organization_measurement_units",
     ),
     path(
-        "<int:measurement_unit_id>/",
+        "<int:id>/",
         MeasurementUnitsAPI.as_view(),
         name="measurement_units",
     ),
@@ -218,7 +214,7 @@ manufacturers_urls = [
         name="organization_manufacturers",
     ),
     path(
-        "<int:manufacturer_id>/",
+        "<int:id>/",
         ManufacturersAPI.as_view(),
         name="manufacturers",
     ),

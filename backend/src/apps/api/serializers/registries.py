@@ -43,8 +43,12 @@ class ManufacturerSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerial
 
     class Meta:
         model = Manufacturer
-        fields = ("id", "name", "organization", "description")
+        fields = ("id", "name", "description")
         read_only_fields = ("id",)
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)
 
 
 class ColorSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
@@ -69,4 +73,8 @@ class MeasurementUnitSerializer(
 
     class Meta:
         model = MeasurementUnit
-        fields = ("id", "unit", "abbreviation", "okei_code", "organization")
+        fields = ("id", "unit", "abbreviation", "okei_code")
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)

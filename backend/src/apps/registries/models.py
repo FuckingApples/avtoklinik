@@ -1,6 +1,5 @@
 from django.db import models
 
-from apps.core.models import SafeDeleteManager
 from apps.organizations.models import Organization
 
 
@@ -26,9 +25,6 @@ class Manufacturer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = SafeDeleteManager()
-    all_objects = models.Manager()
-
     def __str__(self):
         return f"{self.name} (Org: {self.organization.public_id})"
 
@@ -42,7 +38,7 @@ class MeasurementUnit(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.unit
 
 
 class Color(models.Model):
