@@ -1,13 +1,16 @@
+from django_countries.serializer_fields import CountryField
+
 from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.documents.models import Product
 
 
 class ProductSerializer(BaseOrganizationModelSerializer):
+    country = CountryField(required=False)
+
     class Meta:
         model = Product
         fields = (
             "id",
-            "organization",
             "name",
             "receipt_name",
             "article",
