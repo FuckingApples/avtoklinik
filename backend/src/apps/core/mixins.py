@@ -20,6 +20,23 @@ class OrganizationMixin(GenericAPIView):
         return context
 
 
+class OrganizationQuerysetMixin(ModelSerializer):
+    organization_related_fields = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        organization = self.context.get("organization")
+
+        if organization:
+            request = getattr(self.context.get("request"), "method", None)
+            if not request or request in ["POST", "PUT", "PATCH"]:
+                for field_name, model_class in self.organization_related_fields.items():
+                    if field_name in self.fields:
+                        self.fields[field_name].queryset = model_class.objects.filter(
+                            organization=organization
+                        )
+
+
 class UniqueFieldsValidatorMixin(ModelSerializer):
     unique_fields = []
 
@@ -29,6 +46,11 @@ class UniqueFieldsValidatorMixin(ModelSerializer):
 
         if None in filters.values():
             return data
+
+        organization = self.context.get("organization")
+
+        if organization:
+            filters["organization"] = organization
 
         queryset = model.objects.filter(**filters)
 
