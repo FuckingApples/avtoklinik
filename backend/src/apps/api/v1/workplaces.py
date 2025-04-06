@@ -20,7 +20,7 @@ from apps.api.serializers.workplaces import WorkplaceSerializer
     ),
 )
 class OrganizationWorkplacesAPI(BaseOrganizationModelView):
-    model = Workplace
+    queryset = Workplace.objects.all()
     serializer_class = WorkplaceSerializer
 
 
@@ -41,9 +41,8 @@ class OrganizationWorkplacesAPI(BaseOrganizationModelView):
     ),
 )
 class WorkplacesAPI(BaseOrganizationDetailView):
-    model = Workplace
+    queryset = Workplace.objects.all()
     serializer_class = WorkplaceSerializer
-    lookup_field = "workplace_id"
 
 
 urlpatterns = [
@@ -53,7 +52,7 @@ urlpatterns = [
         name="organization_workplaces",
     ),
     path(
-        "<int:workplace_id>/",
+        "<int:id>/",
         WorkplacesAPI.as_view(),
         name="workplaces",
     ),

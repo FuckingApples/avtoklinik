@@ -11,4 +11,8 @@ class WorkplaceSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerialize
 
     class Meta:
         model = Workplace
-        fields = ("id", "organization", "icon", "name", "description", "color")
+        fields = ("id", "icon", "name", "description", "color")
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)
