@@ -9,4 +9,8 @@ class WarehouseSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerialize
 
     class Meta:
         model = Warehouse
-        fields = ("id", "organization", "name", "comment", "is_trade")
+        fields = ("id", "name", "comment", "is_trade")
+
+    def create(self, validated_data):
+        validated_data["organization"] = self.context["organization"]
+        return super().create(validated_data)

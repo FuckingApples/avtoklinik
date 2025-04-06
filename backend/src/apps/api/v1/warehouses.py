@@ -20,7 +20,7 @@ from apps.api.serializers.warehouses import WarehouseSerializer
     ),
 )
 class OrganizationWarehousesAPI(BaseOrganizationModelView):
-    model = Warehouse
+    queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
 
@@ -41,9 +41,8 @@ class OrganizationWarehousesAPI(BaseOrganizationModelView):
     ),
 )
 class WarehousesAPI(BaseOrganizationDetailView):
-    model = Warehouse
+    queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
-    lookup_field = "warehouse_id"
 
 
 urlpatterns = [
@@ -53,7 +52,7 @@ urlpatterns = [
         name="organization_warehouses",
     ),
     path(
-        "<int:warehouse_id>/",
+        "<int:id>/",
         WarehousesAPI.as_view(),
         name="warehouses",
     ),
