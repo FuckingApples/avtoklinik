@@ -3,10 +3,11 @@ from rest_framework import serializers
 from apps.cars.models import Car
 from apps.clients.models import Client
 from apps.core.mixins import UniqueFieldsValidatorMixin
+from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.deals.models import Deal
 
 
-class DealSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
+class DealSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
     number = serializers.CharField()
     client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.none())
     car = serializers.PrimaryKeyRelatedField(
@@ -30,7 +31,3 @@ class DealSerializer(UniqueFieldsValidatorMixin, serializers.ModelSerializer):
                 organization=organization
             )
             self.fields["car"].queryset = Car.objects.filter(organization=organization)
-
-    def create(self, validated_data):
-        validated_data["organization"] = self.context["organization"]
-        return super().create(validated_data)

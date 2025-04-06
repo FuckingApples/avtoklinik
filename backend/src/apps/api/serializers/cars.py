@@ -3,10 +3,11 @@ from rest_framework import serializers
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
 from apps.core.exceptions import DetailedValidationException
+from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.registries.models import Color
 
 
-class CarSerializer(serializers.ModelSerializer):
+class CarSerializer(BaseOrganizationModelSerializer):
     vin = serializers.CharField()
     frame = serializers.CharField(required=False, allow_blank=True)
     brand = serializers.CharField()
@@ -58,7 +59,3 @@ class CarSerializer(serializers.ModelSerializer):
                 message="Plate number is too short.", code="car_plate_too_short"
             )
         return value
-
-    def create(self, validated_data):
-        validated_data["organization"] = self.context["organization"]
-        return super().create(validated_data)

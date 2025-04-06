@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from apps.clients.models import Client
+from apps.core.serializers import BaseOrganizationModelSerializer
 
 
-class ClientSerializer(serializers.ModelSerializer):
+class ClientSerializer(BaseOrganizationModelSerializer):
     last_name = serializers.CharField()
     first_name = serializers.CharField()
     middle_name = serializers.CharField(required=False, allow_blank=True)
@@ -12,7 +13,3 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ("id", "first_name", "last_name", "middle_name", "phone", "email")
-
-    def create(self, validated_data):
-        validated_data["organization"] = self.context["organization"]
-        return super().create(validated_data)
