@@ -30,7 +30,7 @@ class Organization(SoftDeleteModel):
         membership = (
             self.membership_set.filter(user=user).select_related("role").first()
         )
-        return membership.role.name if membership else None
+        return membership.role if membership else None
 
     def __str__(self):
         return self.name
@@ -47,16 +47,21 @@ class PermissionFlags:
     ]
 
 
-# Модель роли
-# Поля:
-# - name - название роли
-# - default_permissions - разрешения по умолчанию
-class Role(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    default_permissions = models.BigIntegerField(default=0)
+# Роли пользователей в организации
+class Role(models.TextChoices):
+    OWNER = "owner", "Владелец"
+    ADMIN = "admin", "Администратор"
+    MANAGER = "manager", "Менеджер"
+    STAFF = "staff", "Сотрудник"
 
-    def __str__(self):
-        return self.name
+
+# Словарь с разрешениями по умолчанию для каждой роли
+DEFAULT_PERMISSIONS = {
+    Role.OWNER: list(range(0, 63)),
+    Role.ADMIN: [],
+    Role.MANAGER: [],
+    Role.STAFF: [],
+}
 
 
 # Менеджер для модели Membership с фильтрацией по is_deleted организации
@@ -70,12 +75,16 @@ class MembershipManager(models.Manager):
 # - user - пользователь
 # - organization - организация
 # - role - роль пользователя в организации
-# - custom_permissions - пользовательские разрешения
+# - permissions - разрешения пользователя в организации
 class Membership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
-    custom_permissions = models.PositiveBigIntegerField(null=True, blank=True)
+    role = models.CharField(
+        max_length=10,
+        choices=Role.choices,
+        default=Role.STAFF,
+    )
+    permissions = models.PositiveBigIntegerField(blank=True)
 
     objects = MembershipManager()
     all_objects = models.Manager()
@@ -83,27 +92,18 @@ class Membership(models.Model):
     class Meta:
         unique_together = ("user", "organization")
 
-    # Метод для получения разрешений пользователя
-    @property
-    def permissions(self):
-        return (
-            self.custom_permissions
-            if self.custom_permissions is not None
-            else self.role.default_permissions
-        )
-
     # Метод для проверки разрешения пользователя
     def has_permission(self, permission):
         return (self.permissions & permission) == permission
 
     # Метод для добавления разрешения пользователю
     def add_permission(self, permission):
-        self.custom_permissions |= permission
+        self.permissions |= permission
         self.save()
 
     # Метод для удаления разрешения у пользователя
     def remove_permission(self, permission):
-        self.custom_permissions &= ~permission
+        self.permissions &= ~permission
         self.save()
 
     # Метод для получения разрешений пользователя в читаемом формате для админки
