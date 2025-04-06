@@ -1,30 +1,28 @@
 from rest_framework import serializers
 
-from apps.core.mixins import UniqueFieldsValidatorMixin
+from apps.core.mixins import UniqueFieldsValidatorMixin, OrganizationQuerysetMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
 
 
-class CategorySerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
+class CategorySerializer(
+    OrganizationQuerysetMixin,
+    UniqueFieldsValidatorMixin,
+    BaseOrganizationModelSerializer,
+):
     name = serializers.CharField()
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.none(), allow_null=True, required=False
     )
     subcategories = serializers.SerializerMethodField()
     unique_fields = ["name"]
+    organization_related_fields = {
+        "parent": Category,
+    }
 
     class Meta:
         model = Category
         fields = ("id", "name", "parent", "subcategories")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        organization = self.context.get("organization")
-
-        if organization:
-            self.fields["parent"].queryset = Category.objects.filter(
-                organization=organization
-            )
 
     def get_subcategories(self, obj):
         serializer = self.__class__(

@@ -3,11 +3,12 @@ from rest_framework import serializers
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
 from apps.core.exceptions import DetailedValidationException
+from apps.core.mixins import OrganizationQuerysetMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.registries.models import Color
 
 
-class CarSerializer(BaseOrganizationModelSerializer):
+class CarSerializer(OrganizationQuerysetMixin, BaseOrganizationModelSerializer):
     vin = serializers.CharField()
     frame = serializers.CharField(required=False, allow_blank=True)
     brand = serializers.CharField()
@@ -20,6 +21,9 @@ class CarSerializer(BaseOrganizationModelSerializer):
     license_plate = serializers.CharField()
     license_plate_region = serializers.CharField()
     mileage = serializers.IntegerField()
+    organization_related_fields = {
+        "color_id": Color,
+    }
 
     class Meta:
         model = Car
@@ -36,15 +40,6 @@ class CarSerializer(BaseOrganizationModelSerializer):
             "license_plate_region",
             "mileage",
         )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        organization = self.context.get("organization")
-
-        if organization and self.context["request"].method in ["POST", "PUT", "PATCH"]:
-            self.fields["color_id"].queryset = Color.objects.filter(
-                organization=organization
-            )
 
     def validate_mileage(self, value):
         if value < 0:
