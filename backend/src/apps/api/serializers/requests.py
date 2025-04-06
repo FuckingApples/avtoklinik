@@ -14,7 +14,6 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         request = self.context["request"]
 
         if not validated_data.get("deal"):
-            # Создание новой сделки, если не передана
             client = request.data.get("client")
             car = request.data.get("car")
 

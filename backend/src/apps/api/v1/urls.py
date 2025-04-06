@@ -11,6 +11,6 @@ urlpatterns = [
     path("deals/", include("apps.api.v1.deals")),
     path("registries/", include("apps.api.v1.registries")),
     path("", include(router.urls)),
-path("<int:organization_id>/requests/", OrganizationRequestsAPI.as_view(), name="organization_requests"),
+    path("<int:organization_id>/requests/", OrganizationRequestsAPI.as_view(), name="organization_requests"),
     path("<int:organization_id>/requests/<int:request_id>/", RequestAPI.as_view(), name="request_detail"),
 ]
