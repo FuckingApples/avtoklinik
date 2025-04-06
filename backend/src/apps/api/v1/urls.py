@@ -24,5 +24,9 @@ urlpatterns = [
         "organization/<int:organization_id>/registries/",
         include("apps.api.v1.registries"),
     ),
+    path(
+        "organization/<int:organization_id>/products/",
+        include("apps.api.v1.documents"),
+    ),
     path("", include(router.urls)),
 ]

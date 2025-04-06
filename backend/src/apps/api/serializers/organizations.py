@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
 from rest_framework import serializers
-from apps.organizations.models import Membership
+from apps.organizations.models import Membership, Role
 
 if TYPE_CHECKING:
     from apps.organizations.models import Organization
@@ -33,20 +33,7 @@ class OrganizationSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     public_id = serializers.UUIDField(read_only=True)
     name = serializers.CharField()
-    user_role = serializers.SerializerMethodField()
-
-    def get_user_role(self, obj) -> Optional[str]:
-        request = self.context.get("request")
-        if not request or not request.user.is_authenticated:
-            return None
-
-        membership = (
-            Membership.objects.filter(user=request.user, organization=obj)
-            .select_related("role")
-            .first()
-        )
-
-        return membership.role.name if membership and membership.role else None
+    user_role = serializers.ChoiceField(choices=Role.choices)
 
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
