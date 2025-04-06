@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
+from apps.core.exceptions import DetailedValidationException
 from apps.registries.models import Color
 
 
@@ -46,21 +47,15 @@ class CarSerializer(serializers.ModelSerializer):
 
     def validate_mileage(self, value):
         if value < 0:
-            raise serializers.ValidationError(
-                {
-                    "message": "Mileage cannot be negative.",
-                    "code": "car_mileage_negative",
-                }
+            raise DetailedValidationException(
+                message="Mileage cannot be negative.", code="car_mileage_negative"
             )
         return value
 
     def validate_plate_number(self, value):
         if len(value) < 5:
-            raise serializers.ValidationError(
-                {
-                    "message": "Plate number is too short.",
-                    "code": "car_plate_too_short",
-                }
+            raise DetailedValidationException(
+                message="Plate number is too short.", code="car_plate_too_short"
             )
         return value
 
