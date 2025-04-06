@@ -53,7 +53,7 @@ class CarSerializer(BaseOrganizationModelSerializer):
             )
         return value
 
-    def validate_plate_number(self, value):
+    def validate_license_plate(self, value):
         if len(value) < 5:
             raise DetailedValidationException(
                 message="Plate number is too short.", code="car_plate_too_short"

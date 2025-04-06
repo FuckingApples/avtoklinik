@@ -151,12 +151,12 @@ class OrganizationManufacturersAPI(BaseOrganizationModelView):
 @extend_schema_view(
     patch=extend_schema(
         summary="Обновление производителя",
-        request=ColorSerializer,
-        responses={status.HTTP_200_OK: ColorSerializer},
+        request=ManufacturerSerializer,
+        responses={status.HTTP_200_OK: ManufacturerSerializer},
     ),
     get=extend_schema(
         summary="Получение информации о производителе",
-        responses={status.HTTP_200_OK: ColorSerializer},
+        responses={status.HTTP_200_OK: ManufacturerSerializer},
     ),
     delete=extend_schema(
         summary="Удаление производителя",
