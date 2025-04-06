@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 
 from rest_framework import serializers
-from apps.documets.models import Product
+from apps.documents.models import Product
 from apps.registries.models import Category
 from apps.MeasurementUnit.models import MeasurementUnit
 from apps.manufacturers.models import Manufacturer
+
 
 @dataclass
 class ProductDTO:
@@ -52,22 +53,39 @@ class ProductDTO:
             manufacturer_id=prod.manufacturer.id if prod.manufacturer else None,
         )
 
+
 class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
         fields = (
-            "id", "organization", "name", "cheque_Name", "article", "barcode", "quantity",
-            "cost_price", "selling_price", "max_discount", "critical_stock",
-            "desired_stock", "net_weight", "gross_weight", "country", "comment", "category", "sales_unit",
-            "write_off_unit", "manufacturer"
+            "id",
+            "organization",
+            "name",
+            "cheque_Name",
+            "article",
+            "barcode",
+            "quantity",
+            "cost_price",
+            "selling_price",
+            "max_discount",
+            "critical_stock",
+            "desired_stock",
+            "net_weight",
+            "gross_weight",
+            "country",
+            "comment",
+            "category",
+            "sales_unit",
+            "write_off_unit",
+            "manufacturer",
         )
 
     def create(self, validated_data):
-        category_data = validated_data.pop('category', None)
-        sales_unit_data = validated_data.pop('sales_unit', None)
-        write_off_unit_data = validated_data.pop('write_off_unit', None)
-        manufacturer_data = validated_data.pop('manufacturer', None)
+        category_data = validated_data.pop("category", None)
+        sales_unit_data = validated_data.pop("sales_unit", None)
+        write_off_unit_data = validated_data.pop("write_off_unit", None)
+        manufacturer_data = validated_data.pop("manufacturer", None)
 
         prod = Product.objects.create(**validated_data)
 
@@ -86,4 +104,3 @@ class ProductSerializer(serializers.ModelSerializer):
         prod.save()
 
         return prod
-

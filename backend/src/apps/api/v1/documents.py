@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
-from apps.documets.models import Product
+from apps.documents.models import Product
 from apps.organizations.models import Organization
 from apps.api.serializers.documents import ProductSerializer
 
