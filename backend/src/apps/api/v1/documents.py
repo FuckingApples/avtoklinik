@@ -1,60 +1,59 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from django.urls import path
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import status
 
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.documents.models import Product
-from apps.organizations.models import Organization
 from apps.api.serializers.documents import ProductSerializer
 
 
-class ProductListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+@extend_schema(tags=["Номенклатура"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание номенклатуры",
+        request=ProductSerializer,
+        responses={status.HTTP_201_CREATED: ProductSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех номенклатур организации",
+        responses={status.HTTP_200_OK: ProductSerializer},
+    ),
+)
+class OrganizationProductsAPI(BaseOrganizationModelView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Product.objects.filter(organization_id=organization_id)
 
-
-class ProductCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+@extend_schema(tags=["Номенклатура"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление номенклатуры",
+        request=ProductSerializer,
+        responses={status.HTTP_200_OK: ProductSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о номенклатуре",
+        responses={status.HTTP_200_OK: ProductSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление номенклатуры",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class ProductsAPI(BaseOrganizationDetailView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def create(self, request, *args, **kwargs):
-        organization_id = self.kwargs.get("organization_id")
-        organization = get_object_or_404(Organization, id=organization_id)
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(organization=organization)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class ProductDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ProductSerializer
-    lookup_url_kwarg = "Product_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Product.objects.filter(organization_id=organization_id)
-
-
-class ProductUpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ProductSerializer
-    lookup_url_kwarg = "Product_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Product.objects.filter(organization_id=organization_id)
-
-
-class ProductDeleteView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "Product_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Product.objects.filter(organization_id=organization_id)
+urlpatterns = [
+    path(
+        "",
+        OrganizationProductsAPI.as_view(),
+        name="organization_products",
+    ),
+    path(
+        "<int:id>/",
+        ProductsAPI.as_view(),
+        name="products",
+    ),
+]
