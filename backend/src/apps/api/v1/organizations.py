@@ -1,55 +1,48 @@
 from django.urls import path
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from apps.api.serializers.organizations import OrganizationSerializer
-from apps.organizations.models import Organization
+from apps.organizations.models import Organization, Role, Membership
 from apps.organizations.permissions import HasRole
-from apps.organizations.services import organizations
-from apps.organizations.services.organizations import delete_organization
 
 
-class CreateOrgAPI(APIView):
-    authentication_classes = [JWTAuthentication]
+class OrganizationsAPI(generics.ListCreateAPIView):
+    serializer_class = OrganizationSerializer
+    permission_classes = (IsAuthenticated,)
 
-    def post(self, request):
-        serializer = OrganizationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    def get_queryset(self):
+        return Organization.objects.filter(membership__user=self.request.user)
 
-        data = serializer.validated_data
-        serializer.instance = organizations.create_organization(
-            organization=data, user=request.user
+    def perform_create(self, serializer):
+        organization = serializer.save()
+        Membership.objects.create(
+            organization=organization, user=self.request.user, role=Role.OWNER
         )
 
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
+class OrganizationDetailsAPI(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrganizationSerializer
+    permission_classes = (IsAuthenticated, HasRole)
+    lookup_url_kwarg = "organization_id"
 
-class DeleteOrgAPI(APIView):
-    permission_classes = [HasRole]
-    required_role = 1
+    required_roles = {
+        "PATCH": [Role.OWNER, Role.ADMIN],
+        "DELETE": [Role.OWNER],
+    }
 
-    def delete(self, request, organization_id):
-        try:
-            delete_organization(organization_id=organization_id)
-        except Organization.DoesNotExist:
-            return Response(
-                {
-                    "message": "Organization does not exist",
-                    "code": "organization_does_not_exist",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get_queryset(self):
+        return Organization.objects.filter(membership__user=self.request.user)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_destroy(self, instance):
+        instance.soft_delete()
 
 
 urlpatterns = [
-    path("", CreateOrgAPI.as_view(), name="create_org"),
+    path("", OrganizationsAPI.as_view(), name="organizations"),
     path(
-        "<int:organization_id>",
-        DeleteOrgAPI.as_view(),
-        name="delete_org",
+        "<int:organization_id>/",
+        OrganizationDetailsAPI.as_view(),
+        name="organization_details",
     ),
 ]

@@ -77,14 +77,14 @@ class MembershipManager(models.Manager):
 # - role - роль пользователя в организации
 # - permissions - разрешения пользователя в организации
 class Membership(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     role = models.CharField(
         max_length=10,
         choices=Role.choices,
         default=Role.STAFF,
     )
-    permissions = models.PositiveBigIntegerField(blank=True)
+    permissions = models.PositiveBigIntegerField(blank=True, default=0)
 
     objects = MembershipManager()
     all_objects = models.Manager()

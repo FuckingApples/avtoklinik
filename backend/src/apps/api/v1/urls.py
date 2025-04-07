@@ -8,24 +8,26 @@ router.register("oauth", OAuthProviderViewSet, basename="oauth")
 
 urlpatterns = [
     path("user/", include("apps.api.v1.users")),
-    path("organization/", include("apps.api.v1.organizations")),
-    path("organization/<int:organization_id>/clients/", include("apps.api.v1.clients")),
-    path("organization/<int:organization_id>/cars/", include("apps.api.v1.cars")),
+    path("organizations/", include("apps.api.v1.organizations")),
     path(
-        "organization/<int:organization_id>/warehouses/",
+        "organizations/<int:organization_id>/clients/", include("apps.api.v1.clients")
+    ),
+    path("organizations/<int:organization_id>/cars/", include("apps.api.v1.cars")),
+    path(
+        "organizations/<int:organization_id>/warehouses/",
         include("apps.api.v1.warehouses"),
     ),
     path(
-        "organization/<int:organization_id>/workplaces/",
+        "organizations/<int:organization_id>/workplaces/",
         include("apps.api.v1.workplaces"),
     ),
-    path("organization/<int:organization_id>/deals/", include("apps.api.v1.deals")),
+    path("organizations/<int:organization_id>/deals/", include("apps.api.v1.deals")),
     path(
-        "organization/<int:organization_id>/registries/",
+        "organizations/<int:organization_id>/registries/",
         include("apps.api.v1.registries"),
     ),
     path(
-        "organization/<int:organization_id>/products/",
+        "organizations/<int:organization_id>/products/",
         include("apps.api.v1.documents"),
     ),
     path("", include(router.urls)),
