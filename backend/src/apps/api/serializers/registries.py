@@ -10,19 +10,19 @@ class CategorySerializer(
     UniqueFieldsValidatorMixin,
     BaseOrganizationModelSerializer,
 ):
-    name = serializers.CharField()
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.none(), allow_null=True, required=False
     )
     subcategories = serializers.SerializerMethodField()
-    unique_fields = ["name"]
+
     organization_related_fields = {
         "parent": Category,
     }
+    unique_fields = ["name"]
 
     class Meta:
         model = Category
-        fields = ("id", "name", "parent", "subcategories")
+        fields = ("id", "name", "parent", "subcategories", "created_at", "updated_at")
 
     def get_subcategories(self, obj):
         serializer = self.__class__(
@@ -34,25 +34,19 @@ class CategorySerializer(
 class ManufacturerSerializer(
     UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer
 ):
-    name = serializers.CharField(max_length=255)
-    description = serializers.CharField(required=False, allow_blank=True)
     unique_fields = ["name"]
 
     class Meta:
         model = Manufacturer
-        fields = ("id", "name", "description")
-        read_only_fields = ("id",)
+        fields = ("id", "name", "description", "created_at", "updated_at")
 
 
 class ColorSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
-    name = serializers.CharField()
-    code = serializers.CharField(max_length=25, allow_blank=True, required=False)
-    hex = serializers.CharField(max_length=7, allow_blank=True, required=False)
     unique_fields = ["name"]
 
     class Meta:
         model = Color
-        fields = ("id", "name", "code", "hex")
+        fields = ("id", "name", "code", "hex", "created_at", "updated_at")
 
 
 class MeasurementUnitSerializer(
@@ -62,4 +56,4 @@ class MeasurementUnitSerializer(
 
     class Meta:
         model = MeasurementUnit
-        fields = ("id", "unit", "abbreviation", "okei_code")
+        fields = ("id", "unit", "abbreviation", "okei_code", "created_at", "updated_at")

@@ -34,7 +34,7 @@ class Product(models.Model):
         validators=[MinValueValidator(0.01)],
     )
     max_discount = models.PositiveIntegerField(
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
+        validators=[MaxValueValidator(100.0), MinValueValidator(0.0)],
         null=True,
         blank=True,
         default=0,
@@ -76,6 +76,8 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name="products",
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

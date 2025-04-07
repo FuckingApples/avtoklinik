@@ -5,7 +5,7 @@ from apps.documents.models import Product
 
 
 class ProductSerializer(BaseOrganizationModelSerializer):
-    country = CountryField(required=False)
+    country = CountryField(required=False, allow_null=True)
 
     class Meta:
         model = Product
@@ -29,4 +29,6 @@ class ProductSerializer(BaseOrganizationModelSerializer):
             "sales_unit",
             "write_off_unit",
             "manufacturer",
+            "created_at",
+            "updated_at",
         )

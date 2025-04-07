@@ -11,7 +11,7 @@ class WarehouseSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSeria
 
     class Meta:
         model = Warehouse
-        fields = ("id", "name", "comment", "is_trade")
+        fields = ("id", "name", "comment", "is_trade", "created_at", "updated_at")
 
 
 class ProductStockSerializer(
@@ -21,13 +21,13 @@ class ProductStockSerializer(
 ):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
     warehouse = serializers.PrimaryKeyRelatedField(queryset=Warehouse.objects.all())
-    quantity = serializers.IntegerField(default=0, required=False)
-    unique_fields = ["warehouse", "product"]
+
     organization_related_fields = {
         "product": Product,
         "warehouse": Warehouse,
     }
+    unique_fields = ["warehouse", "product"]
 
     class Meta:
         model = ProductStock
-        fields = ("id", "warehouse", "product", "quantity")
+        fields = ("id", "warehouse", "product", "quantity", "created_at", "updated_at")

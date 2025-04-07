@@ -11,7 +11,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     def get_user_role(self, obj):
         user = self.context["request"].user
-        membership = Membership.objects.filter(user=user, organization=obj).first()
+        membership = user.memberships.filter(organization=obj).first()
         if membership:
             return membership.role
         return None

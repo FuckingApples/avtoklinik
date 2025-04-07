@@ -1,10 +1,12 @@
 import uuid
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from django.db import models
 
-from apps.core.models import SafeDeleteManager, SoftDeleteModel
-from apps.users.models import User
+from apps.core.models import SoftDeleteManager, SoftDeleteModel
+
+if TYPE_CHECKING:
+    from apps.users.models import User
 
 
 # Модель организации
@@ -19,7 +21,7 @@ class Organization(SoftDeleteModel):
     name = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    objects = SafeDeleteManager()
+    objects = SoftDeleteManager()
     all_objects = models.Manager()
 
     # Метод для получения роли пользователя в организации
@@ -77,8 +79,12 @@ class MembershipManager(models.Manager):
 # - role - роль пользователя в организации
 # - permissions - разрешения пользователя в организации
 class Membership(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="memberships"
+    )
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE
+    )
     role = models.CharField(
         max_length=10,
         choices=Role.choices,

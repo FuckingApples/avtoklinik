@@ -12,20 +12,27 @@ class DealSerializer(
     UniqueFieldsValidatorMixin,
     BaseOrganizationModelSerializer,
 ):
-    number = serializers.CharField()
     client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.none())
     car = serializers.PrimaryKeyRelatedField(
         queryset=Car.objects.none(),
         allow_null=True,
         required=False,
     )
-    comment = serializers.CharField(required=False, allow_blank=True)
-    unique_fields = ["number"]
+
     organization_related_fields = {
         "client": Client,
         "car": Car,
     }
+    unique_fields = ["number"]
 
     class Meta:
         model = Deal
-        fields = ("id", "number", "client", "car", "comment")
+        fields = (
+            "id",
+            "number",
+            "client",
+            "car",
+            "comment",
+            "created_at",
+            "updated_at",
+        )

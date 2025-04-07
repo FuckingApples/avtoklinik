@@ -1,7 +1,5 @@
 from django.db import models
 
-from apps.organizations.models import Organization
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -12,7 +10,13 @@ class Category(models.Model):
         null=True,
         blank=True,
     )
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="categories",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -20,8 +24,12 @@ class Category(models.Model):
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
+    organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="manufacturers",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -34,8 +42,12 @@ class MeasurementUnit(models.Model):
     abbreviation = models.CharField(max_length=100)
     okei_code = models.PositiveSmallIntegerField(blank=True, null=True)
     organization = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name="measurement_units"
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="measurement_units",
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.unit
@@ -45,7 +57,11 @@ class Color(models.Model):
     name = models.TextField()
     hex = models.CharField(max_length=7, blank=True, null=True)
     code = models.CharField(max_length=25, blank=True, null=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE, related_name="colors"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

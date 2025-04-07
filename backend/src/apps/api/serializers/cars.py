@@ -1,29 +1,29 @@
+from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
 from apps.core.exceptions import DetailedValidationException
-from apps.core.mixins import OrganizationQuerysetMixin
+from apps.core.mixins import OrganizationQuerysetMixin, UniqueFieldsValidatorMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.registries.models import Color
 
 
-class CarSerializer(OrganizationQuerysetMixin, BaseOrganizationModelSerializer):
-    vin = serializers.CharField()
-    frame = serializers.CharField(required=False, allow_blank=True)
-    brand = serializers.CharField()
-    model = serializers.CharField()
-    year = serializers.IntegerField()
+class CarSerializer(
+    OrganizationQuerysetMixin,
+    UniqueFieldsValidatorMixin,
+    BaseOrganizationModelSerializer,
+):
     color_id = serializers.PrimaryKeyRelatedField(
         queryset=Color.objects.none(), write_only=True, source="color"
     )
     color = ColorSerializer(read_only=True)
-    license_plate = serializers.CharField()
-    license_plate_region = serializers.CharField()
-    mileage = serializers.IntegerField()
+    license_plate_region = CountryField()
+
     organization_related_fields = {
         "color_id": Color,
     }
+    unique_fields = ["vin", "frame", "license_plate"]
 
     class Meta:
         model = Car
@@ -39,6 +39,8 @@ class CarSerializer(OrganizationQuerysetMixin, BaseOrganizationModelSerializer):
             "license_plate",
             "license_plate_region",
             "mileage",
+            "created_at",
+            "updated_at",
         )
 
     def validate_mileage(self, value):

@@ -1,20 +1,20 @@
 from django.db import models
 
-from apps.cars.models import Car
-from apps.clients.models import Client
-from apps.core.models import SoftDeleteModel, SafeDeleteManager
-from apps.organizations.models import Organization
+from apps.core.models import SoftDeleteModel
 
 
 class Deal(SoftDeleteModel):
     number = models.CharField(max_length=25)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True, blank=True)
+    client = models.ForeignKey(
+        "clients.Client", on_delete=models.CASCADE, related_name="deals"
+    )
+    car = models.ForeignKey("cars.Car", on_delete=models.CASCADE, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
-
-    objects = SafeDeleteManager()
-    all_objects = models.Manager()
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE, related_name="deals"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Deal № {self.number} (Organization: {self.organization}, Client: {self.client})"

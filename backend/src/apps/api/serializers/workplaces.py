@@ -6,10 +6,18 @@ from apps.workplaces.models import Workplace
 
 
 class WorkplaceSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
-    unique_fields = ["name"]
-
     color = serializers.RegexField(regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$")
+
+    unique_fields = ["name"]
 
     class Meta:
         model = Workplace
-        fields = ("id", "icon", "name", "description", "color")
+        fields = (
+            "id",
+            "icon",
+            "name",
+            "description",
+            "color",
+            "created_at",
+            "updated_at",
+        )
