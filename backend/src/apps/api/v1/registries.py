@@ -8,8 +8,15 @@ from apps.api.serializers.registries import (
     ManufacturerSerializer,
     ColorSerializer,
     MeasurementUnitSerializer,
+    WorkplaceSerializer,
 )
-from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
+from apps.registries.models import (
+    Category,
+    Manufacturer,
+    Color,
+    MeasurementUnit,
+    Workplace,
+)
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
 
@@ -168,6 +175,44 @@ class ManufacturersAPI(BaseOrganizationDetailView):
     serializer_class = ManufacturerSerializer
 
 
+@extend_schema(tags=["Рабочие места"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание рабочего места",
+        request=WorkplaceSerializer,
+        responses={status.HTTP_201_CREATED: WorkplaceSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех рабочих мест организации",
+        responses={status.HTTP_200_OK: WorkplaceSerializer},
+    ),
+)
+class OrganizationWorkplacesAPI(BaseOrganizationModelView):
+    queryset = Workplace.objects.all()
+    serializer_class = WorkplaceSerializer
+
+
+@extend_schema(tags=["Рабочие места"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление рабочего места",
+        request=WorkplaceSerializer,
+        responses={status.HTTP_200_OK: WorkplaceSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о рабочем месте",
+        responses={status.HTTP_200_OK: WorkplaceSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление рабочего места",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class WorkplacesAPI(BaseOrganizationDetailView):
+    queryset = Workplace.objects.all()
+    serializer_class = WorkplaceSerializer
+
+
 categories_urls = [
     path(
         "",
@@ -220,9 +265,23 @@ manufacturers_urls = [
     ),
 ]
 
+workplaces_urls = [
+    path(
+        "",
+        OrganizationWorkplacesAPI.as_view(),
+        name="organization_workplaces",
+    ),
+    path(
+        "<int:id>/",
+        WorkplacesAPI.as_view(),
+        name="workplaces",
+    ),
+]
+
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
     path("colors/", include(colors_urls)),
     path("measurement_units/", include(measurement_units_urls)),
+    path("workplaces/", include(workplaces_urls)),
 ]

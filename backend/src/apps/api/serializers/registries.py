@@ -2,7 +2,13 @@ from rest_framework import serializers
 
 from apps.core.mixins import UniqueFieldsValidatorMixin, OrganizationQuerysetMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
-from apps.registries.models import Category, Manufacturer, Color, MeasurementUnit
+from apps.registries.models import (
+    Category,
+    Manufacturer,
+    Color,
+    MeasurementUnit,
+    Workplace,
+)
 
 
 class CategorySerializer(
@@ -57,3 +63,21 @@ class MeasurementUnitSerializer(
     class Meta:
         model = MeasurementUnit
         fields = ("id", "unit", "abbreviation", "okei_code", "created_at", "updated_at")
+
+
+class WorkplaceSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
+    color = serializers.RegexField(regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$")
+
+    unique_fields = ["name"]
+
+    class Meta:
+        model = Workplace
+        fields = (
+            "id",
+            "icon",
+            "name",
+            "description",
+            "color",
+            "created_at",
+            "updated_at",
+        )

@@ -17,10 +17,6 @@ urlpatterns = [
         "organizations/<int:organization_id>/warehouses/",
         include("apps.api.v1.warehouses"),
     ),
-    path(
-        "organizations/<int:organization_id>/workplaces/",
-        include("apps.api.v1.workplaces"),
-    ),
     path("organizations/<int:organization_id>/deals/", include("apps.api.v1.deals")),
     path(
         "organizations/<int:organization_id>/registries/",

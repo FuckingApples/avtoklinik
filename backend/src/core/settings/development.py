@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     "apps.oauth",
     "apps.clients",
     "apps.cars",
-    "apps.workplaces",
     "apps.documents",
     "apps.warehouses",
     "apps.deals",
