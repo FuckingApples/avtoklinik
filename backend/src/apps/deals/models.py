@@ -8,7 +8,9 @@ class Deal(SoftDeleteModel):
     client = models.ForeignKey(
         "clients.Client", on_delete=models.CASCADE, related_name="deals"
     )
-    car = models.ForeignKey("cars.Car", on_delete=models.CASCADE, null=True, blank=True)
+    car = models.ForeignKey(
+        "cars.Car", on_delete=models.SET_NULL, null=True, blank=True
+    )
     comment = models.TextField(null=True, blank=True)
     organization = models.ForeignKey(
         "organizations.Organization", on_delete=models.CASCADE, related_name="deals"
