@@ -97,20 +97,20 @@ warehouses_urls = [
     ),
 ]
 
-product_stock_urls = [
+product_stocks_urls = [
     path(
         "",
         OrganizationProductStocksAPI.as_view(),
-        name="organization_stock_items",
+        name="organization_product_stocks",
     ),
     path(
         "<int:id>/",
         ProductStocksAPI.as_view(),
-        name="stock_items",
+        name="product_stocks",
     ),
 ]
 
 urlpatterns = [
     path("", include(warehouses_urls)),
-    path("product_stocks/", include(product_stock_urls)),
+    path("product_stocks/", include(product_stocks_urls)),
 ]

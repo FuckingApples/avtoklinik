@@ -194,7 +194,7 @@ colors_urls = [
     ),
 ]
 
-measurement_unit_urls = [
+measurement_units_urls = [
     path(
         "",
         OrganizationMeasurementUnitsAPI.as_view(),
@@ -224,5 +224,5 @@ urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
     path("colors/", include(colors_urls)),
-    path("measurement_units/", include(measurement_unit_urls)),
+    path("measurement_units/", include(measurement_units_urls)),
 ]
