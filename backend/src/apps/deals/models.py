@@ -25,14 +25,21 @@ class Deal(SoftDeleteModel):
 class ClientRequest(models.Model):
     number = models.CharField(max_length=25)
     organization = models.ForeignKey(
-        "organizations.Organization", on_delete=models.CASCADE, related_name="requests"
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="client_requests",
     )
     deal = models.ForeignKey(
-        Deal, on_delete=models.SET_NULL, null=True, blank=True, related_name="requests"
+        Deal,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="client_requests",
     )
     employee = models.ForeignKey(
         "users.User", on_delete=models.SET_NULL, null=True, blank=True
     )
+    client = models.ForeignKey("clients.Client", on_delete=models.CASCADE)
     workplace = models.ForeignKey(
         "registries.Workplace", on_delete=models.SET_NULL, null=True
     )
