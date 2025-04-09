@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_countries",
     "drf_spectacular",
-    "apps.requests",
 ]
 
 MIDDLEWARE = [
