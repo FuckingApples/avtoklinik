@@ -1,3 +1,4 @@
+from django.urls import path
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -6,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.api.serializers.users import UserSerializer, UserDTO
+from apps.api.serializers.users import UserSerializer, UserFullInfoSerializer
 from apps.users.services import users
 
 
@@ -38,7 +39,7 @@ class UserAPI(views.APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        data = UserDTO(**serializer.validated_data)
+        data = serializer.validated_data
         serializer.instance = users.create_user(user=data)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -86,3 +87,10 @@ class LogoutUserAPI(views.APIView):
                 {"code": "token_invalid", "message": "Invalid refresh token"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+urlpatterns = [
+    path("", UserInfoAPI.as_view(), name="user_info"),
+    path("register/", RegisterUserAPI.as_view(), name="register"),
+    path("logout/", LogoutUserAPI.as_view(), name="logout"),
+]

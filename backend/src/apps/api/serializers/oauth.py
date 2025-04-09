@@ -11,7 +11,14 @@ class OAuthProviderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OAuthProvider
-        fields = ["id", "provider", "provider_display", "uid", "created_at"]
+        fields = (
+            "id",
+            "provider",
+            "provider_display",
+            "uid",
+            "created_at",
+            "updated_at",
+        )
 
 
 @dataclass

@@ -1,0 +1,7 @@
+backend:
+  - 'backend/**'
+frontend:
+  - 'frontend/**'
+"repository changes":
+  - '*'
+  - '.github/**'

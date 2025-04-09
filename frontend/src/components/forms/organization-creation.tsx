@@ -28,7 +28,7 @@ export const OrganizationCreationForm = ({
               <FormControl>
                 <Input
                   placeholder="ООО «Рога и Копыта»"
-                  autoComplete="organization"
+                  autoComplete="off"
                   {...field}
                 />
               </FormControl>

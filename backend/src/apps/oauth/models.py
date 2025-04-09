@@ -15,6 +15,7 @@ class OAuthProvider(models.Model):
     provider = models.CharField(max_length=20, choices=OAUTH_CHOICES)
     uid = models.TextField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("user", "provider")
