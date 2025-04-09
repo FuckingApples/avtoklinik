@@ -3,11 +3,10 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status, permissions, views
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.api.serializers.users import UserSerializer, UserFullInfoSerializer
+from apps.api.serializers.users import UserSerializer
 from apps.users.services import users
 
 
@@ -90,7 +89,6 @@ class LogoutUserAPI(views.APIView):
 
 
 urlpatterns = [
-    path("", UserInfoAPI.as_view(), name="user_info"),
-    path("register/", RegisterUserAPI.as_view(), name="register"),
+    path("", UserAPI.as_view(), name="user"),
     path("logout/", LogoutUserAPI.as_view(), name="logout"),
 ]

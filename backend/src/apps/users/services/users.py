@@ -1,12 +1,11 @@
 from django.db import IntegrityError
 
-from apps.api.serializers.users import UserDTO
 from apps.core.exceptions import DetailedValidationException
 from apps.users.models import User
 
 
 # Бизнес-логика для создания пользователя
-def create_user(user: "UserDTO") -> "UserDTO":
+def create_user(user: "User"):
     if User.objects.filter(email=user.email).exists():
         raise DetailedValidationException(
             message="This email is already in use.", code="user_already_exists"
@@ -22,7 +21,7 @@ def create_user(user: "UserDTO") -> "UserDTO":
         if user.password:
             instance.set_password(user.password)
         instance.save()
-        return UserDTO.from_instance(instance)
+        return instance
     except IntegrityError:
         raise DetailedValidationException(
             message="This email is already in use.", code="user_already_exists"
