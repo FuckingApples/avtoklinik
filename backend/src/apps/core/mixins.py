@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.db import IntegrityError
 from rest_framework.serializers import ModelSerializer
 
 from apps.core.exceptions import DetailedValidationException
@@ -84,10 +85,12 @@ class AutoCreateRelatedModelMixin(ModelSerializer):
     def validate(self, data):
         data = super().validate(data)
 
-        field_name = getattr(self, "field_name", None) or getattr(
-            self.__class__, "field_name", None
+        field_name = getattr(self, "creation_field_name", None) or getattr(
+            self.__class__, "creation_field_name", None
         )
-        model = getattr(self, "model", None) or getattr(self.__class__, "model", None)
+        model = getattr(self, "creation_model", None) or getattr(
+            self.__class__, "creation_model", None
+        )
 
         if not field_name or not model:
             raise DetailedValidationException(
@@ -123,7 +126,14 @@ class AutoCreateRelatedModelMixin(ModelSerializer):
                 count = model.objects.filter(organization=organization).count() + 1
                 creation_data["number"] = f"СД-{count:04d}/{year_suffix}"
 
-            related_instance = model.objects.create(**creation_data)
+            try:
+                related_instance = model.objects.create(**creation_data)
+            except IntegrityError as e:
+                raise DetailedValidationException(
+                    message=f"Failed to auto-create {model.__name__}: {str(e)}",
+                    code=f"{model.__name__.lower()}_creation_failed",
+                )
+
             data[field_name] = related_instance
 
         return data

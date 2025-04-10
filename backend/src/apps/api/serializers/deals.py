@@ -61,8 +61,8 @@ class ClientRequestSerializer(
     create_related_automatically = serializers.BooleanField(
         default=False, write_only=True
     )
-    field_name = "deal"
-    model = Deal
+    creation_field_name = "deal"
+    creation_model = Deal
     creation_required_fields = ["client"]
 
     organization_related_fields = {
