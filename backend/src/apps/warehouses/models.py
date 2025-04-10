@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.core.models import SoftDeleteModel
+from apps.core.models import SoftDeleteModel, unique_org_fields
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_countries.fields import CountryField
 
@@ -16,6 +16,9 @@ class Warehouse(SoftDeleteModel):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Warehouse", "name")
 
     def __str__(self):
         return self.name
@@ -112,6 +115,9 @@ class ProductStock(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("ProductStock", "warehouse", "product")
 
     def __str__(self):
         return f"{self.product.name} (Warehouse: {self.warehouse.name})"

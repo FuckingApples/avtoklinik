@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.core.models import unique_org_fields
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -18,6 +20,9 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = unique_org_fields("Category", "name")
+
     def __str__(self):
         return self.name
 
@@ -32,6 +37,9 @@ class Manufacturer(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Manufacturer", "name")
 
     def __str__(self):
         return f"{self.name} (Org: {self.organization.public_id})"
@@ -49,6 +57,9 @@ class MeasurementUnit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = unique_org_fields("MeasurementUnit", "unit", "abbreviation")
+
     def __str__(self):
         return self.unit
 
@@ -62,6 +73,9 @@ class Color(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Color", "name")
 
     def __str__(self):
         return self.name
@@ -79,6 +93,9 @@ class Workplace(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Workplace", "name")
 
     def __str__(self):
         return self.name

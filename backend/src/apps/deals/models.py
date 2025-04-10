@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.core.models import SoftDeleteModel
+from apps.core.models import SoftDeleteModel, unique_org_fields
 
 
 class Deal(SoftDeleteModel):
@@ -17,6 +17,9 @@ class Deal(SoftDeleteModel):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Deal", "number")
 
     def __str__(self):
         return f"Deal № {self.number} (Organization: {self.organization}, Client: {self.client})"
@@ -48,6 +51,9 @@ class ClientRequest(models.Model):
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("ClientRequest", "number")
 
     def __str__(self):
         return f"Request № {self.number} (Organization: {self.organization.name})"
