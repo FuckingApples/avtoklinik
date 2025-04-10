@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -63,3 +64,10 @@ class LogoutUserAPI(APIView):
                 {"code": "token_invalid", "message": "Invalid refresh token"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+urlpatterns = [
+    path("", UserInfoAPI.as_view(), name="user_info"),
+    path("register/", RegisterUserAPI.as_view(), name="register"),
+    path("logout/", LogoutUserAPI.as_view(), name="logout"),
+]

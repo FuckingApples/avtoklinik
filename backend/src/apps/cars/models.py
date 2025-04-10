@@ -1,47 +1,40 @@
-from django.db import models
+from django.utils import timezone
 
-from apps.organizations.models import Organization
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
+from django_countries.fields import CountryField
+
+from apps.core.models import unique_org_fields
 
 
 class Car(models.Model):
-    REGION_CHOICES = (
-        ("ru", "RUS"),  # Россия
-        ("by", "BY"),  # Беларусь
-        ("kz", "KZ"),  # Казахстан
-        ("am", "AM"),  # Армения
-        ("az", "AZ"),  # Азербайджан
-        ("ge", "GE"),  # Грузия
-        ("kg", "KG"),  # Кыргызстан
-        ("md", "MD"),  # Молдова
-        ("tj", "TJ"),  # Таджикистан
-        ("uz", "UZ"),  # Узбекистан
-        ("ee", "EST"),  # Эстония
-        ("lv", "LV"),  # Латвия
-        ("lt", "LT"),  # Литва
-        ("ua", "UA"),  # Украина
-        ("de", "D"),  # Германия
-        ("fr", "F"),  # Франция
-        ("us", "USA"),  # США
-        ("cn", "CHN"),  # Китай
-        ("jp", "J"),  # Япония
-        ("tr", "TR"),  # Турция
-        ("ch", "CH"),  # Швейцария
-        ("pl", "PL"),  # Польша
-        ("in", "IND"),  # Индия
+    vin = models.CharField(max_length=17)
+    frame = models.TextField(null=True, blank=True)
+    brand = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1900.0),
+            MaxValueValidator(timezone.now().year + 1.0),
+        ]
     )
-
-    vin = models.CharField(max_length=17, unique=True)
-    frame = models.TextField(unique=True, null=True, blank=True)
-    brand = models.CharField(max_length=50)
-    model = models.CharField(max_length=50)
-    year = models.PositiveIntegerField()
-    color = models.CharField(max_length=30, null=True, blank=True)
+    color = models.ForeignKey(
+        "registries.Color",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     license_plate = models.CharField(max_length=15)
-    license_plate_region = models.CharField(max_length=5, choices=REGION_CHOICES)
+    license_plate_region = CountryField()
     mileage = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE, related_name="cars"
+    )
+
+    class Meta:
+        constraints = unique_org_fields("Car", "vin", "frame", "license_plate")
 
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year})"

@@ -1,77 +1,115 @@
-from django.urls import path
-from rest_framework import views, status
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from django.urls import path, include
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import status
 
-from apps.api.serializers.deals import DealSerializer
-from apps.deals.models import Deal
-from apps.organizations.models import Organization
+from apps.api.serializers.deals import DealSerializer, ClientRequestSerializer
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
+from apps.deals.models import Deal, ClientRequest
 
 
-class OrganizationDealsAPI(views.APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, organization_id):
-        get_object_or_404(Organization, id=organization_id)
-        deals = Deal.objects.filter(organization_id=organization_id)
-        serializer = DealSerializer(deals, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request, organization_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        serializer = DealSerializer(
-            data=request.data,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+@extend_schema(tags=["Сделки"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание сделки",
+        request=DealSerializer,
+        responses={status.HTTP_201_CREATED: DealSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех сделок организации",
+        responses={status.HTTP_200_OK: DealSerializer},
+    ),
+)
+class OrganizationDealsAPI(BaseOrganizationModelView):
+    queryset = Deal.objects.all()
+    serializer_class = DealSerializer
 
 
-class DealsAPI(views.APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, organization_id, deal_id):
-        get_object_or_404(Organization, id=organization_id)
-        deal = Deal.objects.filter(organization_id=organization_id, id=deal_id).first()
-        serializer = DealSerializer(deal)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, organization_id, deal_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        deal = get_object_or_404(Deal, id=deal_id, organization=organization)
-        serializer = DealSerializer(
-            deal,
-            data=request.data,
-            partial=True,
-            context={"organization": organization, "request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, organization_id, deal_id):
-        organization = get_object_or_404(Organization, id=organization_id)
-        deal = get_object_or_404(Deal, id=deal_id, organization=organization)
-        deal.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+@extend_schema(tags=["Сделки"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление сделки",
+        request=DealSerializer,
+        responses={status.HTTP_200_OK: DealSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о сделке",
+        responses={status.HTTP_200_OK: DealSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление сделки",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class DealsAPI(BaseOrganizationDetailView):
+    queryset = Deal.objects.all()
+    serializer_class = DealSerializer
 
 
-urlpatterns = [
+@extend_schema(tags=["Заявки"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание заявки",
+        request=ClientRequestSerializer,
+        responses={status.HTTP_201_CREATED: ClientRequestSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех заявок организации",
+        responses={status.HTTP_200_OK: ClientRequestSerializer},
+    ),
+)
+class OrganizationClientRequestsAPI(BaseOrganizationModelView):
+    queryset = ClientRequest.objects.all()
+    serializer_class = ClientRequestSerializer
+
+
+@extend_schema(tags=["Заявки"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление заявки",
+        request=ClientRequestSerializer,
+        responses={status.HTTP_200_OK: ClientRequestSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о заявке",
+        responses={status.HTTP_200_OK: ClientRequestSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление заявки",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class ClientRequestsAPI(BaseOrganizationDetailView):
+    queryset = ClientRequest.objects.all()
+    serializer_class = ClientRequestSerializer
+
+
+deals_urls = [
     path(
-        "<int:organization_id>/",
+        "",
         OrganizationDealsAPI.as_view(),
         name="organization_deals",
     ),
     path(
-        "<int:organization_id>/<int:deal_id>/",
+        "<int:id>/",
         DealsAPI.as_view(),
         name="deals",
     ),
+]
+
+client_requests_urls = [
+    path(
+        "",
+        OrganizationClientRequestsAPI.as_view(),
+        name="organization_client_requests",
+    ),
+    path(
+        "<int:id>/",
+        ClientRequestsAPI.as_view(),
+        name="client_requests",
+    ),
+]
+
+urlpatterns = [
+    path("", include(deals_urls)),
+    path("client_requests/", include(client_requests_urls)),
 ]

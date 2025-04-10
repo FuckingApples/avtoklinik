@@ -1,47 +1,34 @@
-from dataclasses import dataclass
-from typing import Optional
-
 from rest_framework import serializers
 
-from apps.registries.models import Category
+from apps.core.mixins import UniqueFieldsValidatorMixin, OrganizationQuerysetMixin
+from apps.core.serializers import BaseOrganizationModelSerializer
+from apps.registries.models import (
+    Category,
+    Manufacturer,
+    Color,
+    MeasurementUnit,
+    Workplace,
+)
 
 
-@dataclass
-class CategoryDTO:
-    name: Optional[str]
-    organization: Optional[int]
-    parent: Optional[int] = None
-    id: Optional[int] = None
-
-    @classmethod
-    def from_instance(cls, category: "Category") -> "CategoryDTO":
-        return CategoryDTO(
-            name=category.name,
-            parent=category.parent.id if category.parent else None,
-            organization=category.organization.id,
-            id=category.id,
-        )
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    name = serializers.CharField()
+class CategorySerializer(
+    OrganizationQuerysetMixin,
+    UniqueFieldsValidatorMixin,
+    BaseOrganizationModelSerializer,
+):
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.none(), allow_null=True, required=False
     )
     subcategories = serializers.SerializerMethodField()
 
+    organization_related_fields = {
+        "parent": Category,
+    }
+    unique_fields = ["name"]
+
     class Meta:
         model = Category
-        fields = ("id", "name", "parent", "subcategories")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        organization = self.context.get("organization")
-
-        if organization:
-            self.fields["parent"].queryset = Category.objects.filter(
-                organization=organization
-            )
+        fields = ("id", "name", "parent", "subcategories", "created_at", "updated_at")
 
     def get_subcategories(self, obj):
         serializer = self.__class__(
@@ -49,20 +36,48 @@ class CategorySerializer(serializers.ModelSerializer):
         )
         return serializer.data
 
-    def validate_name(self, value):
-        organization = self.context.get("organization")
-        queryset = Category.objects.filter(organization=organization, name=value)
 
-        if queryset.exists():
-            raise serializers.ValidationError(
-                {
-                    "message": "A category with this name already exists.",
-                    "code": "category_already_exists",
-                }
-            )
+class ManufacturerSerializer(
+    UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer
+):
+    unique_fields = ["name"]
 
-        return value
+    class Meta:
+        model = Manufacturer
+        fields = ("id", "name", "description", "created_at", "updated_at")
 
-    def create(self, validated_data):
-        validated_data["organization"] = self.context["organization"]
-        return super().create(validated_data)
+
+class ColorSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
+    unique_fields = ["name"]
+
+    class Meta:
+        model = Color
+        fields = ("id", "name", "code", "hex", "created_at", "updated_at")
+
+
+class MeasurementUnitSerializer(
+    UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer
+):
+    unique_fields = ["unit", "abbreviation"]
+
+    class Meta:
+        model = MeasurementUnit
+        fields = ("id", "unit", "abbreviation", "okei_code", "created_at", "updated_at")
+
+
+class WorkplaceSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
+    color = serializers.RegexField(regex=r"^#(?:[0-9a-fA-F]{3}){1,2}$")
+
+    unique_fields = ["name"]
+
+    class Meta:
+        model = Workplace
+        fields = (
+            "id",
+            "icon",
+            "name",
+            "description",
+            "color",
+            "created_at",
+            "updated_at",
+        )

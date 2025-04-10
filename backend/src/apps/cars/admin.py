@@ -27,6 +27,7 @@ class CarAdmin(admin.ModelAdmin):
                     "mileage",
                     ("brand", "model", "color"),
                     ("license_plate", "license_plate_region"),
+                    "organization",
                 ),
             },
         ),

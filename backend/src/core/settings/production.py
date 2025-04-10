@@ -60,8 +60,7 @@ INSTALLED_APPS = [
     "apps.oauth",
     "apps.clients",
     "apps.cars",
-    "apps.workplaces",
-    "apps.manufacturers",
+    "apps.documents",
     "apps.warehouses",
     "apps.deals",
     "apps.registries",
@@ -69,8 +68,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
+    "django_countries",
     "drf_spectacular",
-    "apps.requests",
 ]
 
 MIDDLEWARE = [

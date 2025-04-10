@@ -1,43 +1,50 @@
 from rest_framework.permissions import BasePermission
 
-from apps.organizations.models import Membership
+from apps.organizations.services.organizations import build_permission_mask
 
 
+# TODO: Think about base class
 # Класс HasPermissions проверяет, есть ли у пользователя необходимые права для доступа к представлению.
 class HasPermissions(BasePermission):
+    required_permissions = {}
+
     def has_permission(self, request, view):
+        user = request.user
         organization_id = view.kwargs.get("organization_id")
+        method = request.method.upper()
+
         if not organization_id:
             return False
 
-        membership = Membership.objects.filter(
-            user=request.user.id, organization_id=organization_id
-        ).first()
+        membership = user.memberships.filter(organization_id=organization_id).first()
         if not membership:
             return False
 
-        required_permissions = getattr(view, "required_permissions", None)
-        if required_permissions is None:
-            return False
+        required_permissions = getattr(view, "required_permissions", {}).get(method, [])
+        if isinstance(required_permissions, list):
+            required_permissions = build_permission_mask(required_permissions)
 
         return membership.has_permission(required_permissions)
 
 
 # Класс HasRole проверяет, есть ли у пользователя необходимая роль для доступа к представлению.
 class HasRole(BasePermission):
+    required_roles = {}
+
     def has_permission(self, request, view):
+        user = request.user
         organization_id = view.kwargs.get("organization_id")
+        method = request.method.upper()
+
         if not organization_id:
             return False
 
-        membership = Membership.objects.filter(
-            user=request.user.id, organization_id=organization_id
-        ).first()
+        membership = user.memberships.filter(organization_id=organization_id).first()
         if not membership:
             return False
 
-        required_role = getattr(view, "required_role", None)
-        if required_role is None:
+        allowed_roles = getattr(view, "required_roles", {}).get(method, [])
+        if allowed_roles and membership.role not in allowed_roles:
             return False
 
-        return membership.role_id == required_role
+        return True

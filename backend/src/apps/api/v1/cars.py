@@ -1,60 +1,59 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from django.urls import path
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import status
 
 from apps.cars.models import Car
-from apps.organizations.models import Organization
+from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.api.serializers.cars import CarSerializer
 
 
-class CarListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+@extend_schema(tags=["Автомобили"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание автомобиля",
+        request=CarSerializer,
+        responses={status.HTTP_201_CREATED: CarSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех автомобилей организации",
+        responses={status.HTTP_200_OK: CarSerializer},
+    ),
+)
+class OrganizationCarsAPI(BaseOrganizationModelView):
+    queryset = Car.objects.all()
     serializer_class = CarSerializer
 
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
 
-
-class CarCreateView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+@extend_schema(tags=["Автомобили"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление автомобиля",
+        request=CarSerializer,
+        responses={status.HTTP_200_OK: CarSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации об автомобиле",
+        responses={status.HTTP_200_OK: CarSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление автомобиля",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class CarsAPI(BaseOrganizationDetailView):
+    queryset = Car.objects.all()
     serializer_class = CarSerializer
 
-    def create(self, request, *args, **kwargs):
-        organization_id = self.kwargs.get("organization_id")
-        organization = get_object_or_404(Organization, id=organization_id)
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(organization=organization)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class CarDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CarSerializer
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
-
-
-class CarUpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CarSerializer
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
-
-
-class CarDeleteView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = "car_id"
-
-    def get_queryset(self):
-        organization_id = self.kwargs.get("organization_id")
-        return Car.objects.filter(organization_id=organization_id)
+urlpatterns = [
+    path(
+        "",
+        OrganizationCarsAPI.as_view(),
+        name="organization_cars",
+    ),
+    path(
+        "<int:id>/",
+        CarsAPI.as_view(),
+        name="cars",
+    ),
+]
