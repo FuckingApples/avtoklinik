@@ -2,7 +2,7 @@ from django.urls import path, include
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 
-from apps.api.serializers.deals import DealSerializer
+from apps.api.serializers.deals import DealSerializer, ClientRequestSerializer
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.deals.models import Deal, ClientRequest
 

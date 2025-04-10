@@ -80,20 +80,23 @@ class UniqueFieldsValidatorMixin(ModelSerializer):
 class AutoCreateRelatedModelMixin(ModelSerializer):
     auto_create_flag_field = "create_related_automatically"
     creation_required_fields = []
-    model = None
-    field_name = None
 
     def validate(self, data):
         data = super().validate(data)
 
-        if not self.field_name or not self.model:
+        field_name = getattr(self, "field_name", None) or getattr(
+            self.__class__, "field_name", None
+        )
+        model = getattr(self, "model", None) or getattr(self.__class__, "model", None)
+
+        if not field_name or not model:
             raise DetailedValidationException(
                 message="field_name and model cannot be None",
                 code="creation_fields_empty",
             )
 
         create_flag = self.initial_data.get(self.auto_create_flag_field)
-        related_instance = data.get(self.field_name)
+        related_instance = data.get(field_name)
 
         if not related_instance and str(create_flag).lower() == "true":
             creation_data = {}
@@ -105,22 +108,22 @@ class AutoCreateRelatedModelMixin(ModelSerializer):
                     creation_data[field] = self.initial_data[field]
                 else:
                     raise DetailedValidationException(
-                        message=f"Field ({field}) is required to auto-create {self.model.__name__}.",
-                        code=f"{self.model.__name__}_requires_{field}",
+                        message=f"Field ({field}) is required to auto-create {model.__name__}.",
+                        code=f"{model.__name__}_requires_{field}",
                     )
 
             organization = self.context.get("organization")
             if organization and "organization" in [
-                field.name for field in self.model._meta.fields
+                field.name for field in model._meta.fields
             ]:
                 creation_data["organization"] = organization
 
-            if "number" in [field.name for field in self.model._meta.fields]:
+            if "number" in [field.name for field in model._meta.fields]:
                 year_suffix = timezone.now().strftime("%y")
-                count = self.model.objects.filter(organization=organization).count() + 1
+                count = model.objects.filter(organization=organization).count() + 1
                 creation_data["number"] = f"СД-{count:04d}/{year_suffix}"
 
-            related_instance = self.model.objects.create(**creation_data)
-            data[self.field_name] = related_instance
+            related_instance = model.objects.create(**creation_data)
+            data[field_name] = related_instance
 
         return data
