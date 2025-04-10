@@ -1,18 +1,15 @@
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { Input } from "~/components/ui/input";
 import { UploadCloud } from "lucide-react";
-import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { cn } from "~/lib/utils";
+import type { ChangeEvent } from "react";
 
-type FileUploadProps<T extends FieldValues> = {
+type FileUploadProps = {
   options?: DropzoneOptions;
-  field: ControllerRenderProps<T>;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => unknown;
 };
 
-export default function FileUpload<T extends FieldValues>({
-  options,
-  field: { onChange },
-}: FileUploadProps<T>) {
+export default function FileUpload({ options, onChange }: FileUploadProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone(options);
 
   return (
@@ -37,9 +34,8 @@ export default function FileUpload<T extends FieldValues>({
       </label>
       <Input
         type="file"
-        className="hidden"
         {...getInputProps({
-          onChange: (event) => onChange(event.target.files?.[0]),
+          onChange,
         })}
       />
     </section>

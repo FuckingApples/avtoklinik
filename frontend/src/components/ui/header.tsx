@@ -6,9 +6,9 @@ import UserSpaceNav from "~/components/user-space-nav";
 
 function Header() {
   return (
-    <header className="border-b-border flex h-12 flex-row items-center border px-4">
+    <header className="border-b-border flex h-12 flex-row items-center border-b px-4">
       <div className="flex justify-center md:justify-start">
-        <Link href="/" className="flex items-center gap-2 font-medium">
+        <Link href="/dashboard" className="flex items-center gap-2 font-medium">
           <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md">
             <CarFront className="size-4" />
           </div>
