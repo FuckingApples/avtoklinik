@@ -5,9 +5,9 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export const userSettingsSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
-  email: z.string().email(),
+  first_name: z.string().min(1, { message: "Имя обязательно" }),
+  last_name: z.string().min(1, { message: "Фамилия обязательна" }),
+  email: z.string().email({ message: "Неверный email" }),
   image: z
     .instanceof(File)
     .optional()

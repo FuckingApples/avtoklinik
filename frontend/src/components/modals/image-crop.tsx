@@ -1,4 +1,10 @@
-import Cropper, { type Area } from "react-easy-crop";
+import {
+  FixedCropper,
+  ImageRestriction,
+  type FixedCropperRef,
+  type StencilSize,
+  Cropper,
+} from "react-advanced-cropper";
 import { useIsMobile } from "~/hooks/use-mobile";
 import {
   Drawer,
@@ -13,8 +19,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { useCallback, useState } from "react";
-import { getCroppedImg } from "~/lib/crop-images";
 import { Button } from "~/components/ui/button";
 import {
   FlipHorizontalIcon,
@@ -22,6 +26,8 @@ import {
   RotateCcwSquareIcon,
   RotateCwSquare,
 } from "lucide-react";
+import "react-advanced-cropper/dist/style.css";
+import { useRef } from "react";
 
 type ImageCropProps = {
   file: File;
@@ -36,25 +42,41 @@ export function ImageCropDialog({
   onClose,
   onSave,
 }: ImageCropProps) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [flip, setFlip] = useState({ horizontal: false, vertical: false });
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const cropperRef = useRef<FixedCropperRef>(null);
   const isMobile = useIsMobile();
 
-  const onCropComplete = useCallback((_: Area, croppedPixels: Area) => {
-    setCroppedAreaPixels(croppedPixels);
-  }, []);
-  const handleSave = async () => {
-    const cropped = await getCroppedImg(
-      URL.createObjectURL(file),
-      croppedAreaPixels!,
-      rotation,
-      flip,
-    );
-    onSave(cropped);
-    onClose();
+  const handleSave = () => {
+    const ref = cropperRef.current;
+    if (ref) {
+      ref.getCanvas()?.toBlob((blob) => {
+        if (blob) {
+          onSave(new File([blob], "edited-image.jpg", { type: "image/webp" }));
+        }
+      }, "image/webp");
+      onClose();
+    }
+  };
+
+  const stencilSize: StencilSize = ({ boundary }) => {
+    return {
+      width: boundary.width - 80,
+      height: boundary.width - 80,
+    };
+  };
+
+  const rotate = (angle: number) => {
+    const ref = cropperRef.current;
+
+    if (ref) {
+      ref.rotateImage(angle);
+    }
+  };
+  const flip = (horizontal = false, vertical = false) => {
+    const ref = cropperRef.current;
+
+    if (ref) {
+      ref.flipImage(horizontal, vertical);
+    }
   };
 
   if (isMobile) {
@@ -64,84 +86,44 @@ export function ImageCropDialog({
           <DrawerHeader hidden>
             <DrawerTitle>Редактор изображения</DrawerTitle>
           </DrawerHeader>
-          <div className="bg-muted relative m-4 aspect-square overflow-hidden rounded-lg">
-            <Cropper
-              image={file ? URL.createObjectURL(file) : ""}
-              transform={[
-                `translate(${crop.x}px, ${crop.y}px)`,
-                `rotateZ(${rotation}deg)`,
-                `rotateY(${flip.horizontal ? 180 : 0}deg)`,
-                `rotateX(${flip.vertical ? 180 : 0}deg)`,
-                `scale(${zoom})`,
-              ].join(" ")}
-              crop={crop}
-              onCropChange={setCrop}
-              zoom={zoom}
-              onZoomChange={setZoom}
-              rotation={rotation}
-              onRotationChange={setRotation}
-              aspect={1}
-              objectFit="contain"
-              onCropComplete={onCropComplete}
-            />
-          </div>
+          <FixedCropper
+            ref={cropperRef}
+            className="bg-muted! relative m-4 aspect-square rounded-lg"
+            src={file ? URL.createObjectURL(file) : ""}
+            stencilProps={{
+              aspectRatio: 1,
+              movable: false,
+              resizable: false,
+              lines: false,
+              handlers: false,
+            }}
+            stencilSize={stencilSize}
+            transformImage={{ adjustStencil: false }}
+            imageRestriction={ImageRestriction.stencil}
+          />
           <div className="mx-auto flex gap-4">
-            <Button
-              size="icon"
-              variant="secondary"
-              onClick={() =>
-                setRotation((prev) => {
-                  return prev - 90;
-                })
-              }
-            >
+            <Button size="icon" variant="secondary" onClick={() => rotate(-90)}>
               <RotateCcwSquareIcon />
             </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              onClick={() =>
-                setFlip((prev) => {
-                  return {
-                    ...prev,
-                    horizontal: !prev.horizontal,
-                  };
-                })
-              }
-            >
+            <Button size="icon" variant="secondary" onClick={() => flip(true)}>
               <FlipHorizontalIcon />
             </Button>
             <Button
               size="icon"
               variant="secondary"
-              onClick={() =>
-                setFlip((prev) => {
-                  return {
-                    ...prev,
-                    vertical: !prev.vertical,
-                  };
-                })
-              }
+              onClick={() => flip(false, true)}
             >
               <FlipVerticalIcon />
             </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              onClick={() =>
-                setRotation((prev) => {
-                  return prev + 90;
-                })
-              }
-            >
+            <Button size="icon" variant="secondary" onClick={() => rotate(90)}>
               <RotateCwSquare />
             </Button>
           </div>
           <DrawerFooter>
-            <Button size="sm" onClick={handleSave}>
+            <Button size="lg" onClick={handleSave}>
               Сохранить
             </Button>
-            <Button size="sm" variant="outline" onClick={onClose}>
+            <Button size="lg" variant="outline" onClick={onClose}>
               Отменить
             </Button>
           </DrawerFooter>
@@ -152,10 +134,31 @@ export function ImageCropDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="flex flex-row gap-5">
         <DialogHeader hidden>
           <DialogTitle>Редактор изображения</DialogTitle>
         </DialogHeader>
+        <Cropper
+          ref={cropperRef}
+          className="bg-muted! relative aspect-square flex-2 rounded-lg"
+          src={file ? URL.createObjectURL(file) : ""}
+          stencilProps={{
+            aspectRatio: 1,
+          }}
+          transformImage={{ adjustStencil: false }}
+          imageRestriction={ImageRestriction.fillArea}
+        />
+        <div className="flex flex-1 flex-col justify-between gap-3">
+          <div></div>
+          <div className="flex flex-col gap-2">
+            <Button size="sm" onClick={handleSave}>
+              Сохранить
+            </Button>
+            <Button size="sm" variant="outline" onClick={onClose}>
+              Отменить
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

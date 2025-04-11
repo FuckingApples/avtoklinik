@@ -41,31 +41,39 @@ export default function ProfilePage() {
 
   return (
     <>
-      <UserInfoBanner className="mt-3 mb-6" />
-      <section className="flex flex-col">
-        <div className="mx-3">
-          <h3 className="text-foreground text-2xl leading-none font-bold">
-            Настройки
-          </h3>
-          <span className="text-muted-foreground text-sm">
-            Настройте свой профиль
-          </span>
-        </div>
+      <UserInfoBanner
+        className="mt-3"
+        isDirty={form.formState.isDirty}
+        onClear={() => {
+          form.reset();
+        }}
+      />
+      <section className="mx-auto flex flex-col lg:max-w-5xl">
         <Tabs
           defaultValue={page}
           onValueChange={setPage}
           className="overflow-visible"
         >
-          <ScrollArea>
-            <TabsList className="m-3">
-              <TabsTrigger value="details">Мои данные</TabsTrigger>
-              <TabsTrigger value="security">Безопасность</TabsTrigger>
-              <TabsTrigger value="apperance">Внешний вид</TabsTrigger>
-              <TabsTrigger value="notifications">Уведомления</TabsTrigger>
-            </TabsList>
-            <ScrollBar orientation="horizontal" className="hidden" />
-          </ScrollArea>
-          <TabsContent value="details">
+          <div className="flex flex-col justify-between md:flex-row md:items-center">
+            <div className="mx-3">
+              <h3 className="text-foreground text-2xl leading-none font-bold">
+                Настройки
+              </h3>
+              <span className="text-muted-foreground text-sm">
+                Настройте свой профиль
+              </span>
+            </div>
+            <ScrollArea>
+              <TabsList className="m-3">
+                <TabsTrigger value="details">Мои данные</TabsTrigger>
+                <TabsTrigger value="security">Безопасность</TabsTrigger>
+                <TabsTrigger value="apperance">Внешний вид</TabsTrigger>
+                <TabsTrigger value="notifications">Уведомления</TabsTrigger>
+              </TabsList>
+              <ScrollBar orientation="horizontal" className="hidden" />
+            </ScrollArea>
+          </div>
+          <TabsContent value="details" className="mx-3">
             <DetailsTab form={form} />
           </TabsContent>
         </Tabs>

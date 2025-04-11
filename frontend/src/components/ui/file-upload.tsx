@@ -2,18 +2,22 @@ import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { Input } from "~/components/ui/input";
 import { UploadCloud } from "lucide-react";
 import { cn } from "~/lib/utils";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, HTMLAttributes } from "react";
 
-type FileUploadProps = {
+type FileUploadProps = HTMLAttributes<HTMLDivElement> & {
   options?: DropzoneOptions;
   onChange: (event: ChangeEvent<HTMLInputElement>) => unknown;
 };
 
-export default function FileUpload({ options, onChange }: FileUploadProps) {
+export default function FileUpload({
+  options,
+  onChange,
+  ...props
+}: FileUploadProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone(options);
 
   return (
-    <section>
+    <section {...props}>
       <label
         className={cn(
           "border-border hover:bg-primary-foreground relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed py-6",

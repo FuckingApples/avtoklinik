@@ -45,101 +45,112 @@ export default function DetailsTab({
     }
   };
   const onImageSave = (editedFile: File) => {
-    form.setValue("image", editedFile);
+    form.setValue("image", editedFile, { shouldDirty: true });
   };
   const onSubmit = async (data: TUserSettingsSchema) => {
     await updateUser.mutateAsync(data);
+    form.reset({
+      first_name: data?.first_name,
+      last_name: data?.last_name,
+      email: data?.email,
+    });
   };
 
   return (
-    <section className="mx-3">
-      <Form {...form}>
-        <form
-          id="user-settings"
-          className="mb-3 flex flex-col gap-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FormField
-            control={form.control}
-            name="first_name"
-            render={({ field }) => (
-              <FormItem>
+    <Form {...form}>
+      <form
+        id="user-settings"
+        className="mb-3 flex flex-col gap-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="first_name"
+          render={({ field }) => (
+            <FormItem className="md:flex">
+              <div className="flex-1">
+                <FormLabel>Имя</FormLabel>
+                <FormDescription>Ваше имя</FormDescription>
+              </div>
+              <FormControl className="flex-1">
                 <div>
-                  <FormLabel>Имя</FormLabel>
-                  <FormDescription>Ваше имя</FormDescription>
-                </div>
-                <FormControl>
                   <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="last_name"
-            render={({ field }) => (
-              <FormItem>
-                <div>
-                  <FormLabel>Фамилия</FormLabel>
-                  <FormDescription>Ваша фамилия</FormDescription>
+                  <FormMessage />
                 </div>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <div>
-                  <FormLabel>Почта</FormLabel>
-                  <FormDescription>
-                    Почта для входа и уведомлений
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Separator />
-          <FormItem>
-            <div>
-              <FormLabel>Фото профиля</FormLabel>
-              <FormDescription>
-                Фото увидят все в организациях, где вы состоите
-              </FormDescription>
-            </div>
-            <FormControl>
-              <FileUpload
-                onChange={onFileUpload}
-                options={{
-                  maxFiles: 1,
-                  maxSize: 5 * 1024 * 1024,
-                  accept: {
-                    "image/jpeg": [".jpeg", ".jpg"],
-                    "image/png": [".png"],
-                    "image/webp": [".webp"],
-                  },
-                }}
-              />
-            </FormControl>
-            <FormMessage></FormMessage>
-          </FormItem>
-          {file && (
-            <ImageCropDialog
-              onSave={onImageSave}
-              file={file}
-              open={open}
-              onClose={() => setOpen(false)}
-            />
+              </FormControl>
+            </FormItem>
           )}
-        </form>
-      </Form>
-    </section>
+        />
+        <FormField
+          control={form.control}
+          name="last_name"
+          render={({ field }) => (
+            <FormItem className="md:flex">
+              <div className="flex-1">
+                <FormLabel>Фамилия</FormLabel>
+                <FormDescription>Ваша фамилия</FormDescription>
+              </div>
+              <FormControl>
+                <div className="flex-1">
+                  <Input {...field} />
+                  <FormMessage />
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem className="md:flex">
+              <div className="flex-1">
+                <FormLabel>Почта</FormLabel>
+                <FormDescription>Почта для входа и уведомлений</FormDescription>
+              </div>
+              <FormControl className="flex-1">
+                <div>
+                  <Input {...field} />
+                  <FormMessage />
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Separator />
+        <FormItem className="md:flex">
+          <div className="flex-1">
+            <FormLabel>Фото профиля</FormLabel>
+            <FormDescription>
+              Фото увидят все в организациях, где вы состоите
+            </FormDescription>
+          </div>
+          <FormControl>
+            <FileUpload
+              className="flex-1"
+              onChange={onFileUpload}
+              options={{
+                maxFiles: 1,
+                maxSize: 5 * 1024 * 1024,
+                accept: {
+                  "image/jpeg": [".jpeg", ".jpg"],
+                  "image/png": [".png"],
+                  "image/webp": [".webp"],
+                },
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+        {file && (
+          <ImageCropDialog
+            onSave={onImageSave}
+            file={file}
+            open={open}
+            onClose={() => setOpen(false)}
+          />
+        )}
+      </form>
+    </Form>
   );
 }
