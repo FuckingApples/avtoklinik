@@ -26,3 +26,13 @@ class SoftDeleteModel(models.Model):
         self.is_deleted = False
         self.deleted_at = None
         self.save()
+
+
+def unique_org_fields(model_name: str, *fields: str):
+    return [
+        models.UniqueConstraint(
+            fields=["organization", field],
+            name=f"unique_{model_name.lower()}_{field}_per_org",
+        )
+        for field in fields
+    ]

@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django_countries.fields import CountryField
 
+from apps.core.models import unique_org_fields
+
 
 class Car(models.Model):
     vin = models.CharField(max_length=17)
@@ -30,6 +32,9 @@ class Car(models.Model):
     organization = models.ForeignKey(
         "organizations.Organization", on_delete=models.CASCADE, related_name="cars"
     )
+
+    class Meta:
+        constraints = unique_org_fields("Car", "vin", "frame", "license_plate")
 
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year})"

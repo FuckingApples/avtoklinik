@@ -1,10 +1,16 @@
 from rest_framework import serializers
 
+from apps.deals.models import Deal, ClientRequest
 from apps.cars.models import Car
 from apps.clients.models import Client
-from apps.core.mixins import UniqueFieldsValidatorMixin, OrganizationQuerysetMixin
+from apps.registries.models import Workplace
+
+from apps.core.mixins import (
+    UniqueFieldsValidatorMixin,
+    OrganizationQuerysetMixin,
+    AutoCreateRelatedModelMixin,
+)
 from apps.core.serializers import BaseOrganizationModelSerializer
-from apps.deals.models import Deal
 
 
 class DealSerializer(
@@ -33,6 +39,55 @@ class DealSerializer(
             "client",
             "car",
             "comment",
+            "created_at",
+            "updated_at",
+        )
+
+
+class ClientRequestSerializer(
+    AutoCreateRelatedModelMixin,
+    UniqueFieldsValidatorMixin,
+    OrganizationQuerysetMixin,
+    BaseOrganizationModelSerializer,
+):
+    deal = serializers.PrimaryKeyRelatedField(
+        queryset=Deal.objects.none(), allow_null=True, required=False
+    )
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.none())
+    workplace = serializers.PrimaryKeyRelatedField(
+        queryset=Workplace.objects.none(), allow_null=True, required=True
+    )
+
+    create_related_automatically = serializers.BooleanField(
+        default=False, write_only=True
+    )
+    creation_field_name = "deal"
+    creation_model = Deal
+    creation_required_fields = ["client"]
+
+    organization_related_fields = {
+        "deal": Deal,
+        "client": Client,
+        "workplace": Workplace,
+    }
+    unique_fields = ["number"]
+
+    fields_to_delete = ["create_related_automatically"]
+
+    class Meta:
+        model = ClientRequest
+        fields = (
+            "id",
+            "number",
+            "organization",
+            "deal",
+            "employee",
+            "client",
+            "workplace",
+            "date_start",
+            "date_end",
+            "comment",
+            "create_related_automatically",
             "created_at",
             "updated_at",
         )
