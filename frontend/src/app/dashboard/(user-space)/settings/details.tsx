@@ -18,8 +18,10 @@ import { useUpdateUser } from "~/hooks/use-user";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 import type { ErrorResponse } from "~/types/api";
-import { type ChangeEvent, useState } from "react";
+import { useCallback, useState } from "react";
 import { ImageCropDialog } from "~/components/modals/image-crop";
+import type { FileRejection } from "react-dropzone";
+import { cn } from "~/lib/utils";
 
 export default function DetailsTab({
   form,
@@ -37,16 +39,28 @@ export default function DetailsTab({
     }
   });
 
-  const onFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFile(file);
-      setOpen(true);
-    }
-  };
+  const onDropAccepted = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]!);
+    setOpen(true);
+  }, []);
+
+  const onDropRejected = useCallback(
+    (fileRejections: FileRejection[]) => {
+      fileRejections.some(({ errors }) => {
+        errors.some((err) => {
+          if (err.code === "too-many-files") {
+            form.setError("image", { message: "Слишком много файлов" });
+          }
+        });
+      });
+    },
+    [form],
+  );
+
   const onImageSave = (editedFile: File) => {
     form.setValue("image", editedFile, { shouldDirty: true });
   };
+
   const onSubmit = async (data: TUserSettingsSchema) => {
     await updateUser.mutateAsync(data);
     form.reset({
@@ -120,27 +134,33 @@ export default function DetailsTab({
         <Separator />
         <FormItem className="md:flex">
           <div className="flex-1">
-            <FormLabel>Фото профиля</FormLabel>
+            <FormLabel
+              className={cn(form.formState.errors?.image && "text-destructive")}
+            >
+              Фото профиля
+            </FormLabel>
             <FormDescription>
               Фото увидят все в организациях, где вы состоите
             </FormDescription>
           </div>
-          <FormControl>
-            <FileUpload
-              className="flex-1"
-              onChange={onFileUpload}
-              options={{
-                maxFiles: 1,
-                maxSize: 5 * 1024 * 1024,
-                accept: {
-                  "image/jpeg": [".jpeg", ".jpg"],
-                  "image/png": [".png"],
-                  "image/webp": [".webp"],
-                },
-              }}
-            />
-          </FormControl>
-          <FormMessage />
+          <div className="flex-1">
+            <FormControl>
+              <FileUpload
+                options={{
+                  maxFiles: 1,
+                  maxSize: 5 * 1024 * 1024,
+                  accept: {
+                    "image/jpeg": [".jpeg", ".jpg"],
+                    "image/png": [".png"],
+                    "image/webp": [".webp"],
+                  },
+                  onDropAccepted,
+                  onDropRejected,
+                }}
+              />
+            </FormControl>
+            <FormMessage>{form.formState.errors.image?.message}</FormMessage>
+          </div>
         </FormItem>
         {file && (
           <ImageCropDialog

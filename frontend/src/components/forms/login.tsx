@@ -18,10 +18,10 @@ import Link from "next/link";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import type { AxiosError } from "axios";
-import { useSearchParams } from "next/navigation";
+import { useQueryState } from "nuqs";
 
 export const LoginForm = () => {
-  const searchParams = useSearchParams();
+  const [redirect] = useQueryState("redirect");
   const form = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -29,14 +29,11 @@ export const LoginForm = () => {
       password: "",
     },
   });
-  const loginUser = useLoginUser(
-    searchParams.get("redirect"),
-    (error: AxiosError) => {
-      if (error.response?.status === 401) {
-        form.setError("root", { message: "Пароль или email указаны неверно" });
-      }
-    },
-  );
+  const loginUser = useLoginUser(redirect, (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      form.setError("root", { message: "Пароль или email указаны неверно" });
+    }
+  });
 
   const onSubmit = async (data: TSignInSchema) => {
     await loginUser.mutateAsync(data);

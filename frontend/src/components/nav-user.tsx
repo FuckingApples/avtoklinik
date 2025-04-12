@@ -21,8 +21,10 @@ import { logoutUser } from "~/api/auth";
 import { useUserStore } from "~/store/user";
 import Link from "next/link";
 import React from "react";
+import { usePathname } from "next/navigation";
 
 export function NavUser() {
+  const pathname = usePathname();
   const { isMobile } = useSidebar();
   const { logout } = useAuthStore();
   const { user } = useUserStore();
@@ -76,7 +78,7 @@ export function NavUser() {
                 Уведомления
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings">
+                <Link href={`/dashboard/settings?return=${pathname}`}>
                   <Settings />
                   Настройки
                 </Link>

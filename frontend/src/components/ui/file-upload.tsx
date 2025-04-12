@@ -2,18 +2,13 @@ import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { Input } from "~/components/ui/input";
 import { UploadCloud } from "lucide-react";
 import { cn } from "~/lib/utils";
-import type { ChangeEvent, HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
 type FileUploadProps = HTMLAttributes<HTMLDivElement> & {
   options?: DropzoneOptions;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => unknown;
 };
 
-export default function FileUpload({
-  options,
-  onChange,
-  ...props
-}: FileUploadProps) {
+export default function FileUpload({ options, ...props }: FileUploadProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone(options);
 
   return (
@@ -36,12 +31,7 @@ export default function FileUpload({
           <p className="text-xs">или нажмите, чтобы выбрать файлы</p>
         </div>
       </label>
-      <Input
-        type="file"
-        {...getInputProps({
-          onChange,
-        })}
-      />
+      <Input type="file" {...getInputProps()} />
     </section>
   );
 }

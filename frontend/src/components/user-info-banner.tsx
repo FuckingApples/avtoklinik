@@ -6,8 +6,10 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import React from "react";
 import { Button } from "~/components/ui/button";
-import { SaveIcon, XIcon } from "lucide-react";
+import { ArrowLeft, SaveIcon, XIcon } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
+import { useQueryState } from "nuqs";
+import Link from "next/link";
 
 type UserInfoBannerProps = React.ComponentProps<"section"> & {
   isDirty: boolean;
@@ -20,6 +22,8 @@ export default function UserInfoBanner({
   onClear,
   ...props
 }: UserInfoBannerProps) {
+  const [back] = useQueryState("return", { defaultValue: "" });
+
   const { user } = useUserStore();
 
   return (
@@ -27,7 +31,14 @@ export default function UserInfoBanner({
       className={cn("px-3 lg:mx-auto lg:max-w-5xl", className)}
       {...props}
     >
-      <span className="hidden xl:block">TEST</span>
+      {back && (
+        <Button size="sm" variant="outline" className="my-3" asChild>
+          <Link href={back}>
+            <ArrowLeft />
+            Вернуться в панель
+          </Link>
+        </Button>
+      )}
       {user ? (
         <div
           className="animate-user-banner-gradient aspect-4/1 rounded-lg bg-[length:400%_400%] sm:aspect-5/1 lg:aspect-6/1"
