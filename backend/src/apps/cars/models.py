@@ -26,9 +26,10 @@ class Car(models.Model):
     )
     client = models.ForeignKey(
         "clients.Client",
-        null=True,
+        null=True, 
         blank=True,
         on_delete=models.SET_NULL,
+        related_name="cars"
     )
     license_plate = models.CharField(max_length=15)
     license_plate_region = CountryField()
