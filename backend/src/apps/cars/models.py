@@ -24,6 +24,12 @@ class Car(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    client = models.ForeignKey(
+        "clients.Client",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     license_plate = models.CharField(max_length=15)
     license_plate_region = CountryField()
     mileage = models.PositiveIntegerField()
