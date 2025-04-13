@@ -13,6 +13,7 @@ import {
 } from "~/utils/validation/user-settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import AppearanceTab from "~/app/dashboard/(user-space)/settings/appearance";
 
 export default function ProfilePage() {
   const [page, setPage] = useQueryState("page", { defaultValue: "details" });
@@ -67,7 +68,7 @@ export default function ProfilePage() {
               <TabsList className="m-3">
                 <TabsTrigger value="details">Мои данные</TabsTrigger>
                 <TabsTrigger value="security">Безопасность</TabsTrigger>
-                <TabsTrigger value="apperance">Внешний вид</TabsTrigger>
+                <TabsTrigger value="appearance">Внешний вид</TabsTrigger>
                 <TabsTrigger value="notifications">Уведомления</TabsTrigger>
               </TabsList>
               <ScrollBar orientation="horizontal" className="hidden" />
@@ -75,6 +76,9 @@ export default function ProfilePage() {
           </div>
           <TabsContent value="details" className="mx-3">
             <DetailsTab form={form} />
+          </TabsContent>
+          <TabsContent value="appearance" className="mx-3">
+            <AppearanceTab form={form} />
           </TabsContent>
         </Tabs>
       </section>
