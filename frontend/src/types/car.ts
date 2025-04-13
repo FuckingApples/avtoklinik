@@ -1,7 +1,8 @@
 export interface Color {
   id: string;
   name: string;
-  hex_code: string;
+  hex: string;
+  code?: string | null;
 }
 
 export interface CarOwner {

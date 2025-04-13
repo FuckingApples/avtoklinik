@@ -42,11 +42,6 @@ export async function getColors(orgId: string) {
   return api.get<Color[]>(`/v1/organizations/${numericOrgId}/registries/colors/`).then((res) => res.data);
 }
 
-export async function getColor(orgId: string, colorId: string) {
-  const numericOrgId = await getNumericOrgId(orgId);
-  return api.get<Color>(`/v1/organizations/${numericOrgId}/registries/colors/${colorId}/`).then((res) => res.data);
-}
-
 export async function getCountries(): Promise<Country[]> {
   return Promise.resolve(COUNTRIES);
 }
@@ -55,13 +50,3 @@ export function getCountryName(countryCode: string): string {
   const country = COUNTRIES.find(c => c.code === countryCode);
   return country ? country.name : countryCode;
 }
-
-export async function createColor(orgId: string, data: Partial<Color>) {
-  const numericOrgId = await getNumericOrgId(orgId);
-  return api.post<Color>(`/v1/organizations/${numericOrgId}/registries/colors/`, data).then((res) => res.data);
-}
-
-export async function deleteColor(orgId: string, colorId: string) {
-  const numericOrgId = await getNumericOrgId(orgId);
-  return api.delete(`/v1/organizations/${numericOrgId}/registries/colors/${colorId}/`);
-} 

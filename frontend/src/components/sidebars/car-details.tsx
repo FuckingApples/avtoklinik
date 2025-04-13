@@ -167,14 +167,23 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                       </div>
                       <div>
                         <p className="text-muted-foreground text-sm">Цвет</p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col">
                           {car.color ? (
                             <>
-                              <div
-                                className="h-4 w-4 rounded-full border border-gray-300"
-                                style={{ backgroundColor: car.color.hex_code }}
-                              />
-                              <p className="font-medium">{car.color.name}</p>
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="h-4 w-4 rounded-full border border-gray-300"
+                                  style={{ backgroundColor: car.color.hex || '#CCCCCC' }}
+                                />
+                                <p className="font-medium">{car.color.name}</p>
+                              </div>
+                              
+                              {car.color.code && car.color.code.trim() !== '' && (
+                                <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
+                                  <span className="font-medium">Код краски:</span> 
+                                  <span className="ml-1">{car.color.code}</span>
+                                </div>
+                              )}
                             </>
                           ) : (
                             <p className="font-medium">Не указан</p>
@@ -193,6 +202,11 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="font-medium">
                           {new Date(car.created_at).toLocaleDateString("ru-RU")}
                         </p>
+                        <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
+                          <span>
+                            {new Date(car.created_at).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
                       </div>
                       <div>
                         <p className="text-muted-foreground text-sm">
@@ -201,6 +215,11 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="font-medium">
                           {new Date(car.updated_at).toLocaleDateString("ru-RU")}
                         </p>
+                        <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
+                          <span>
+                            {new Date(car.updated_at).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -297,7 +297,7 @@ export function Cars({
                         <div className="flex items-center">
                           <div 
                             className="w-4 h-4 rounded-full border border-gray-300 mr-2" 
-                            style={{ backgroundColor: car.color.hex_code }}
+                            style={{ backgroundColor: car.color.hex }}
                           />
                           <span>{car.color.name}</span>
                         </div>
