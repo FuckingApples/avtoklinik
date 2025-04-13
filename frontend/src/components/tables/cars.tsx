@@ -311,7 +311,12 @@ export function Cars({
                   return (
                     <TableCell key={column.key} className="p-4 align-middle">
                       {car.client ? (
-                        <span>{car.client.last_name} {car.client.first_name}</span>
+                        <div className="flex flex-col">
+                          <span>{car.client.last_name} {car.client.first_name}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {car.client.phone}
+                          </span>
+                        </div>
                       ) : (
                         <span className="text-muted-foreground">Не указан</span>
                       )}

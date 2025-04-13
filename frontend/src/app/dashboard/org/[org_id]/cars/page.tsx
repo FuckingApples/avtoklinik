@@ -133,13 +133,22 @@ export default function CarsPage() {
       const query = searchQuery.toLowerCase().trim();
       carsToFilter = carsToFilter.filter(car => {
         const countryName = getCountryName(car.license_plate_region || "").toLowerCase();
-        
-        return (car.brand?.toLowerCase().includes(query) || false) ||
-          (car.model?.toLowerCase().includes(query) || false) ||
-          (car.license_plate?.toLowerCase().includes(query) || false) ||
-          (car.vin?.toLowerCase().includes(query) || false) ||
-          (car.color?.name?.toLowerCase().includes(query) || false) ||
-          (countryName.includes(query) || false);
+
+        const matchesCar = (car.brand?.toLowerCase().includes(query) || false) ||
+            (car.model?.toLowerCase().includes(query) || false) ||
+            (car.license_plate?.toLowerCase().includes(query) || false) ||
+            (car.vin?.toLowerCase().includes(query) || false) ||
+            (car.color?.name?.toLowerCase().includes(query) || false) ||
+            (countryName.includes(query) || false);
+
+        const matchesClient = car.client ? (
+            (car.client.last_name?.toLowerCase().includes(query) || false) ||
+            (car.client.first_name?.toLowerCase().includes(query) || false) ||
+            (car.client.phone?.includes(query) || false) ||
+            (`${car.client.last_name} ${car.client.first_name}`.toLowerCase().includes(query) || false)
+        ) : false;
+
+        return matchesCar || matchesClient;
       });
     }
     
