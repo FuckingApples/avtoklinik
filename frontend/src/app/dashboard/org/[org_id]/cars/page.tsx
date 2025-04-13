@@ -187,7 +187,7 @@ export default function CarsPage() {
               className="h-9 inline-flex items-center"
             >
               <span className="flex items-center pr-2">
-                <Filter className={Object.keys(filters).length > 0 ? "size-4 mr-0.5 text-primary" : "size-4 mr-0.5"} />
+                <Filter className={Object.keys(filters).length > 0 ? "size-4 mr-1.5 text-primary" : "size-4 mr-1.5"} />
                 Фильтры
                 {Object.keys(filters).length > 0 && (
                   <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 py-0 text-xs">
