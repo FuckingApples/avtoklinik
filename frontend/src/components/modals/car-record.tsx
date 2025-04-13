@@ -160,10 +160,6 @@ export function CarForm({ open, onClose, onSubmit, car, orgId }: CarFormProps) {
       newErrors.license_plate_region = "Страна регистрации обязательна";
     }
 
-    if (!formData.client_id) {
-      newErrors.client_id = "Владелец обязателен";
-    }
-
     if (!formData.year) {
       newErrors.year = "Год обязателен";
     } else if (
@@ -239,7 +235,7 @@ export function CarForm({ open, onClose, onSubmit, car, orgId }: CarFormProps) {
           <div className="space-y-6 px-1 pb-4">
             <div className="space-y-2">
               <Label htmlFor="client_id" className="flex items-center">
-                Владелец <span className="text-destructive ml-1">*</span>
+                Владелец
               </Label>
               <select
                 id="client_id"
