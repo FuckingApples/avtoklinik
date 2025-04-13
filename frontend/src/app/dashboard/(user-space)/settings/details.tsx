@@ -86,7 +86,7 @@ export default function DetailsTab({
                 <FormLabel>Имя</FormLabel>
                 <FormDescription>Ваше имя</FormDescription>
               </div>
-              <FormControl className="flex-1">
+              <FormControl className="flex-2">
                 <div>
                   <Input {...field} />
                   <FormMessage />
@@ -105,7 +105,7 @@ export default function DetailsTab({
                 <FormDescription>Ваша фамилия</FormDescription>
               </div>
               <FormControl>
-                <div className="flex-1">
+                <div className="flex-2">
                   <Input {...field} />
                   <FormMessage />
                 </div>
@@ -122,7 +122,7 @@ export default function DetailsTab({
                 <FormLabel>Почта</FormLabel>
                 <FormDescription>Почта для входа и уведомлений</FormDescription>
               </div>
-              <FormControl className="flex-1">
+              <FormControl className="flex-2">
                 <div>
                   <Input {...field} />
                   <FormMessage />
@@ -143,7 +143,7 @@ export default function DetailsTab({
               Фото увидят все в организациях, где вы состоите
             </FormDescription>
           </div>
-          <div className="flex-1">
+          <div className="flex-2">
             <FormControl>
               <FileUpload
                 options={{

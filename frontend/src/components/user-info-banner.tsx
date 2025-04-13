@@ -49,7 +49,7 @@ export default function UserInfoBanner({
           }}
         />
       ) : (
-        <Skeleton className="aspect-4/1 rounded-lg sm:aspect-6/1 lg:aspect-7/1" />
+        <Skeleton className="aspect-4/1 rounded-lg sm:aspect-5/1 lg:aspect-6/1" />
       )}
       <div className="relative mt-3 flex items-center justify-between">
         <Avatar className="absolute top-0 ml-3 size-20 -translate-y-1/2 rounded-xl lg:ml-6 lg:size-25">

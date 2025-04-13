@@ -66,10 +66,10 @@ export default function UserSpaceNav({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Menu</SheetTitle>
-            <SheetDescription>Displays the mobile menu.</SheetDescription>
+            <SheetTitle>Меню</SheetTitle>
+            <SheetDescription>Мобильное меню</SheetDescription>
           </SheetHeader>
-          {children}
+          <div className="grid gap-4 px-4 py-7">{children}</div>
           <SheetFooter>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
