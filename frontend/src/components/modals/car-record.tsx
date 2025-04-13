@@ -191,7 +191,7 @@ export function CarForm({ open, onClose, onSubmit, car, orgId }: CarFormProps) {
         model: formData.model,
         year: formData.year,
         vin: formData.vin || undefined,
-        frame: formData.frame || undefined,
+        frame: formData.frame === "" ? null : formData.frame,
         license_plate: formData.license_plate,
         license_plate_region: formData.license_plate_region,
         mileage: formData.mileage,
@@ -362,7 +362,7 @@ export function CarForm({ open, onClose, onSubmit, car, orgId }: CarFormProps) {
                 id="frame"
                 placeholder="Например: ABC123456"
                 value={formData.frame || ""}
-                onChange={(e) => handleInputChange("frame", e.target.value)}
+                onChange={(e) => handleInputChange("frame", e.target.value || null)}
               />
             </div>
 

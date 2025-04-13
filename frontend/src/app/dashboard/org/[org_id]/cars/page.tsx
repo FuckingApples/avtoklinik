@@ -17,7 +17,7 @@ import { useCarTableSettings } from "~/hooks/cars/use-car-table-settings";
 import { useCarFilters } from "~/hooks/cars/use-car-filters";
 import { toast } from "sonner";
 import { Badge } from "~/components/ui/badge";
-import { getCars, createCar, updateCar, deleteCar } from "~/api/cars";
+import { getCars, createCar, updateCar, deleteCar, getCar } from "~/api/cars";
 import { getCountryName } from "~/api/registries";
 
 export default function CarsPage() {
@@ -294,7 +294,14 @@ export default function CarsPage() {
       <CarForm
         open={isCarFormOpen}
         onClose={() => setIsCarFormOpen(false)}
-        onSubmit={handleCarFormSubmit}
+        onSubmit={async (carData) => {
+          await handleCarFormSubmit(carData);
+
+          if (editingCar && selectedCar && editingCar.id === selectedCar.id) {
+            const updatedCar = await getCar(org_id as string, editingCar.id);
+            setSelectedCar(updatedCar);
+          }
+        }}
         car={editingCar}
         orgId={org_id as string}
       />

@@ -7,6 +7,11 @@ export async function getCars(orgId: string) {
   return api.get<Car[]>(`/v1/organizations/${numericOrgId}/cars/`).then((res) => res.data);
 }
 
+export async function getCar(orgId: string, carId: string) {
+  const numericOrgId = await getNumericOrgId(orgId);
+  return api.get<Car>(`/v1/organizations/${numericOrgId}/cars/${carId}/`).then((res) => res.data);
+}
+
 export async function createCar(orgId: string, data: Partial<Car> & { client_id?: string }) {
   const numericOrgId = await getNumericOrgId(orgId);
   return api.post<Car>(`/v1/organizations/${numericOrgId}/cars/`, data).then((res) => res.data);
