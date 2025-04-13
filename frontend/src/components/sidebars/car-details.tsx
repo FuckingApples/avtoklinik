@@ -144,11 +144,11 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
 
                     <Separator />
 
-                    <div>
-                      <p className="text-muted-foreground text-sm">VIN</p>
-                      <p className="font-medium">{car.vin}</p>
-                    </div>
-
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-muted-foreground text-sm">VIN</p>
+                        <p className="font-medium">{car.vin}</p>
+                      </div>
                     {car.frame && (
                       <div>
                         <p className="text-muted-foreground text-sm">
@@ -157,6 +157,7 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="font-medium">{car.frame}</p>
                       </div>
                     )}
+                    </div>
 
                     <Separator />
 
