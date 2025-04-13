@@ -1,9 +1,12 @@
 import {
   FixedCropper,
   ImageRestriction,
+  Cropper,
+  CropperPreview,
   type FixedCropperRef,
   type StencilSize,
-  Cropper,
+  type CropperRef,
+  type CropperPreviewRef,
 } from "react-advanced-cropper";
 import { useIsMobile } from "~/hooks/use-mobile";
 import {
@@ -26,8 +29,9 @@ import {
   RotateCcwSquareIcon,
   RotateCwSquare,
 } from "lucide-react";
-import "react-advanced-cropper/dist/style.css";
 import { useRef } from "react";
+
+import "react-advanced-cropper/dist/style.css";
 
 type ImageCropProps = {
   file: File;
@@ -43,6 +47,8 @@ export function ImageCropDialog({
   onSave,
 }: ImageCropProps) {
   const cropperRef = useRef<FixedCropperRef>(null);
+  const previewBigRef = useRef<CropperPreviewRef>(null);
+  const previewSmallRef = useRef<CropperPreviewRef>(null);
   const isMobile = useIsMobile();
 
   const handleSave = () => {
@@ -55,6 +61,11 @@ export function ImageCropDialog({
       }, "image/webp");
       onClose();
     }
+  };
+
+  const onUpdate = (cropper: CropperRef) => {
+    previewBigRef.current?.update(cropper);
+    previewSmallRef.current?.update(cropper);
   };
 
   const stencilSize: StencilSize = ({ boundary }) => {
@@ -71,6 +82,7 @@ export function ImageCropDialog({
       ref.rotateImage(angle);
     }
   };
+
   const flip = (horizontal = false, vertical = false) => {
     const ref = cropperRef.current;
 
@@ -147,9 +159,42 @@ export function ImageCropDialog({
           }}
           transformImage={{ adjustStencil: false }}
           imageRestriction={ImageRestriction.fillArea}
+          onUpdate={onUpdate}
         />
         <div className="flex flex-1 flex-col justify-between gap-3">
-          <div></div>
+          <div>
+            <h6 className="text-foreground mb-1 text-lg font-semibold">
+              Предпросмотр
+            </h6>
+            <div className="flex justify-between">
+              <CropperPreview
+                ref={previewBigRef}
+                className="size-25 rounded-xl"
+              />
+              <CropperPreview
+                ref={previewSmallRef}
+                className="size-14 rounded-lg"
+              />
+            </div>
+          </div>
+          <div className="mx-auto flex gap-2">
+            <Button size="icon" variant="secondary" onClick={() => rotate(-90)}>
+              <RotateCcwSquareIcon />
+            </Button>
+            <Button size="icon" variant="secondary" onClick={() => flip(true)}>
+              <FlipHorizontalIcon />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={() => flip(false, true)}
+            >
+              <FlipVerticalIcon />
+            </Button>
+            <Button size="icon" variant="secondary" onClick={() => rotate(90)}>
+              <RotateCwSquare />
+            </Button>
+          </div>
           <div className="flex flex-col gap-2">
             <Button size="sm" onClick={handleSave}>
               Сохранить
