@@ -38,26 +38,11 @@ class OrganizationDetailsAPI(generics.RetrieveUpdateDestroyAPIView):
         instance.soft_delete()
 
 
-class OrganizationPublicIdAPI(generics.RetrieveAPIView):
-    serializer_class = OrganizationSerializer
-    permission_classes = (IsAuthenticated,)
-    lookup_url_kwarg = "public_id"
-    lookup_field = "public_id"
-
-    def get_queryset(self):
-        return Organization.objects.filter(membership__user=self.request.user)
-
-
 urlpatterns = [
     path("", OrganizationsAPI.as_view(), name="organizations"),
     path(
         "<int:organization_id>/",
         OrganizationDetailsAPI.as_view(),
         name="organization_details",
-    ),
-    path(
-        "by_public_id/<uuid:public_id>/",
-        OrganizationPublicIdAPI.as_view(),
-        name="organization_by_public_id",
     ),
 ]
