@@ -24,6 +24,7 @@ dependencies = [
     "boto3 (>=1.37.13,<2.0.0)",
     "gunicorn (>=23.0.0,<24.0.0)",
     "django-countries (>=7.6.1,<8.0.0)",
+    "django-filter (>=25.1,<26.0)",
 ]
 
 

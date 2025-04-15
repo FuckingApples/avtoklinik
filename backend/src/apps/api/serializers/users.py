@@ -34,5 +34,8 @@ class UserSerializer(serializers.Serializer):
 
         organizations = obj.organizations.all()
         return OrganizationSerializer(
-            organizations, many=True, context={"request": request}
+            organizations,
+            many=True,
+            context={"request": request},
+            fields=["id", "public_id", "name", "user_role"],
         ).data
