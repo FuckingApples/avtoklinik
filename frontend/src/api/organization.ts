@@ -5,19 +5,27 @@ import type { Organization } from "~/types/organization";
 export async function getNumericOrgId(uuidOrgId: string): Promise<number> {
   try {
     const response = await api.get<Organization[]>(`/v1/organizations/`, {
-      params: { uuid: uuidOrgId }
+      params: { uuid: uuidOrgId },
     });
-    
-    const matchingOrg = response.data.find(org => org.public_id === uuidOrgId);
-    
+
+    const matchingOrg = response.data.find(
+      (org) => org.public_id === uuidOrgId,
+    );
+
     if (matchingOrg?.id) {
       return matchingOrg.id;
     }
-    
+
     throw new Error(`Organization with uuid ${uuidOrgId} not found`);
   } catch (error) {
     throw new Error(`Organization with uuid ${uuidOrgId} not found`);
   }
+}
+
+export async function getOrganizationInfo(id: number) {
+  return api
+    .get<Organization>(`/v1/organizations/${id}`)
+    .then((res) => res.data);
 }
 
 export async function createOrganization(data: TOrganizationCreationSchema) {

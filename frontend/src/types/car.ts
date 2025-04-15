@@ -1,7 +1,7 @@
 export interface Color {
   id: string;
   name: string;
-  hex: string;
+  hex?: string;
   code?: string | null;
 }
 
@@ -30,7 +30,7 @@ export interface Car {
 }
 
 export interface CarTableColumn {
-  key: keyof Car | 'actions';
+  key: keyof Car | "actions";
   title: string;
   visible: boolean;
 }
@@ -45,4 +45,4 @@ export interface CarFilterOptions {
   models: string[];
   yearRange: [number, number];
   colors: Color[];
-} 
+}

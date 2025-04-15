@@ -7,5 +7,8 @@ export type User = {
   email: string;
   avatar?: string;
   is_email_verified: boolean;
-  organizations: Organization[];
+  organizations: Pick<
+    Organization,
+    "id" | "user_role" | "name" | "public_id"
+  >[];
 };

@@ -3,12 +3,12 @@
 import { useState, useMemo, useEffect } from "react";
 import { Edit, Trash } from "lucide-react";
 import { Car } from "~/types/car";
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle, 
-  SheetFooter 
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
 } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -21,12 +21,17 @@ interface CarDetailProps {
   car: Car | null;
   open: boolean;
   onClose: () => void;
-  orgId: string;
   onEdit?: (car: Car) => void;
   onDelete?: (carId: string) => void;
 }
 
-export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailProps) {
+export function CarDetails({
+  car,
+  open,
+  onClose,
+  onEdit,
+  onDelete,
+}: CarDetailProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -35,7 +40,7 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
       setIsSheetOpen(true);
     }
   }, [open]);
-  
+
   const countryName = useMemo(() => {
     if (!car?.license_plate_region) return "Неизвестно";
     return getCountryName(car.license_plate_region);
@@ -50,7 +55,7 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
 
   const handleSheetOpenChange = (open: boolean) => {
     setIsSheetOpen(open);
-    
+
     if (!open) {
       setTimeout(() => {
         onClose();
@@ -149,14 +154,14 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="text-muted-foreground text-sm">VIN</p>
                         <p className="font-medium">{car.vin}</p>
                       </div>
-                    {car.frame && (
-                      <div>
-                        <p className="text-muted-foreground text-sm">
-                          Номер кузова
-                        </p>
-                        <p className="font-medium">{car.frame}</p>
-                      </div>
-                    )}
+                      {car.frame && (
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Номер кузова
+                          </p>
+                          <p className="font-medium">{car.frame}</p>
+                        </div>
+                      )}
                     </div>
 
                     <Separator />
@@ -174,17 +179,24 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                               <div className="flex items-center gap-2">
                                 <div
                                   className="h-4 w-4 rounded-full border border-gray-300"
-                                  style={{ backgroundColor: car.color.hex || '#CCCCCC' }}
+                                  style={{
+                                    backgroundColor: car.color.hex ?? "#CCCCCC",
+                                  }}
                                 />
                                 <p className="font-medium">{car.color.name}</p>
                               </div>
-                              
-                              {car.color.code && car.color.code.trim() !== '' && (
-                                <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
-                                  <span className="font-medium">Код краски:</span> 
-                                  <span className="ml-1">{car.color.code}</span>
-                                </div>
-                              )}
+
+                              {car.color.code &&
+                                car.color.code.trim() !== "" && (
+                                  <div className="bg-muted mt-1 inline-flex w-fit rounded px-2 py-1 text-sm">
+                                    <span className="font-medium">
+                                      Код краски:
+                                    </span>
+                                    <span className="ml-1">
+                                      {car.color.code}
+                                    </span>
+                                  </div>
+                                )}
                             </>
                           ) : (
                             <p className="font-medium">Не указан</p>
@@ -203,9 +215,12 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="font-medium">
                           {new Date(car.created_at).toLocaleDateString("ru-RU")}
                         </p>
-                        <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
+                        <div className="bg-muted mt-1 inline-flex w-fit rounded px-2 py-1 text-sm">
                           <span>
-                            {new Date(car.created_at).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(car.created_at).toLocaleTimeString(
+                              "ru-RU",
+                              { hour: "2-digit", minute: "2-digit" },
+                            )}
                           </span>
                         </div>
                       </div>
@@ -216,9 +231,12 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                         <p className="font-medium">
                           {new Date(car.updated_at).toLocaleDateString("ru-RU")}
                         </p>
-                        <div className="mt-1 inline-flex bg-muted px-2 py-1 rounded text-sm w-fit">
+                        <div className="bg-muted mt-1 inline-flex w-fit rounded px-2 py-1 text-sm">
                           <span>
-                            {new Date(car.updated_at).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(car.updated_at).toLocaleTimeString(
+                              "ru-RU",
+                              { hour: "2-digit", minute: "2-digit" },
+                            )}
                           </span>
                         </div>
                       </div>
@@ -278,18 +296,20 @@ export function CarDetails({ car, open, onClose, onEdit, onDelete }: CarDetailPr
                   </Button>
                 )}
               </div>
-              <Button onClick={() => handleSheetOpenChange(false)}>Закрыть</Button>
+              <Button onClick={() => handleSheetOpenChange(false)}>
+                Закрыть
+              </Button>
             </div>
           </SheetFooter>
         </SheetContent>
       </Sheet>
-      
+
       <DeleteCar
-        open={deleteDialogOpen} 
+        open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDelete}
         car={car}
       />
     </>
   );
-} 
+}
