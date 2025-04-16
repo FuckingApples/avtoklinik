@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import type { Car } from "~/types/car";
-import { DataTableColumnHeader } from "~/components/ui/data-table-column-header";
+import { DataTableColumnHeader } from "~/components/ui/data-table/data-table-column-header";
 
 interface GetCarsTableColumnsProps {
   setRowAction: React.Dispatch<
@@ -60,25 +60,28 @@ export function getCarsTableColumns({
       size: 40,
     },
     {
-      id: "brand",
+      id: "car",
       accessorKey: "brand",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Марка" />
+        <DataTableColumnHeader column={column} title="Автомобиль" />
       ),
+      cell: ({ row }) => {
+        const originalRow = row.original;
+        return (
+          <>
+            {originalRow.brand} {originalRow.model}
+          </>
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
     {
-      id: "model",
-      accessorKey: "model",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Модель" />
-      ),
-      enableSorting: false,
-    },
-    {
       id: "year",
       accessorKey: "year",
+      meta: {
+        label: "Год выпуска",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Год выпуска" />
       ),
@@ -86,6 +89,9 @@ export function getCarsTableColumns({
     {
       id: "license_plate",
       accessorKey: "license_plate",
+      meta: {
+        label: "Гос. номер",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Гос. номер" />
       ),
@@ -94,6 +100,9 @@ export function getCarsTableColumns({
     {
       id: "license_plate_region",
       accessorKey: "license_plate_region",
+      meta: {
+        label: "Страна регистрации",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Страна регистрации" />
       ),
@@ -102,6 +111,9 @@ export function getCarsTableColumns({
     {
       id: "client",
       accessorKey: "client",
+      meta: {
+        label: "Клиент",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Клиент" />
       ),
@@ -117,6 +129,9 @@ export function getCarsTableColumns({
     {
       id: "vin",
       accessorKey: "vin",
+      meta: {
+        label: "VIN",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="VIN" />
       ),
@@ -124,6 +139,9 @@ export function getCarsTableColumns({
     {
       id: "frame",
       accessorKey: "frame",
+      meta: {
+        label: "Frame",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Frame" />
       ),
@@ -138,14 +156,20 @@ export function getCarsTableColumns({
     {
       id: "mileage",
       accessorKey: "mileage",
+      meta: {
+        label: "Пробег",
+      },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Пробег" />
+        <DataTableColumnHeader column={column} title="Пробег, км." />
       ),
-      cell: ({ row }) => <div>{row.getValue("mileage")} км.</div>,
+      cell: ({ row }) => <>{row.getValue("mileage")}</>,
     },
     {
       id: "color",
       accessorKey: "color",
+      meta: {
+        label: "Цвет",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Цвет" />
       ),
@@ -185,6 +209,11 @@ export function getCarsTableColumns({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem
+                onSelect={() => setRowAction({ row, variant: "view" })}
+              >
+                Просмотреть
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => setRowAction({ row, variant: "update" })}
               >

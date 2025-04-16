@@ -11,6 +11,8 @@ import { CarDetails } from "~/components/sidebars/car-details";
 import { useCarsStore } from "~/store/cars";
 import { parseAsInteger, useQueryStates } from "nuqs";
 import { getFiltersStateParser, getSortingStateParser } from "~/lib/parsers";
+import { DataTableToolbar } from "~/components/ui/data-table/data-table-toolbar";
+import { DataTableSortList } from "~/components/ui/data-table/data-table-sort-list";
 
 export function CarsTable() {
   const { setFilters } = useCarsStore();
@@ -55,7 +57,11 @@ export function CarsTable() {
 
   return (
     <>
-      <DataTable table={table} />
+      <DataTable table={table}>
+        <DataTableToolbar table={table}>
+          <DataTableSortList table={table} align="end" />
+        </DataTableToolbar>
+      </DataTable>
       <CarDetails
         car={rowAction?.row.original ?? null}
         open={rowAction?.variant === "view"}

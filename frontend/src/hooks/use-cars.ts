@@ -16,7 +16,7 @@ export const useCars = () => {
       return await getCars(organization.id, filters);
     },
     enabled: !!organization?.id,
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 60,
     retry: false,
     placeholderData: keepPreviousData,
   });
