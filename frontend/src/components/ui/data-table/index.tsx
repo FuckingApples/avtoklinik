@@ -30,7 +30,7 @@ export function DataTable<TData>({
       {children}
       <div className="overflow-hidden rounded-md border">
         <Table>
-          <TableHeader className="[&_th]:bg-muted!">
+          <TableHeader className="[&_th]:bg-muted! sticky">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
