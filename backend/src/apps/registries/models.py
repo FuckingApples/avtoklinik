@@ -102,24 +102,21 @@ class Workplace(models.Model):
         return self.name
 
 
-class NormHour(models.Model):
+class HourlyWage(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    cost = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        validators=[MinValueValidator(0)]
+    wage = models.DecimalField(
+        max_digits=10, decimal_places=2, validators=[MinValueValidator(0)]
     )
     organization = models.ForeignKey(
         "organizations.Organization",
         on_delete=models.CASCADE,
-        related_name="norm_hours",
+        related_name="hourly_wages",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        constraints = unique_org_fields("NormHours", "name")
+        constraints = unique_org_fields("HourlyWage", "name")
 
     def __str__(self):
-        return f"{self.name} ({self.cost} руб.)"
+        return f"{self.name} ({self.wage} руб.)"

@@ -7,7 +7,8 @@ from apps.registries.models import (
     Manufacturer,
     Color,
     MeasurementUnit,
-    Workplace, NormHour,
+    Workplace,
+    NormHour,
 )
 
 
@@ -83,14 +84,7 @@ class WorkplaceSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSeria
         )
 
 
-class NormHourSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
-    cost = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        min_value=0,
-        required=True
-    )
-
+class HourlyWageSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
     unique_fields = ["name"]
 
     class Meta:
@@ -98,8 +92,7 @@ class NormHourSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerial
         fields = (
             "id",
             "name",
-            "description",
-            "cost",
+            "wage",
             "created_at",
             "updated_at",
         )

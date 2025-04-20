@@ -1,14 +1,14 @@
 from django.urls import path, include
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
-from rest_framework.response import Response
 
 from apps.api.serializers.registries import (
     CategorySerializer,
     ManufacturerSerializer,
     ColorSerializer,
     MeasurementUnitSerializer,
-    WorkplaceSerializer, NormHourSerializer,
+    WorkplaceSerializer,
+    HourlyWageSerializer,
 )
 from apps.registries.models import (
     Category,
@@ -16,7 +16,7 @@ from apps.registries.models import (
     Color,
     MeasurementUnit,
     Workplace,
-    NormHour,
+    HourlyWage,
 )
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
@@ -214,59 +214,42 @@ class WorkplacesAPI(BaseOrganizationDetailView):
     serializer_class = WorkplaceSerializer
 
 
-@extend_schema(tags=["Нормочасы"])
+@extend_schema(tags=["Нормо-часы"])
 @extend_schema_view(
     post=extend_schema(
-        summary="Создание нормочаса",
-        request=NormHourSerializer,
-        responses={status.HTTP_201_CREATED: NormHourSerializer},
+        summary="Создание нормо-часа",
+        request=HourlyWageSerializer,
+        responses={status.HTTP_201_CREATED: HourlyWageSerializer},
     ),
     get=extend_schema(
-        summary="Получение списка всех нормочасов организации",
-        responses={status.HTTP_200_OK: NormHourSerializer(many=True)},
+        summary="Получение списка всех нормо-часов организации",
+        responses={status.HTTP_200_OK: HourlyWageSerializer(many=True)},
     ),
 )
-class OrganizationNormHoursAPI(BaseOrganizationModelView):
-    queryset = NormHour.objects.all()
-    serializer_class = NormHourSerializer
+class OrganizationHourlyWagesAPI(BaseOrganizationModelView):
+    queryset = HourlyWage.objects.all()
+    serializer_class = HourlyWageSerializer
 
 
-@extend_schema(tags=["Нормочасы"])
+@extend_schema(tags=["Нормо-часы"])
 @extend_schema_view(
     patch=extend_schema(
-        summary="Обновление нормочаса",
-        request=NormHourSerializer,
-        responses={status.HTTP_200_OK: NormHourSerializer},
+        summary="Обновление нормо-часа",
+        request=HourlyWageSerializer,
+        responses={status.HTTP_200_OK: HourlyWageSerializer},
     ),
     get=extend_schema(
-        summary="Получение информации о нормочасе",
-        responses={status.HTTP_200_OK: NormHourSerializer},
+        summary="Получение информации о нормо-часе",
+        responses={status.HTTP_200_OK: HourlyWageSerializer},
     ),
     delete=extend_schema(
-        summary="Удаление нормочаса",
+        summary="Удаление нормо-часа",
         responses={status.HTTP_204_NO_CONTENT: None},
     ),
 )
-class NormHoursAPI(BaseOrganizationDetailView):
-    queryset = NormHour.objects.all()
-    serializer_class = NormHourSerializer
-
-
-@extend_schema(tags=["Нормочасы"])
-@extend_schema_view(
-    patch=extend_schema(
-        summary="Обновление стоимости нормочаса",
-        request=NormHourSerializer,
-        responses={status.HTTP_200_OK: NormHourSerializer},
-    ),
-    get=extend_schema(
-        summary="Получение стоимости нормочаса",
-        responses={status.HTTP_200_OK: NormHourSerializer},
-    ),
-)
-class NormHoursCostAPI(BaseOrganizationDetailView):
-    queryset = NormHour.objects.all()
-    serializer_class = NormHourSerializer
+class HourlyWagesAPI(BaseOrganizationDetailView):
+    queryset = HourlyWage.objects.all()
+    serializer_class = HourlyWageSerializer
 
 
 categories_urls = [
@@ -334,16 +317,16 @@ workplaces_urls = [
     ),
 ]
 
-normochas_urls = [
+hourly_wages_urls = [
     path(
         "",
-        OrganizationWorkplacesAPI.as_view(),
-        name="organization_normochas",
+        OrganizationHourlyWagesAPI.as_view(),
+        name="organization_hourly_wages",
     ),
     path(
         "<int:id>/",
-        WorkplacesAPI.as_view(),
-        name="normochas",
+        HourlyWagesAPI.as_view(),
+        name="hourly_wages",
     ),
 ]
 
@@ -353,5 +336,5 @@ urlpatterns = [
     path("colors/", include(colors_urls)),
     path("measurement_units/", include(measurement_units_urls)),
     path("workplaces/", include(workplaces_urls)),
-    path("normochas/", include(normochas_urls)),
+    path("hourly_wages/", include(hourly_wages_urls)),
 ]
