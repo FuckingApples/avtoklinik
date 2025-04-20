@@ -8,7 +8,7 @@ from apps.registries.models import (
     Color,
     MeasurementUnit,
     Workplace,
-    NormHour,
+    HourlyWage,
 )
 
 
