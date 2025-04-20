@@ -8,7 +8,7 @@ from apps.api.serializers.registries import (
     ManufacturerSerializer,
     ColorSerializer,
     MeasurementUnitSerializer,
-    WorkplaceSerializer,
+    WorkplaceSerializer, NormHourSerializer,
 )
 from apps.registries.models import (
     Category,
@@ -16,6 +16,7 @@ from apps.registries.models import (
     Color,
     MeasurementUnit,
     Workplace,
+    NormHour,
 )
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
@@ -213,6 +214,61 @@ class WorkplacesAPI(BaseOrganizationDetailView):
     serializer_class = WorkplaceSerializer
 
 
+@extend_schema(tags=["Нормочасы"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание нормочаса",
+        request=NormHourSerializer,
+        responses={status.HTTP_201_CREATED: NormHourSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех нормочасов организации",
+        responses={status.HTTP_200_OK: NormHourSerializer(many=True)},
+    ),
+)
+class OrganizationNormHoursAPI(BaseOrganizationModelView):
+    queryset = NormHour.objects.all()
+    serializer_class = NormHourSerializer
+
+
+@extend_schema(tags=["Нормочасы"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление нормочаса",
+        request=NormHourSerializer,
+        responses={status.HTTP_200_OK: NormHourSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о нормочасе",
+        responses={status.HTTP_200_OK: NormHourSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление нормочаса",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class NormHoursAPI(BaseOrganizationDetailView):
+    queryset = NormHour.objects.all()
+    serializer_class = NormHourSerializer
+
+
+@extend_schema(tags=["Нормочасы"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление стоимости нормочаса",
+        request=NormHourSerializer,
+        responses={status.HTTP_200_OK: NormHourSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение стоимости нормочаса",
+        responses={status.HTTP_200_OK: NormHourSerializer},
+    ),
+)
+class NormHoursCostAPI(BaseOrganizationDetailView):
+    queryset = NormHour.objects.all()
+    serializer_class = NormHourSerializer
+
+
 categories_urls = [
     path(
         "",
@@ -278,10 +334,24 @@ workplaces_urls = [
     ),
 ]
 
+normochas_urls = [
+    path(
+        "",
+        OrganizationWorkplacesAPI.as_view(),
+        name="organization_normochas",
+    ),
+    path(
+        "<int:id>/",
+        WorkplacesAPI.as_view(),
+        name="normochas",
+    ),
+]
+
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
     path("colors/", include(colors_urls)),
     path("measurement_units/", include(measurement_units_urls)),
     path("workplaces/", include(workplaces_urls)),
+    path("normochas/", include(normochas_urls)),
 ]

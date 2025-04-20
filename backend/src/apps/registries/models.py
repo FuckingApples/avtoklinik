@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from apps.core.models import unique_org_fields
@@ -99,3 +100,26 @@ class Workplace(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class NormHour(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
+    organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="norm_hours",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("NormHours", "name")
+
+    def __str__(self):
+        return f"{self.name} ({self.cost} руб.)"
