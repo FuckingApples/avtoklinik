@@ -9,6 +9,7 @@ from apps.registries.models import (
     MeasurementUnit,
     Workplace,
     HourlyWage,
+    Equipment,
 )
 
 
@@ -93,6 +94,19 @@ class HourlyWageSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSeri
             "id",
             "name",
             "wage",
+            "created_at",
+            "updated_at",
+        )
+
+
+class EquipmentSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSerializer):
+    unique_fields = ["name"]
+
+    class Meta:
+        model = Equipment
+        fields = (
+            "id",
+            "name",
             "created_at",
             "updated_at",
         )

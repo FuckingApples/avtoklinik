@@ -9,6 +9,7 @@ from apps.api.serializers.registries import (
     MeasurementUnitSerializer,
     WorkplaceSerializer,
     HourlyWageSerializer,
+    EquipmentSerializer,
 )
 from apps.registries.models import (
     Category,
@@ -17,6 +18,7 @@ from apps.registries.models import (
     MeasurementUnit,
     Workplace,
     HourlyWage,
+    Equipment,
 )
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
@@ -252,6 +254,44 @@ class HourlyWagesAPI(BaseOrganizationDetailView):
     serializer_class = HourlyWageSerializer
 
 
+@extend_schema(tags=["Комплектности"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание комплектности",
+        request=EquipmentSerializer,
+        responses={status.HTTP_201_CREATED: EquipmentSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех комплектностей организации",
+        responses={status.HTTP_200_OK: EquipmentSerializer(many=True)},
+    ),
+)
+class OrganizationEquipmentsAPI(BaseOrganizationModelView):
+    queryset = Equipment.objects.all()
+    serializer_class = EquipmentSerializer
+
+
+@extend_schema(tags=["Комплектности"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление комплектности",
+        request=EquipmentSerializer,
+        responses={status.HTTP_200_OK: EquipmentSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о комплектности",
+        responses={status.HTTP_200_OK: EquipmentSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление комплектности",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class EquipmentsAPI(BaseOrganizationDetailView):
+    queryset = Equipment.objects.all()
+    serializer_class = EquipmentSerializer
+
+
 categories_urls = [
     path(
         "",
@@ -330,6 +370,19 @@ hourly_wages_urls = [
     ),
 ]
 
+equipments_urls = [
+    path(
+        "",
+        OrganizationEquipmentsAPI.as_view(),
+        name="organization_equipments",
+    ),
+    path(
+        "<int:id>/",
+        EquipmentsAPI.as_view(),
+        name="equipments",
+    ),
+]
+
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
@@ -337,4 +390,5 @@ urlpatterns = [
     path("measurement_units/", include(measurement_units_urls)),
     path("workplaces/", include(workplaces_urls)),
     path("hourly_wages/", include(hourly_wages_urls)),
+    path("equipments/", include(equipments_urls)),
 ]
