@@ -120,3 +120,20 @@ class HourlyWage(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.wage} руб.)"
+
+
+class Equipment(models.Model):
+    name = models.CharField(max_length=100)
+    organization = models.ForeignKey(
+        "organizations.Organization",
+        on_delete=models.CASCADE,
+        related_name="equipments",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = unique_org_fields("Equipment", "name")
+
+    def __str__(self):
+        return f"{self.name}"
