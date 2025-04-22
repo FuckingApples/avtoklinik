@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import ReactQueryProvider from "~/components/providers/react-query-provider";
 import { Toaster } from "~/components/ui/toaster";
 import CsrfTokenHandler from "~/components/csrf-token-handler";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Автоклиника",
@@ -49,7 +50,8 @@ export default function RootLayout({
           enableColorScheme
         >
           <ReactQueryProvider>
-            {children}
+            {/*TODO: REMOVE SUSPENSE*/}
+            <Suspense>{children}</Suspense>
             <Toaster richColors />
             <CsrfTokenHandler />
           </ReactQueryProvider>
