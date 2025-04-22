@@ -88,7 +88,7 @@ class HourlyWageSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSeri
     unique_fields = ["name"]
 
     class Meta:
-        model = NormHour
+        model = HourlyWage
         fields = (
             "id",
             "name",
