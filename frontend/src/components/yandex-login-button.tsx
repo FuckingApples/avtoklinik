@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { env } from "~/env";
 
 declare global {
   interface Window {
@@ -46,10 +47,10 @@ export const YandexLoginButton = () => {
     ) {
       window.YaAuthSuggest.init(
         {
-          client_id: "69be39b19e274d3190c73d9f8f590eeb",
+          client_id: env.NEXT_PUBLIC_YANDEX_CLIENT_ID,
           response_type: "code",
           optional_scope: "login:avatar",
-          redirect_uri: "http://localhost:3000/oauth/yandex",
+          redirect_uri: `${env.NEXT_PUBLIC_APP_URL}/oauth/yandex`,
         },
         "https://oauth.yandex.ru",
         {
