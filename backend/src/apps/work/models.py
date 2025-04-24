@@ -19,21 +19,29 @@ class Work(models.Model):
     )
 
     price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         verbose_name="Стоимость",
         blank=True, null=True
     )
 
     norm_time = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         verbose_name="Норма времени",
         blank=True, null=True
     )
 
     max_discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         verbose_name="Максимальная скидка (%)",
         blank=True, null=True
     )
 
     coefficient = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         verbose_name="Коэффициент",
         blank=True, null=True
     )
@@ -67,7 +75,7 @@ class Work(models.Model):
     )
 
     hourly_wage = models.ForeignKey(
-        'HourlyWage',
+        'registries.HourlyWage',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -84,7 +92,7 @@ class Work(models.Model):
     )
 
     product = models.ForeignKey(
-        'Product',
+        'warehouses.Product',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
