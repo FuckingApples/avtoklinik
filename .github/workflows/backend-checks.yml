@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: pip install -r backend/requirements_dev.txt
+        run: pip install -r requirements_dev.txt
 
       - name: Run flake8
         if: steps.changed-files.outputs.any_changed == 'true'
