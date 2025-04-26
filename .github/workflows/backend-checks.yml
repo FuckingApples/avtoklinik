@@ -13,6 +13,9 @@ jobs:
   lint-backend:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+          working-directory: ./backend
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,28 +34,45 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: "pip"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.pythonLocation }}/lib/python*/site-packages
+            ~/.cache/pip
+          key: pip-${{ hashFiles('backend/requirements_dev.txt') }}
 
       - name: Install dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: pip install -r backend/requirements_dev.txt
+        run: pip install -r requirements_dev.txt
+
+      - name: Prepare file list
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: prepare-files
+        run: |
+          # Удаляем префикс backend/ из путей
+          FILTERED_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | sed 's|backend/||g')
+          echo "filtered_files=${FILTERED_FILES}" >> $GITHUB_OUTPUT
 
       - name: Run flake8
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}" | \
+          echo "${{ steps.prepare-files.outputs.filtered_files }}" | \
           tr ',' '\n' | \
           xargs -r flake8
 
       - name: Run isort check
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}" | \
+          echo "${{ steps.prepare-files.outputs.filtered_files }}" | \
           tr ',' '\n' | \
           xargs -r isort --check
 
       - name: Run black check
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}" | \
+          echo "${{ steps.prepare-files.outputs.filtered_files }}" | \
           tr ',' '\n' | \
           xargs -r black --check
