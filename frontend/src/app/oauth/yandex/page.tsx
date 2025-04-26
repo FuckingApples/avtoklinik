@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { yandexOAuth } from "~/api/auth";
 import { useAuthStore } from "~/store/auth";
+import { useQueryState } from "nuqs";
 
 export default function YandexOAuthPage() {
   const { setAccessToken } = useAuthStore();
-  const searchParams = useSearchParams();
+  const [code] = useQueryState("code");
   const router = useRouter();
 
   useEffect(() => {
-    const code = searchParams.get("code");
     if (!code) {
       router.back();
     }
@@ -41,7 +41,7 @@ export default function YandexOAuthPage() {
     };
 
     void handleAuth();
-  }, [router, searchParams, setAccessToken]);
+  }, [router, code, setAccessToken]);
 
   return <div>Авторизация...</div>;
 }

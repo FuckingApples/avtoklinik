@@ -1,8 +1,10 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
+from apps.api.serializers.clients import ClientSerializer
 from apps.api.serializers.registries import ColorSerializer
 from apps.cars.models import Car
+from apps.clients.models import Client
 from apps.core.exceptions import DetailedValidationException
 from apps.core.mixins import OrganizationQuerysetMixin, UniqueFieldsValidatorMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
@@ -18,10 +20,14 @@ class CarSerializer(
         queryset=Color.objects.none(), write_only=True, source="color"
     )
     color = ColorSerializer(read_only=True)
-    license_plate_region = CountryField()
+    client_id = serializers.PrimaryKeyRelatedField(
+        queryset=Client.objects.none(), write_only=True, source="client", required=False
+    )
+    client = ClientSerializer(read_only=True)
 
     organization_related_fields = {
         "color_id": Color,
+        "client_id": Client,
     }
     unique_fields = ["vin", "frame", "license_plate"]
 
@@ -36,8 +42,9 @@ class CarSerializer(
             "year",
             "color",
             "color_id",
+            "client",
+            "client_id",
             "license_plate",
-            "license_plate_region",
             "mileage",
             "created_at",
             "updated_at",

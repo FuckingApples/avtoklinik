@@ -11,10 +11,9 @@ class CarAdmin(admin.ModelAdmin):
         "__str__",
         "mileage",
         "license_plate",
-        "license_plate_region",
     )
     search_fields = ("license_plate", "vin", "model", "brand")
-    list_filter = ("license_plate_region", "year")
+    list_filter = ("year",)
     date_hierarchy = "created_at"
     fieldsets = (
         (
@@ -26,7 +25,7 @@ class CarAdmin(admin.ModelAdmin):
                     "year",
                     "mileage",
                     ("brand", "model", "color"),
-                    ("license_plate", "license_plate_region"),
+                    "license_plate",
                     "organization",
                 ),
             },

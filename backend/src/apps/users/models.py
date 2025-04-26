@@ -48,6 +48,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     is_email_verified = models.BooleanField(default=False)
     password = models.TextField()
+    avatar = models.URLField(null=True, blank=True)
     organizations = models.ManyToManyField(
         "organizations.Organization",
         blank=True,
