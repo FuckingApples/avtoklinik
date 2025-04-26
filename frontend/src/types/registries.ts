@@ -15,6 +15,15 @@ export interface Manufacturer {
     updated_at: string;
 }
 
+export interface MeasurementUnit {
+    id: string;
+    unit: string;
+    abbreviation: string;
+    okei_code: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Country {
     code: string;
     name: string;

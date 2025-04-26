@@ -5,9 +5,9 @@ import type {
   RegistriesCounts,
 } from "~/types/registries";
 import { getNumericOrgId } from "~/api/organization";
-import type { GetManufacturersFilters } from "~/store/registries";
+import type { GetManufacturersFilters, GetMeasurementUnitsFilters } from "~/store/registries";
 import type { ApiResponse } from "~/types/api";
-import type { Manufacturer } from "~/types/registries";
+import type { Manufacturer, MeasurementUnit } from "~/types/registries";
 
 export const COUNTRIES: Country[] = [
   { code: "RU", name: "Россия" },
@@ -57,6 +57,22 @@ export async function getManufacturers(orgId: number, filters?: GetManufacturers
 
   return api
       .get<ApiResponse<Manufacturer>>(`/v1/organizations/${orgId}/registries/manufacturers/`, { params })
+      .then((res) => res.data);
+}
+
+export async function getMeasurementUnits(orgId: number, filters?: GetMeasurementUnitsFilters) {
+  const params = new URLSearchParams();
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params.append(key, value.toString());
+      }
+    });
+  }
+
+  return api
+      .get<ApiResponse<MeasurementUnit>>(`/v1/organizations/${orgId}/registries/measurement_units/`, { params })
       .then((res) => res.data);
 }
 

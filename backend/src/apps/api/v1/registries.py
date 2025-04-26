@@ -14,7 +14,7 @@ from apps.api.serializers.registries import (
     HourlyWageSerializer,
     EquipmentSerializer,
 )
-from apps.registries.filters import ManufacturerFilter
+from apps.registries.filters import ManufacturerFilter, MeasurementUnitFilter
 from apps.registries.models import (
     Category,
     Manufacturer,
@@ -121,6 +121,17 @@ class ColorsAPI(BaseOrganizationDetailView):
 class OrganizationMeasurementUnitsAPI(BaseOrganizationModelView):
     queryset = MeasurementUnit.objects.all()
     serializer_class = MeasurementUnitSerializer
+    filterset_class = MeasurementUnitFilter
+    ordering_fields = (
+        "unit",
+        "abbreviation",
+        "okei_code",
+    )
+    search_fields = (
+        "unit",
+        "abbreviation",
+        "okei_code",
+    )
 
 
 @extend_schema(tags=["Списки"])

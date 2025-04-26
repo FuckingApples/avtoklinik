@@ -1,0 +1,123 @@
+"use client";
+
+import type { DataTableRowAction } from "~/types/data-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  Ellipsis,
+} from "lucide-react";
+import React from "react";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import type { MeasurementUnit } from "~/types/registries";
+import { DataTableColumnHeader } from "~/components/ui/data-table/data-table-column-header";
+
+interface GetMeasurementUnitsTableColumnsProps {
+  setRowAction: React.Dispatch<
+    React.SetStateAction<DataTableRowAction<MeasurementUnit> | null>
+  >;
+}
+
+export function getMeasurementUnitsTableColumns({
+  setRowAction,
+}: GetMeasurementUnitsTableColumnsProps): ColumnDef<MeasurementUnit>[] {
+  return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="translate-y-0.5"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="translate-y-0.5"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 40,
+    },
+    {
+      id: "unit",
+      accessorKey: "unit",
+      meta: {
+        label: "Единица измерения",
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Единица измерения" />
+      ),
+      enableSorting: true,
+      enableHiding: false,
+    },
+    {
+      id: "abbreviation",
+      accessorKey: "abbreviation",
+      meta: {
+        label: "Сокращение",
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Сокращение" />
+      ),
+      enableSorting: true,
+    },
+    {
+      id: "okei_code",
+      accessorKey: "okei_code",
+      meta: {
+        label: "ОКЕИ",
+      },
+      header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="ОКЕИ" />
+      ),
+      enableSorting: true,
+    },
+    {
+      id: "actions",
+      cell: function Cell({ row }) {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                aria-label="Open menu"
+                variant="ghost"
+                className="data-[state=open]:bg-muted flex size-8 p-0"
+              >
+                <Ellipsis className="size-4" aria-hidden="true" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem
+                onSelect={() => setRowAction({ row, variant: "update" })}
+              >
+                Редактировать
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onSelect={() => setRowAction({ row, variant: "delete" })}
+              >
+                Удалить
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      size: 40,
+    },
+  ];
+}
