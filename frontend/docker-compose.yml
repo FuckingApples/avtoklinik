@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  frontend:
+    container_name: frontend
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+      NEXT_PUBLIC_YANDEX_CLIENT_ID: ${NEXT_PUBLIC_YANDEX_CLIENT_ID}

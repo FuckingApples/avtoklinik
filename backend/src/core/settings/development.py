@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 
+from django.conf.global_settings import CSRF_COOKIE_SECURE, CSRF_COOKIE_DOMAIN
 from dotenv import load_dotenv
 import os
 import dj_database_url
@@ -187,6 +188,9 @@ CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_DOMAIN = "." + os.getenv("BASE_DOMAIN", "")
 
 # Setup Yandex OAuth
 OAUTH_YANDEX_CLIENT_ID = os.getenv("OAUTH_YANDEX_CLIENT_ID")

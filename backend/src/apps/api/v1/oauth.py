@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 import requests
@@ -132,6 +133,7 @@ class YandexOAuthAPI(views.APIView):
             str(refresh_token),
             httponly=True,
             secure=True,
+            domain="." + os.getenv("BASE_DOMAIN", ""),
             samesite="None",
             path="/",
             expires=datetime.now() + timedelta(days=30),
