@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 from django.utils.decorators import method_decorator
@@ -28,6 +29,7 @@ class CustomTokenObtainPairAPI(TokenObtainPairView):
                 refresh_token,
                 httponly=True,
                 secure=True,
+                domain="." + os.getenv("BASE_DOMAIN", ""),
                 samesite="None",
                 path="/",
                 expires=datetime.now() + timedelta(days=30),
@@ -67,6 +69,7 @@ class CustomTokenRefreshAPI(TokenRefreshView):
                     new_refresh_token,
                     httponly=True,
                     secure=True,
+                    domain="." + os.getenv("BASE_DOMAIN", ""),
                     samesite="None",
                     path="/",
                     expires=datetime.now() + timedelta(days=30),
