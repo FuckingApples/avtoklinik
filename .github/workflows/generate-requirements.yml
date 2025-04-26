@@ -63,7 +63,7 @@ jobs:
     - name: Export requirements
       run: |
         poetry export --without dev -f requirements.txt --output requirements.txt
-        poetry export -f requirements.txt --output requirements_dev.txt
+        poetry export --with dev -f requirements.txt --output requirements_dev.txt
 
     - name: Commit changes
       run: |
