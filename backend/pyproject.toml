@@ -12,9 +12,6 @@ dependencies = [
     "djangorestframework (>=3.15.2,<4.0.0)",
     "django-cors-headers (>=4.7.0,<5.0.0)",
     "python-dotenv (>=1.0.1,<2.0.0)",
-    "black (>=25.1.0,<26.0.0)",
-    "pytest (>=8.3.4,<9.0.0)",
-    "pytest-django (>=4.10.0,<5.0.0)",
     "djangorestframework-simplejwt (>=5.4.0,<6.0.0)",
     "pyotp (>=2.9.0,<3.0.0)",
     "drf-spectacular (==0.27.1)",
@@ -29,3 +26,34 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+pytest = "^8.3.5"
+pytest-django = "^4.11.1"
+flake8 = "^7.2.0"
+isort = "^6.0.1"
+
+
+[tool.poetry]
+package-mode = false
+
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+extend-exclude = '''
+(
+  migrations   # Django DB migrations
+)
+'''
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+skip_gitignore = true
+skip_glob = ["**/migrations/*", "**/settings/*"]
+src_paths = ["src"]
