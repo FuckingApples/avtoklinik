@@ -2,9 +2,9 @@ from django.urls import path
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 
-from apps.work.models import Work
-from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
-from apps.api.serializers.work import WorkSerializer
+from apps.api.serializers.works import WorkSerializer
+from apps.core.views.base import BaseOrganizationDetailView, BaseOrganizationModelView
+from apps.works.models import Work
 
 
 @extend_schema(tags=["Работы"])
@@ -54,6 +54,6 @@ urlpatterns = [
     path(
         "<int:id>/",
         WorkAPI.as_view(),
-        name="work_detail",
+        name="works",
     ),
 ]

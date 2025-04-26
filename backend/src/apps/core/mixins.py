@@ -1,10 +1,12 @@
-from django.utils import timezone
+from warnings import deprecated
+
 from django.db import IntegrityError
+from django.utils import timezone
+from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.serializers import ModelSerializer
 
 from apps.core.exceptions import DetailedValidationException
 from apps.organizations.models import Organization
-from rest_framework.generics import get_object_or_404, GenericAPIView
 
 
 class OrganizationMixin(GenericAPIView):
@@ -22,6 +24,7 @@ class OrganizationMixin(GenericAPIView):
         return context
 
 
+@deprecated("Use OrgPrimaryKeyRelatedField instead")
 class OrganizationQuerysetMixin(ModelSerializer):
     organization_related_fields = {}
 
