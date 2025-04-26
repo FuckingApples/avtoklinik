@@ -98,17 +98,6 @@ export function getCarsTableColumns({
       enableSorting: false,
     },
     {
-      id: "license_plate_region",
-      accessorKey: "license_plate_region",
-      meta: {
-        label: "Страна регистрации",
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Страна регистрации" />
-      ),
-      enableSorting: false,
-    },
-    {
       id: "client",
       accessorKey: "client",
       meta: {
@@ -131,10 +120,13 @@ export function getCarsTableColumns({
       accessorKey: "vin",
       meta: {
         label: "VIN",
+        placeholder: "Поиск по VIN...",
+        variant: "text",
       },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="VIN" />
       ),
+      enableColumnFilter: true,
     },
     {
       id: "frame",

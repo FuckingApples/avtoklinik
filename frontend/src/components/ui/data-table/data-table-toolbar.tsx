@@ -56,7 +56,7 @@ export function DataTableToolbar<TData>({
             onClick={onReset}
           >
             <XIcon />
-            Reset
+            Сбросить
           </Button>
         )}
       </div>

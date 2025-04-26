@@ -22,7 +22,6 @@ export interface Car {
   year: number;
   color: Color | null;
   license_plate: string;
-  license_plate_region: string;
   mileage: number;
   created_at: string;
   updated_at: string;
