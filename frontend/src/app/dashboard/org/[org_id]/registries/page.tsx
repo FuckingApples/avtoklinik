@@ -63,8 +63,8 @@ export default function RegistriesPage() {
             {menuItems.map(section => (
               <div key={section.title} className="bg-white rounded-lg border shadow-sm p-4 hover:border-gray-300 transition-colors">
                 <div className="flex items-center mb-3">
-                  <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 shadow-sm">
-                    <Folder size={18} className="text-blue-500" />
+                  <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm border border-blue-100">
+                    <Folder size={22} className="text-blue-500" />
                   </div>
                   <h3 className="text-lg font-semibold">{section.title}</h3>
                 </div>
