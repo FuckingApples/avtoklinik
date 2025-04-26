@@ -14,6 +14,7 @@ from apps.api.serializers.registries import (
     HourlyWageSerializer,
     EquipmentSerializer,
 )
+from apps.registries.filters import ManufacturerFilter
 from apps.registries.models import (
     Category,
     Manufacturer,
@@ -158,6 +159,12 @@ class MeasurementUnitsAPI(BaseOrganizationDetailView):
 class OrganizationManufacturersAPI(BaseOrganizationModelView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
+    filterset_class = ManufacturerFilter
+    ordering_fields = ("name",)
+    search_fields = (
+        "name",
+        "description",
+    )
 
 
 @extend_schema(tags=["Списки"])

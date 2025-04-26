@@ -5,6 +5,9 @@ import type {
   RegistriesCounts,
 } from "~/types/registries";
 import { getNumericOrgId } from "~/api/organization";
+import type { GetManufacturersFilters } from "~/store/registries";
+import type { ApiResponse } from "~/types/api";
+import type { Manufacturer } from "~/types/registries";
 
 export const COUNTRIES: Country[] = [
   { code: "RU", name: "Россия" },
@@ -39,6 +42,22 @@ export const COUNTRIES: Country[] = [
 export async function getColors(orgId: string) {
   const numericOrgId = await getNumericOrgId(orgId);
   return api.get<Color[]>(`/v1/organizations/${numericOrgId}/registries/colors/`).then((res) => res.data);
+}
+
+export async function getManufacturers(orgId: number, filters?: GetManufacturersFilters) {
+  const params = new URLSearchParams();
+
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params.append(key, value.toString());
+      }
+    });
+  }
+
+  return api
+      .get<ApiResponse<Manufacturer>>(`/v1/organizations/${orgId}/registries/manufacturers/`, { params })
+      .then((res) => res.data);
 }
 
 export async function getCountries(): Promise<Country[]> {

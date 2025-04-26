@@ -7,6 +7,14 @@ export interface Color {
     code?: string | null;
 }
 
+export interface Manufacturer {
+    id: string;
+    name: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Country {
     code: string;
     name: string;
