@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
-
-from dotenv import load_dotenv
 import os
+from datetime import timedelta
+from pathlib import Path
+
 import dj_database_url
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "apps.warehouses",
     "apps.deals",
     "apps.registries",
+    "apps.works",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",
