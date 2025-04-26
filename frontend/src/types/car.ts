@@ -1,9 +1,4 @@
-export interface Color {
-  id: string;
-  name: string;
-  hex?: string;
-  code?: string | null;
-}
+import type { Color } from "~/types/registries";
 
 export interface CarOwner {
   id: string;

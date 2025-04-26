@@ -1,5 +1,4 @@
 import {
-  LucideIcon,
   Folder,
   Tag,
   Ruler,
@@ -8,21 +7,7 @@ import {
   Building,
   Timer,
 } from "lucide-react";
-
-export interface RegistryItem {
-  title: string;
-  path: string;
-  href: (org_id: string) => string;
-  count: number;
-  icon: LucideIcon;
-  addButtonText: string;
-  importEnabled?: boolean;
-}
-
-export interface RegistrySection {
-  title: string;
-  items: RegistryItem[];
-}
+import type { RegistrySection } from "~/types/registries";
 
 export const registriesSections: RegistrySection[] = [
   {
@@ -34,7 +19,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/categories`,
         count: 12,
         icon: Folder,
-        addButtonText: "Добавить категорию",
+        buttonTitle: "Добавить категорию",
         importEnabled: true,
       },
       {
@@ -43,7 +28,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/manufacturers`,
         count: 28,
         icon: Tag,
-        addButtonText: "Добавить производителя",
+        buttonTitle: "Добавить производителя",
         importEnabled: true,
       },
       {
@@ -52,7 +37,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/measurement-units`,
         count: 8,
         icon: Ruler,
-        addButtonText: "Добавить единицу измерения",
+        buttonTitle: "Добавить единицу измерения",
         importEnabled: true,
       },
     ],
@@ -66,7 +51,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/colors`,
         count: 15,
         icon: Palette,
-        addButtonText: "Добавить цвет",
+        buttonTitle: "Добавить цвет",
         importEnabled: true,
       },
       {
@@ -75,7 +60,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/equipments`,
         count: 12,
         icon: Car,
-        addButtonText: "Добавить комплектность",
+        buttonTitle: "Добавить комплектность",
         importEnabled: true,
       },
     ],
@@ -89,7 +74,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/workplaces`,
         count: 20,
         icon: Building,
-        addButtonText: "Добавить рабочее место",
+        buttonTitle: "Добавить рабочее место",
         importEnabled: true,
       },
       {
@@ -98,7 +83,7 @@ export const registriesSections: RegistrySection[] = [
         href: (org_id) => `/dashboard/org/${org_id}/registries/hourly-wages`,
         count: 14,
         icon: Timer,
-        addButtonText: "Добавить стоимость",
+        buttonTitle: "Добавить стоимость",
         importEnabled: true,
       },
     ],

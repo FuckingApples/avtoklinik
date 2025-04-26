@@ -1,11 +1,10 @@
 import api from "~/lib/axios";
-import { Color } from "~/types/car";
+import type {
+  Color,
+  Country,
+  RegistriesCounts,
+} from "~/types/registries";
 import { getNumericOrgId } from "~/api/organization";
-
-export interface Country {
-  code: string;
-  name: string;
-}
 
 export const COUNTRIES: Country[] = [
   { code: "RU", name: "Россия" },
@@ -49,4 +48,11 @@ export async function getCountries(): Promise<Country[]> {
 export function getCountryName(countryCode: string): string {
   const country = COUNTRIES.find(c => c.code === countryCode);
   return country ? country.name : countryCode;
+}
+
+export async function getRegistriesCounts(orgId: string): Promise<RegistriesCounts> {
+  const numericOrgId = await getNumericOrgId(orgId);
+  return api
+    .get<RegistriesCounts>(`/v1/organizations/${numericOrgId}/registries/counts/`)
+    .then((res) => res.data);
 }

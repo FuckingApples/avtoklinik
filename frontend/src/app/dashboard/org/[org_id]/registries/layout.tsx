@@ -53,7 +53,7 @@ export default function RegistriesLayout({
             <ButtonsGroup>
               <Button>
                 <PlusIcon />
-                <span className="hidden sm:block">{registry?.addButtonText}</span>
+                <span className="hidden sm:block">{registry?.buttonTitle}</span>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
