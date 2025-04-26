@@ -3,11 +3,11 @@ name: Backend checks
 on:
   push:
     branches: ["develop", "main" ]
-    paths: ["backend/**.py"]
+    paths: ["backend/**"]
 
   pull_request:
     branches: [ "develop", "main" ]
-    paths: ["backend/**.py"]
+    paths: ["backend/**"]
 
 jobs:
   lint-backend:
