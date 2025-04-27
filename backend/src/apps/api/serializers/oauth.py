@@ -1,5 +1,6 @@
-from rest_framework import serializers
 from dataclasses import dataclass
+
+from rest_framework import serializers
 
 from apps.oauth.models import OAuthProvider
 
@@ -21,19 +22,6 @@ class OAuthProviderSerializer(serializers.ModelSerializer):
         )
 
 
-@dataclass
-class YandexOAuthDTO:
-    code: str
-
-    @classmethod
-    def from_instance(cls, code: str) -> "YandexOAuthDTO":
-        return cls(code=code)
-
-
 class YandexOAuthSerializer(serializers.Serializer):
     code = serializers.CharField(write_only=True)
-
-    def to_internal_value(self, data):
-        data = super().to_internal_value(data)
-
-        return YandexOAuthDTO(**data)
+    code_verifier = serializers.CharField(write_only=True)

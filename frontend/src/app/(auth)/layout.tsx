@@ -1,19 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CarFront } from "lucide-react";
+import { CarFront, KeyRoundIcon } from "lucide-react";
 import { env } from "~/env";
-import Script from "next/script";
+import OAuthButton from "~/components/oauth-button";
 
 export default function AuthLayout({
   children,
 }: Readonly<React.PropsWithChildren>) {
   return (
     <div className="grid min-h-svh p-2 lg:grid-cols-2">
-      <Script
-        src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"
-        strategy="beforeInteractive"
-      />
       <div className="bg-muted relative hidden rounded-lg lg:block">
         <Image
           width={0} // Width & height will be ignored, but they are required
@@ -33,7 +29,37 @@ export default function AuthLayout({
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="relative w-full max-w-xs">{children}</div>
+          <div className="relative w-full max-w-xs">
+            {children}
+            <div className="after:border-border relative my-4 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+              <span className="bg-background text-muted-foreground relative z-10 px-2">
+                или
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {/*<OAuthButton className="font-semibold">*/}
+              {/*  <KeyRoundIcon /> Passkey*/}
+              {/*</OAuthButton>*/}
+              <OAuthButton provider="yandex">
+                <Image
+                  src="providers/yandex.svg"
+                  alt="Войти через Яндекс"
+                  className="size-6 rounded-full"
+                  width={0}
+                  height={0}
+                />
+              </OAuthButton>
+              <OAuthButton provider="vk">
+                <Image
+                  src="providers/vk.svg"
+                  alt="Войти через VK"
+                  className="size-6"
+                  width={0}
+                  height={0}
+                />
+              </OAuthButton>
+            </div>
+          </div>
         </div>
       </div>
     </div>

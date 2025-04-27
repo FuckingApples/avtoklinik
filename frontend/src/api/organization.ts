@@ -2,6 +2,11 @@ import api from "~/lib/axios";
 import type { TOrganizationCreationSchema } from "~/utils/validation/organization-creation";
 import type { Organization } from "~/types/organization";
 
+/**
+ *
+ * @deprecated Use zustand organization storage instead
+ * @see useOrganizationStore
+ */
 export async function getNumericOrgId(uuidOrgId: string): Promise<number> {
   try {
     const response = await api.get<Organization[]>(`/v1/organizations/`, {
