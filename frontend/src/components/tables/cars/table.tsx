@@ -9,7 +9,7 @@ import { useCars } from "~/hooks/use-cars";
 import { DataTable } from "~/components/ui/data-table";
 import { CarDetails } from "~/components/sidebars/car-details";
 import { useCarsStore } from "~/store/cars";
-import { parseAsInteger, useQueryStates } from "nuqs";
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { getFiltersStateParser, getSortingStateParser } from "~/lib/parsers";
 import { DataTableToolbar } from "~/components/ui/data-table/data-table-toolbar";
 import { DataTableSortList } from "~/components/ui/data-table/data-table-sort-list";
@@ -17,6 +17,7 @@ import { DataTableSortList } from "~/components/ui/data-table/data-table-sort-li
 export function CarsTable() {
   const { setFilters } = useCarsStore();
   const [search] = useQueryStates({
+    vin: parseAsString.withDefault(""),
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
     sort: getSortingStateParser<Car>().withDefault([]),
@@ -52,8 +53,9 @@ export function CarsTable() {
       page: search.page,
       page_size: search.perPage,
       ordering: search.sort.map((s) => `${s.desc ? "-" : ""}${s.id}`).join(","),
+      vin__icontains: search.vin,
     });
-  }, [search.page, search.perPage, search.sort, setFilters]);
+  }, [search.page, search.perPage, search.sort, search.vin, setFilters]);
 
   return (
     <>

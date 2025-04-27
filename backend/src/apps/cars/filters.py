@@ -15,6 +15,5 @@ class CarFilter(filters.FilterSet):
             "color__name": ["icontains"],
             "client__last_name": ["icontains"],
             "license_plate": ["icontains"],
-            "license_plate_region": ["icontains"],
             "mileage": ["gte", "lte"],
         }
