@@ -1,6 +1,5 @@
 import api from "~/lib/axios";
 import type { Car } from "~/types/car";
-import { getNumericOrgId } from "~/api/organization";
 import type { GetCarsFilters } from "~/store/cars";
 import type { ApiResponse } from "~/types/api";
 
@@ -20,35 +19,31 @@ export async function getCars(orgId: number, filters?: GetCarsFilters) {
     .then((res) => res.data);
 }
 
-export async function getCar(orgId: string, carId: string) {
-  const numericOrgId = await getNumericOrgId(orgId);
+export async function getCar(orgId: number, carId: string) {
   return api
-    .get<Car>(`/v1/organizations/${numericOrgId}/cars/${carId}/`)
+    .get<Car>(`/v1/organizations/${orgId}/cars/${carId}/`)
     .then((res) => res.data);
 }
 
 export async function createCar(
-  orgId: string,
+  orgId: number,
   data: Partial<Car> & { client_id?: string },
 ) {
-  const numericOrgId = await getNumericOrgId(orgId);
   return api
-    .post<Car>(`/v1/organizations/${numericOrgId}/cars/`, data)
+    .post<Car>(`/v1/organizations/${orgId}/cars/`, data)
     .then((res) => res.data);
 }
 
 export async function updateCar(
-  orgId: string,
+  orgId: number,
   carId: string,
   data: Partial<Car> & { client_id?: string },
 ) {
-  const numericOrgId = await getNumericOrgId(orgId);
   return api
-    .patch<Car>(`/v1/organizations/${numericOrgId}/cars/${carId}/`, data)
+    .patch<Car>(`/v1/organizations/${orgId}/cars/${carId}/`, data)
     .then((res) => res.data);
 }
 
-export async function deleteCar(orgId: string, carId: string) {
-  const numericOrgId = await getNumericOrgId(orgId);
-  return api.delete(`/v1/organizations/${numericOrgId}/cars/${carId}/`);
+export async function deleteCar(orgId: number, carId: string) {
+  return api.delete(`/v1/organizations/${orgId}/cars/${carId}/`);
 }

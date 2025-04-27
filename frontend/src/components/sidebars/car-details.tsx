@@ -14,7 +14,6 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getCountryName } from "~/api/registries";
 import { DeleteCar } from "~/components/modals/delete-car";
 
 interface CarDetailProps {

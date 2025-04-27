@@ -24,12 +24,6 @@ export interface MeasurementUnit {
     updated_at: string;
 }
 
-export interface Country {
-    code: string;
-    name: string;
-}
-
-
 export interface RegistryItem {
     title: string;
     path: string;

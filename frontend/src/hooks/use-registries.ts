@@ -1,7 +1,9 @@
 import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
-import { getManufacturers, getMeasurementUnits } from "~/api/registries";
+import { getRegistry } from "~/api/registries";
 import { useOrganizationStore } from "~/store/organization";
 import { useManufacturersStore, useMeasurementUnitsStore } from "~/store/registries";
+import type { Manufacturer, MeasurementUnit } from "~/types/registries";
+import type { GetManufacturersFilters, GetMeasurementUnitsFilters } from "~/store/registries";
 
 export const useManufacturers = () => {
     const { organization } = useOrganizationStore();
@@ -13,7 +15,7 @@ export const useManufacturers = () => {
             if (!organization?.id) {
                 throw new Error("Organization not selected");
             }
-            return await getManufacturers(organization.id, filters);
+            return await getRegistry<Manufacturer, GetManufacturersFilters>("manufacturers", organization.id, filters);
         },
         enabled: !!organization?.id,
         staleTime: 1000 * 60,
@@ -32,7 +34,7 @@ export const useMeasurementUnits = () => {
             if (!organization?.id) {
                 throw new Error("Organization not selected");
             }
-            return await getMeasurementUnits(organization.id, filters);
+            return await getRegistry<MeasurementUnit, GetMeasurementUnitsFilters>("measurement_units", organization.id, filters);
         },
         enabled: !!organization?.id,
         staleTime: 1000 * 60,

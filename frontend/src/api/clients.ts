@@ -1,5 +1,4 @@
 import api from "~/lib/axios";
-import { getNumericOrgId } from "~/api/organization";
 
 export interface Client {
   id: string;
@@ -12,7 +11,6 @@ export interface Client {
   updated_at: string;
 }
 
-export async function getClients(orgId: string) {
-  const numericOrgId = await getNumericOrgId(orgId);
-  return api.get<Client[]>(`/v1/organizations/${numericOrgId}/clients/`).then((res) => res.data);
+export async function getClients(orgId: number) {
+  return api.get<Client[]>(`/v1/organizations/${orgId}/clients/`).then((res) => res.data);
 }
