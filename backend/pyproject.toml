@@ -42,6 +42,10 @@ isort = "^6.0.1"
 package-mode = false
 
 
+[tool.poetry.requires-plugins]
+poetry-plugin-shell = ">=1.0.0,<2.0.0"
+
+
 [tool.black]
 line-length = 88
 target-version = ["py313"]
