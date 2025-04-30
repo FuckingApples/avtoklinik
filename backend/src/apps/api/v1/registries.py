@@ -252,6 +252,14 @@ class WorkplacesAPI(BaseOrganizationDetailView):
 class OrganizationHourlyWagesAPI(BaseOrganizationModelView):
     queryset = HourlyWage.objects.all()
     serializer_class = HourlyWageSerializer
+    ordering_fields = (
+        "name",
+        "wage",
+    )
+    search_fields = (
+        "name",
+        "wage",
+    )
 
 
 @extend_schema(tags=["Списки"])
@@ -290,6 +298,8 @@ class HourlyWagesAPI(BaseOrganizationDetailView):
 class OrganizationEquipmentsAPI(BaseOrganizationModelView):
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+    ordering_fields = ("name",)
+    search_fields = ("name",)
 
 
 @extend_schema(tags=["Списки"])
