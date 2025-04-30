@@ -1,10 +1,9 @@
+import base64
 import os
 from datetime import datetime, timedelta
 
 import requests
-import base64
-
-from rest_framework import viewsets, permissions, views, status
+from rest_framework import permissions, status, views, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -33,14 +32,18 @@ class YandexOAuthAPI(views.APIView):
         serializer = YandexOAuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        code = serializer.validated_data.code
+        validated_data = serializer.validated_data
 
         # Запрашиваем токен у Яндекса
         token_obtain_url = "https://oauth.yandex.ru/token"
         auth_token = base64.b64encode(
             f"{OAUTH_YANDEX_CLIENT_ID}:{OAUTH_YANDEX_CLIENT_SECRET}".encode()
         ).decode()
-        data = {"grant_type": "authorization_code", "code": code}
+        data = {
+            "grant_type": "authorization_code",
+            "code": validated_data["code"],
+            "code_verifier": validated_data["code_verifier"],
+        }
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Authorization": f"Basic {auth_token}",
