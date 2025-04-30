@@ -20,7 +20,7 @@ export default function AuthLayout({
           height={0}
           src="/placeholder.svg"
           alt="Placeholder"
-          className="absolute inset-0 h-full w-full rounded-lg object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full rounded-lg object-cover dark:brightness-[0.8]"
         />
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
