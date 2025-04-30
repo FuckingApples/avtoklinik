@@ -13,18 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import type { MeasurementUnit } from "~/types/registries";
+import type { HourlyWage } from "~/types/registries";
 import { DataTableColumnHeader } from "~/components/ui/data-table/data-table-column-header";
 
-interface GetMeasurementUnitsTableColumnsProps {
+interface GetHourlyWagesTableColumnsProps {
   setRowAction: React.Dispatch<
-    React.SetStateAction<DataTableRowAction<MeasurementUnit> | null>
+    React.SetStateAction<DataTableRowAction<HourlyWage> | null>
   >;
 }
 
-export function getMeasurementUnitsTableColumns({
+export function getHourlyWagesTableColumns({
   setRowAction,
-}: GetMeasurementUnitsTableColumnsProps): ColumnDef<MeasurementUnit>[] {
+}: GetHourlyWagesTableColumnsProps): ColumnDef<HourlyWage>[] {
   return [
     {
       id: "select",
@@ -52,36 +52,25 @@ export function getMeasurementUnitsTableColumns({
       size: 40,
     },
     {
-      id: "unit",
-      accessorKey: "unit",
+      id: "name",
+      accessorKey: "name",
       meta: {
-        label: "Единица измерения",
+        label: "Нормо-час",
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Единица измерения" />
+        <DataTableColumnHeader column={column} title="Нормо-час" />
       ),
       enableSorting: true,
       enableHiding: false,
     },
     {
-      id: "abbreviation",
-      accessorKey: "abbreviation",
+      id: "wage",
+      accessorKey: "wage",
       meta: {
-        label: "Сокращение",
+        label: "Стоимость",
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Сокращение" />
-      ),
-      enableSorting: true,
-    },
-    {
-      id: "okei_code",
-      accessorKey: "okei_code",
-      meta: {
-        label: "ОКЕИ",
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ОКЕИ" />
+        <DataTableColumnHeader column={column} title="Стоимость" />
       ),
       enableSorting: true,
     },

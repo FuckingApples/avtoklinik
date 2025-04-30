@@ -2,9 +2,7 @@
 
 import type { DataTableRowAction } from "~/types/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  Ellipsis,
-} from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";

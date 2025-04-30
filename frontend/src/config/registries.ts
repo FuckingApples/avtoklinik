@@ -34,7 +34,8 @@ export const registriesSections: RegistrySection[] = [
       {
         title: "Единицы измерения",
         path: "measurement-units",
-        href: (org_id) => `/dashboard/org/${org_id}/registries/measurement-units`,
+        href: (org_id) =>
+          `/dashboard/org/${org_id}/registries/measurement-units`,
         count: 8,
         icon: Ruler,
         buttonTitle: "Добавить единицу измерения",
@@ -55,7 +56,7 @@ export const registriesSections: RegistrySection[] = [
         importEnabled: true,
       },
       {
-        title: "Комплектность",
+        title: "Комплектности",
         path: "equipments",
         href: (org_id) => `/dashboard/org/${org_id}/registries/equipments`,
         count: 12,
@@ -78,7 +79,7 @@ export const registriesSections: RegistrySection[] = [
         importEnabled: true,
       },
       {
-        title: "Стоимость нормо-часа",
+        title: "Нормо-часы",
         path: "hourly-wages",
         href: (org_id) => `/dashboard/org/${org_id}/registries/hourly-wages`,
         count: 14,
@@ -91,27 +92,27 @@ export const registriesSections: RegistrySection[] = [
 ];
 
 export function getRegistriesData(orgId: string) {
-  return registriesSections.map(section => ({
+  return registriesSections.map((section) => ({
     ...section,
-    items: section.items.map(item => ({
+    items: section.items.map((item) => ({
       ...item,
       href: item.href(orgId),
-    }))
+    })),
   }));
 }
 
 export function getCurrentRegistry(pathname: string, org_id: string) {
-  const lastPathSegment = pathname.split('/').pop() ?? '';
+  const lastPathSegment = pathname.split("/").pop() ?? "";
 
   for (const section of registriesSections) {
-    const item = section.items.find(item => item.path === lastPathSegment);
+    const item = section.items.find((item) => item.path === lastPathSegment);
     if (item) {
       return {
         ...item,
         href: item.href(org_id),
-        section: section.title
+        section: section.title,
       };
     }
   }
   return null;
-} 
+}

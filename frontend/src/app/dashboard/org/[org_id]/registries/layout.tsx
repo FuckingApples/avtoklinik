@@ -1,8 +1,13 @@
 "use client";
 
-import { RegistriesNavigation } from "~/components/registries-navigation";
+import { NavRegistries } from "~/components/nav-registries";
 import DashboardHeader from "~/components/ui/dashboard-header";
-import { ChevronDownIcon, ChevronRight, FileUpIcon, PlusIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronRight,
+  FileUpIcon,
+  PlusIcon,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { ButtonsGroup } from "~/components/ui/buttons-group";
 import {
@@ -22,7 +27,7 @@ export default function RegistriesLayout({
   const pathname = usePathname();
   const params = useParams();
   const org_id = params.org_id as string;
-  
+
   const mainPage = `/dashboard/org/${org_id}/registries`;
   const isMainPage = pathname === mainPage;
   const registry = getCurrentRegistry(pathname, org_id);
@@ -34,12 +39,20 @@ export default function RegistriesLayout({
         <DashboardHeader.Title>
           {!isMainPage && registry ? (
             <div className="flex items-center gap-2">
-              <Link href={mainPage} className="hover:text-gray-800 transition-colors">
+              <Link
+                href={mainPage}
+                className="transition-colors hover:text-gray-800"
+              >
                 <span>Справочники</span>
               </Link>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm border border-blue-100">
-                {registry.icon && <registry.icon className="h-5 w-5 text-blue-500" strokeWidth={2.2} />}
+              <ChevronRight className="text-muted-foreground h-4 w-4" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm">
+                {registry.icon && (
+                  <registry.icon
+                    className="h-5 w-5 text-blue-500"
+                    strokeWidth={2.2}
+                  />
+                )}
               </div>
               <span>{registry.title}</span>
             </div>
@@ -47,7 +60,7 @@ export default function RegistriesLayout({
             "Справочники"
           )}
         </DashboardHeader.Title>
-        
+
         {showAddButton && (
           <DashboardHeader.ActionButton asChild>
             <ButtonsGroup>
@@ -74,9 +87,9 @@ export default function RegistriesLayout({
       </DashboardHeader>
 
       <div className="flex flex-1">
-        <RegistriesNavigation />
-          {children}
+        <NavRegistries />
+        {children}
       </div>
     </div>
   );
-} 
+}

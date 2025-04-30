@@ -13,18 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import type { MeasurementUnit } from "~/types/registries";
+import type { Equipment } from "~/types/registries";
 import { DataTableColumnHeader } from "~/components/ui/data-table/data-table-column-header";
 
-interface GetMeasurementUnitsTableColumnsProps {
+interface GetEquipmentsTableColumnsProps {
   setRowAction: React.Dispatch<
-    React.SetStateAction<DataTableRowAction<MeasurementUnit> | null>
+    React.SetStateAction<DataTableRowAction<Equipment> | null>
   >;
 }
 
-export function getMeasurementUnitsTableColumns({
+export function getEquipmentsTableColumns({
   setRowAction,
-}: GetMeasurementUnitsTableColumnsProps): ColumnDef<MeasurementUnit>[] {
+}: GetEquipmentsTableColumnsProps): ColumnDef<Equipment>[] {
   return [
     {
       id: "select",
@@ -52,38 +52,16 @@ export function getMeasurementUnitsTableColumns({
       size: 40,
     },
     {
-      id: "unit",
-      accessorKey: "unit",
+      id: "name",
+      accessorKey: "name",
       meta: {
-        label: "Единица измерения",
+        label: "Комплектность",
       },
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Единица измерения" />
+        <DataTableColumnHeader column={column} title="Комплектность" />
       ),
       enableSorting: true,
       enableHiding: false,
-    },
-    {
-      id: "abbreviation",
-      accessorKey: "abbreviation",
-      meta: {
-        label: "Сокращение",
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Сокращение" />
-      ),
-      enableSorting: true,
-    },
-    {
-      id: "okei_code",
-      accessorKey: "okei_code",
-      meta: {
-        label: "ОКЕИ",
-      },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ОКЕИ" />
-      ),
-      enableSorting: true,
     },
     {
       id: "actions",
