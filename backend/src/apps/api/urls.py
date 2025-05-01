@@ -6,6 +6,7 @@ from apps.api.v1.core import get_csrf_token
 from apps.api.v1.oauth import YandexOAuthAPI, OAuthProviderViewSet
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
 from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
+from apps.api.v1.templates import TemplateListCreateAPI
 
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
@@ -31,4 +32,5 @@ urlpatterns = [
     # OAuth routes
     path("v1/oauth/yandex/", YandexOAuthAPI.as_view(), name="yandex_oauth"),
     path("v1/", include("apps.api.v1.urls")),
+    path("templates/", TemplateListCreateAPI.as_view(), name="templates"),
 ]
