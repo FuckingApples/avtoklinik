@@ -1,6 +1,7 @@
-from rest_framework import serializers
 from dataclasses import dataclass
 from typing import Optional
+
+from rest_framework import serializers
 
 
 @dataclass

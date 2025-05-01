@@ -3,10 +3,10 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 
 from apps.api.v1.core import get_csrf_token
-from apps.api.v1.oauth import YandexOAuthAPI, OAuthProviderViewSet
+from apps.api.v1.oauth import OAuthProviderViewSet, YandexOAuthAPI
 from apps.api.v1.otp import RequestEmailOTPAPI, VerifyEmailOTPAPI
-from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
 from apps.api.v1.templates import TemplateListCreateAPI
+from apps.api.v1.tokens import CustomTokenObtainPairAPI, CustomTokenRefreshAPI
 
 router = DefaultRouter()
 router.register("oauth", OAuthProviderViewSet, basename="oauth")
