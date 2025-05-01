@@ -16,4 +16,6 @@ class TemplateListCreateAPI(APIView):
         serializer = TemplateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         template = Template.objects.create(**serializer.validated_data.__dict__)
-        return Response(TemplateSerializer(template).data, status=status.HTTP_201_CREATED)
+        return Response(
+            TemplateSerializer(template).data, status=status.HTTP_201_CREATED
+        )

@@ -2,7 +2,9 @@ from django.db import models
 
 
 class Template(models.Model):
-    is_organization = models.BooleanField(default=False, help_text="Привязан ли шаблон к организации")
+    is_organization = models.BooleanField(
+        default=False, help_text="Привязан ли шаблон к организации"
+    )
     text = models.TextField(help_text="Текст шаблона")
     field_id = models.CharField(max_length=255, help_text="ID связанного поля")
 
