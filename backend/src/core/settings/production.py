@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "apps.deals",
     "apps.registries",
     "apps.works",
+    "apps.calculations",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",

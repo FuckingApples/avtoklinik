@@ -26,5 +26,9 @@ urlpatterns = [
         "organizations/<int:organization_id>/works/",
         include("apps.api.v1.works"),
     ),
+    path(
+        "organizations/<int:organization_id>/calculations/",
+        include("apps.api.v1.calculations"),
+    ),
     path("", include(router.urls)),
 ]
