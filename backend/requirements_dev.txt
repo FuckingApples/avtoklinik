@@ -132,7 +132,7 @@ charset-normalizer==3.4.1 ; python_version >= "3.13" \
 click==8.1.8 ; python_version >= "3.13" \
     --hash=sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2 \
     --hash=sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a
-colorama==0.4.6 ; platform_system == "Windows" and python_version >= "3.13" or sys_platform == "win32" and python_version >= "3.13" \
+colorama==0.4.6 ; (platform_system == "Windows" or sys_platform == "win32") and python_version >= "3.13" \
     --hash=sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44 \
     --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6
 dj-database-url==2.3.0 ; python_version >= "3.13" \
@@ -414,6 +414,12 @@ rpds-py==0.24.0 ; python_version >= "3.13" \
     --hash=sha256:fc1c892b1ec1f8cbd5da8de287577b455e388d9c328ad592eabbdcb6fc93bee5 \
     --hash=sha256:fc2c1e1b00f88317d9de6b2c2b39b012ebbfe35fe5e7bef980fd2a91f6100a07 \
     --hash=sha256:fd822f019ccccd75c832deb7aa040bb02d70a92eb15a2f16c7987b7ad4ee8d83
+s3transfer==0.12.0 ; python_version >= "3.13" \
+    --hash=sha256:35b314d7d82865756edab59f7baebc6b477189e6ab4c53050e28c1de4d9cce18 \
+    --hash=sha256:8ac58bc1989a3fdb7c7f3ee0918a66b160d038a147c7b5db1500930a607e9a1c
+six==1.17.0 ; python_version >= "3.13" \
+    --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
+    --hash=sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
 sqlparse==0.5.3 ; python_version >= "3.13" \
     --hash=sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272 \
     --hash=sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca
