@@ -17,6 +17,7 @@ from apps.api.serializers.registries import (
 from apps.registries.filters import (
     ManufacturerFilter,
     MeasurementUnitFilter,
+    WorkplacesFilter,
     HourlyWageFilter,
     EquipmentFilter,
 )
@@ -227,6 +228,15 @@ class ManufacturersAPI(BaseOrganizationDetailView):
 class OrganizationWorkplacesAPI(BaseOrganizationModelView):
     queryset = Workplace.objects.all()
     serializer_class = WorkplaceSerializer
+    filterset_class = WorkplacesFilter
+    ordering_fields = (
+        "name",
+        "description",
+    )
+    search_fields = (
+        "name",
+        "description",
+    )
 
 
 @extend_schema(tags=["Списки"])

@@ -43,6 +43,19 @@ export const useColorsStore = create<ColorsState>((set) => ({
   setFilters: (filters) => set({ filters }),
 }));
 
+export type GetWorkplacesFilters = BaseFiltersParams & PaginationParams & {};
+
+type WorkplacesState = {
+  filters?: GetWorkplacesFilters;
+  setFilters: (filters?: GetWorkplacesFilters) => void;
+};
+
+export const useWorkplacesStore = create<WorkplacesState>((set) => ({
+  filters: undefined,
+  pagination: undefined,
+  setFilters: (filters) => set({ filters }),
+}));
+
 export type GetHourlyWagesFilters = BaseFiltersParams & PaginationParams & {};
 
 type HourlyWagesState = {

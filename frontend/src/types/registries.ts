@@ -24,6 +24,16 @@ export interface Color {
   code?: string | null;
 }
 
+export interface Workplace {
+  id: string;
+  icon?: string;
+  name: string;
+  description?: string;
+  color: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface HourlyWage {
   id: string;
   name: string;

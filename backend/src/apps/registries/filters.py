@@ -37,6 +37,15 @@ class ColorFilter(filters.FilterSet):
         }
 
 
+class WorkplacesFilter(filters.FilterSet):
+    class Meta:
+        model = Manufacturer
+        fields = {
+            "name": ["icontains"],
+            "description": ["icontains"],
+        }
+
+
 class HourlyWageFilter(filters.FilterSet):
     class Meta:
         model = HourlyWage
