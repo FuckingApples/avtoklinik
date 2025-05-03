@@ -1,12 +1,5 @@
 import type { LucideIcon } from "lucide-react";
 
-export interface Color {
-  id: string;
-  name: string;
-  hex?: string;
-  code?: string | null;
-}
-
 export interface Manufacturer {
   id: string;
   name: string;
@@ -22,6 +15,13 @@ export interface MeasurementUnit {
   okei_code: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface Color {
+  id: string;
+  name: string;
+  hex?: string;
+  code?: string | null;
 }
 
 export interface HourlyWage {

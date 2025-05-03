@@ -1,6 +1,12 @@
 from django_filters import rest_framework as filters
 
-from .models import Manufacturer, MeasurementUnit, HourlyWage, Equipment
+from .models import (
+    Manufacturer,
+    MeasurementUnit,
+    Color,
+    HourlyWage,
+    Equipment,
+)
 
 
 class ManufacturerFilter(filters.FilterSet):
@@ -19,6 +25,15 @@ class MeasurementUnitFilter(filters.FilterSet):
             "unit": ["icontains"],
             "abbreviation": ["icontains"],
             "okei_code": ["icontains"],
+        }
+
+
+class ColorFilter(filters.FilterSet):
+    class Meta:
+        model = Color
+        fields = {
+            "name": ["icontains"],
+            "code": ["icontains"],
         }
 
 

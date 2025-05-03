@@ -30,6 +30,19 @@ export const useMeasurementUnitsStore = create<MeasurementUnitsState>(
   }),
 );
 
+export type GetColorsFilters = BaseFiltersParams & PaginationParams & {};
+
+type ColorsState = {
+  filters?: GetColorsFilters;
+  setFilters: (filters?: GetColorsFilters) => void;
+};
+
+export const useColorsStore = create<ColorsState>((set) => ({
+  filters: undefined,
+  pagination: undefined,
+  setFilters: (filters) => set({ filters }),
+}));
+
 export type GetHourlyWagesFilters = BaseFiltersParams & PaginationParams & {};
 
 type HourlyWagesState = {

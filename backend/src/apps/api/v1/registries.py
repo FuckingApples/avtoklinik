@@ -14,7 +14,12 @@ from apps.api.serializers.registries import (
     HourlyWageSerializer,
     EquipmentSerializer,
 )
-from apps.registries.filters import ManufacturerFilter, MeasurementUnitFilter
+from apps.registries.filters import (
+    ManufacturerFilter,
+    MeasurementUnitFilter,
+    HourlyWageFilter,
+    EquipmentFilter,
+)
 from apps.registries.models import (
     Category,
     Manufacturer,
@@ -83,6 +88,14 @@ class CategoriesAPI(BaseOrganizationDetailView):
 class OrganizationColorsAPI(BaseOrganizationModelView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
+    ordering_fields = (
+        "name",
+        "code",
+    )
+    search_fields = (
+        "name",
+        "code",
+    )
 
 
 @extend_schema(tags=["Списки"])
@@ -252,6 +265,7 @@ class WorkplacesAPI(BaseOrganizationDetailView):
 class OrganizationHourlyWagesAPI(BaseOrganizationModelView):
     queryset = HourlyWage.objects.all()
     serializer_class = HourlyWageSerializer
+    filterset_class = HourlyWageFilter
     ordering_fields = (
         "name",
         "wage",
@@ -298,6 +312,7 @@ class HourlyWagesAPI(BaseOrganizationDetailView):
 class OrganizationEquipmentsAPI(BaseOrganizationModelView):
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+    filterset_class = EquipmentFilter
     ordering_fields = ("name",)
     search_fields = ("name",)
 

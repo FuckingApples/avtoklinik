@@ -2,14 +2,17 @@ import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 import { getRegistry } from "~/api/registries";
 import { useOrganizationStore } from "~/store/organization";
 import {
+  GetColorsFilters,
   GetEquipmentsFilters,
   GetHourlyWagesFilters,
+  useColorsStore,
   useEquipmentsStore,
   useHourlyWagesStore,
   useManufacturersStore,
   useMeasurementUnitsStore,
 } from "~/store/registries";
 import type {
+  Color,
   Equipment,
   HourlyWage,
   Manufacturer,
@@ -55,6 +58,29 @@ export const useMeasurementUnits = () => {
       }
       return await getRegistry<MeasurementUnit, GetMeasurementUnitsFilters>(
         "measurement_units",
+        organization.id,
+        filters,
+      );
+    },
+    enabled: !!organization?.id,
+    staleTime: 1000 * 60,
+    retry: false,
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useColors = () => {
+  const { organization } = useOrganizationStore();
+  const { filters } = useColorsStore();
+
+  return useQuery({
+    queryKey: ["colors", organization?.id, filters],
+    queryFn: async () => {
+      if (!organization?.id) {
+        throw new Error("Organization not selected");
+      }
+      return await getRegistry<Color, GetColorsFilters>(
+        "colors",
         organization.id,
         filters,
       );
