@@ -1,5 +1,5 @@
 import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
-import { getRegistry } from "~/api/registries";
+import { getRegistry, getRegistriesCounts } from "~/api/registries";
 import { useOrganizationStore } from "~/store/organization";
 import {
   useManufacturersStore,
@@ -16,6 +16,7 @@ import type {
   Workplace,
   HourlyWage,
   Equipment,
+  RegistriesCounts,
 } from "~/types/registries";
 import type {
   GetManufacturersFilters,
@@ -163,3 +164,21 @@ export const useEquipments = () => {
     placeholderData: keepPreviousData,
   });
 };
+
+export function useRegistriesCounts() {
+  const { organization } = useOrganizationStore();
+
+  return useQuery<RegistriesCounts>({
+    queryKey: ["registries-counts", organization?.id],
+    queryFn: async () => {
+      if (!organization?.id) {
+        throw new Error("Organization not selected");
+      }
+      return await getRegistriesCounts(organization.id);
+    },
+    enabled: !!organization?.id,
+    staleTime: 1000 * 60,
+    retry: false,
+    placeholderData: keepPreviousData,
+  });
+}

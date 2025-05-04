@@ -4,6 +4,7 @@ from .models import (
     Manufacturer,
     MeasurementUnit,
     Color,
+    Workplace,
     HourlyWage,
     Equipment,
 )
@@ -39,7 +40,7 @@ class ColorFilter(filters.FilterSet):
 
 class WorkplacesFilter(filters.FilterSet):
     class Meta:
-        model = Manufacturer
+        model = Workplace
         fields = {
             "name": ["icontains"],
             "description": ["icontains"],

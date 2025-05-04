@@ -6,6 +6,7 @@ import { getRegistriesData } from "~/config/registries";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
+import { useRegistriesCounts } from "~/hooks/use-registries";
 
 export default function RegistriesPage() {
   const params = useParams();
@@ -13,6 +14,7 @@ export default function RegistriesPage() {
   const [viewMode, setViewMode] = useState<string>("grid");
 
   const menuItems = getRegistriesData(org_id);
+  const { data: counts, isLoading } = useRegistriesCounts();
 
   return (
     <div className="flex flex-1 items-center justify-center p-6">
@@ -65,21 +67,25 @@ export default function RegistriesPage() {
                   <h3 className="text-lg font-semibold">{section.title}</h3>
                 </div>
                 <div>
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.title}
-                      href={item.href}
-                      className="flex items-center justify-between border-t py-2"
-                    >
-                      <span className="text-sm">{item.title}</span>
-                      <div className="flex items-center">
-                        <span className="mr-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                          {item.count}
-                        </span>
-                        <ChevronRight size={16} className="text-gray-400" />
-                      </div>
-                    </Link>
-                  ))}
+                  {section.items.map((item) => {
+                    const count = counts?.[item.path] ?? 0;
+
+                    return (
+                      <Link
+                        key={item.title}
+                        href={item.href}
+                        className="flex items-center justify-between border-t py-2"
+                      >
+                        <span className="text-sm">{item.title}</span>
+                        <div className="flex items-center">
+                          <span className="mr-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+                            {isLoading ? "..." : count}
+                          </span>
+                          <ChevronRight size={16} className="text-gray-400" />
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}

@@ -53,15 +53,9 @@ export interface RegistryItem {
   title: string;
   path: string;
   href: (org_id: string) => string;
-  count: number;
   icon: LucideIcon;
   buttonTitle: string;
   importEnabled?: boolean;
-}
-
-export interface RegistrySection {
-  title: string;
-  items: RegistryItem[];
 }
 
 export interface RegistriesCounts {
@@ -72,4 +66,9 @@ export interface RegistriesCounts {
   workplaces: number;
   hourly_wages: number;
   equipments: number;
+}
+
+export interface RegistrySection {
+  title: string;
+  items: RegistryItem[];
 }
