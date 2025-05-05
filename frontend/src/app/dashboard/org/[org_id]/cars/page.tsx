@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function CarsPage() {
   return (
@@ -44,6 +45,7 @@ export default async function CarsPage() {
         </section>
         {/*<span className="bg-muted h-[500px] w-[600px]" />*/}
       </main>
+      <HelpMenu pageKey="cars" />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { ManufacturersTable } from "~/components/tables/registries/manufacturers/table";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function ManufacturersPage() {
   return (
@@ -8,6 +9,7 @@ export default async function ManufacturersPage() {
           <ManufacturersTable />
         </section>
       </main>
+      <HelpMenu pageKey="manufacturers" />
     </div>
   );
 }

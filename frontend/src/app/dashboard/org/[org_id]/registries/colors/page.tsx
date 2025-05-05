@@ -1,4 +1,5 @@
 import { ColorsTable } from "~/components/tables/registries/colors/table";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function ColorsPage() {
   return (
@@ -8,6 +9,7 @@ export default async function ColorsPage() {
           <ColorsTable />
         </section>
       </main>
+      <HelpMenu pageKey="colors" />
     </div>
   );
 }

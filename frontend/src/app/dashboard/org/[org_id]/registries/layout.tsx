@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { getCurrentRegistry } from "~/config/registries";
+import { getCurrentRegistry } from "~/config/registries-content";
 import Link from "next/link";
 import React from "react";
 import { usePathname, useParams } from "next/navigation";

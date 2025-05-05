@@ -6,7 +6,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { getRegistriesData } from "~/config/registries";
+import { getRegistriesData } from "~/config/registries-content";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useParams, usePathname } from "next/navigation";

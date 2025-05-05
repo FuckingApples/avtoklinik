@@ -1,4 +1,5 @@
 import { MeasurementUnitsTable } from "~/components/tables/registries/measurement-units/table";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function MeasurementUnitsPage() {
   return (
@@ -8,6 +9,7 @@ export default async function MeasurementUnitsPage() {
           <MeasurementUnitsTable />
         </section>
       </main>
+      <HelpMenu pageKey="measurement-units" />
     </div>
   );
 }

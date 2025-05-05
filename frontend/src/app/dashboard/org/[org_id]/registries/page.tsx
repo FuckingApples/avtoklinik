@@ -2,11 +2,12 @@
 
 import { ChevronRight, Folder, Plus, Grid, List, BookOpen } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { getRegistriesData } from "~/config/registries";
+import { getRegistriesData } from "~/config/registries-content";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useRegistriesCounts } from "~/hooks/use-registries";
+import { HelpMenu } from "~/components/help-menu";
 
 export default function RegistriesPage() {
   const params = useParams();
@@ -126,6 +127,7 @@ export default function RegistriesPage() {
           </div>
         )}
       </div>
+      <HelpMenu pageKey="registries" />
     </div>
   );
 }

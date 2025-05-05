@@ -1,4 +1,5 @@
 import { EquipmentsTable } from "~/components/tables/registries/equipments/table";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function EquipmentsPage() {
   return (
@@ -8,6 +9,7 @@ export default async function EquipmentsPage() {
           <EquipmentsTable />
         </section>
       </main>
+      <HelpMenu pageKey="equipments" />
     </div>
   );
 }

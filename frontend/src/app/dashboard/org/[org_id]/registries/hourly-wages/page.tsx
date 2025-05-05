@@ -1,4 +1,5 @@
 import { HourlyWagesTable } from "~/components/tables/registries/hourly-wages/table";
+import { HelpMenu } from "~/components/help-menu";
 
 export default async function HourlyWagesPage() {
   return (
@@ -8,6 +9,7 @@ export default async function HourlyWagesPage() {
           <HourlyWagesTable />
         </section>
       </main>
+      <HelpMenu pageKey="hourly-wages" />
     </div>
   );
 }
