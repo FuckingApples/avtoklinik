@@ -2,14 +2,7 @@
 
 import type { DataTableRowAction } from "~/types/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  CalendarIcon,
-  CircleDashed,
-  Clock,
-  Ellipsis,
-  Text,
-} from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import React from "react";
 // import { DataTableColumnHeader } from "~/components/data-table-column-header";
 import { Button } from "~/components/ui/button";

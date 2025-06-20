@@ -12,7 +12,7 @@ import {
 
 export default async function CarsPage() {
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
       <DashboardHeader>
         <DashboardHeader.Title>Автомобили</DashboardHeader.Title>
         <DashboardHeader.ActionButton asChild>

@@ -22,6 +22,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_YANDEX_CLIENT_ID: z.string(),
     NEXT_PUBLIC_VK_CLIENT_ID: z.string(),
+    NEXT_PUBLIC_ALFABANK_CLIENT_ID: z.string(),
   },
 
   /**
@@ -35,6 +36,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_YANDEX_CLIENT_ID: process.env.NEXT_PUBLIC_YANDEX_CLIENT_ID,
     NEXT_PUBLIC_VK_CLIENT_ID: process.env.NEXT_PUBLIC_VK_CLIENT_ID,
+    NEXT_PUBLIC_ALFABANK_CLIENT_ID: process.env.NEXT_PUBLIC_ALFABANK_CLIENT_ID,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

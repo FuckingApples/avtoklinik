@@ -49,10 +49,19 @@ export default function AuthLayout({
                   height={0}
                 />
               </OAuthButton>
+              <OAuthButton provider="alfabank" disabled>
+                <Image
+                  src="providers/alfabank.svg"
+                  alt="Войти по Alfa ID"
+                  className="mt-0.5 size-5"
+                  width={0}
+                  height={0}
+                />
+              </OAuthButton>
               <OAuthButton provider="vk">
                 <Image
                   src="providers/vk.svg"
-                  alt="Войти через VK"
+                  alt="Войти через VK ID"
                   className="size-6"
                   width={0}
                   height={0}

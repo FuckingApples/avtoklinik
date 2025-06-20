@@ -29,7 +29,7 @@ export default async function OAuthButton({
     redirectUrl.searchParams.set("scope", PROVIDERS[provider].scopes);
     redirectUrl.searchParams.set("code_challenge", code_challenge);
     redirectUrl.searchParams.set("code_challenge_method", "S256");
-    redirectUrl.searchParams.set("state", `${provider}:${state}`);
+    redirectUrl.searchParams.set("state", `${provider}_${state}`);
     redirectUrl.searchParams.set(
       "optional_scope",
       PROVIDERS[provider].optional_scopes ?? "",
