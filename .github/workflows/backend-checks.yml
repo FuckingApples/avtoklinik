@@ -6,7 +6,7 @@ on:
     paths: ["backend/**"]
 
   pull_request:
-    branches: [ "develop", "main" ]
+    branches: ["develop", "main"]
     paths: ["backend/**"]
 
 jobs:

@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from apps.api.v1.oauth import OAuthProviderViewSet
@@ -22,5 +22,6 @@ urlpatterns = [
         "organizations/<int:organization_id>/registries/",
         include("apps.api.v1.registries"),
     ),
+    path("oauth/", include("apps.api.v1.oauth")),
     path("", include(router.urls)),
 ]

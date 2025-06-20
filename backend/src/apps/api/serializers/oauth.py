@@ -22,6 +22,11 @@ class OAuthProviderSerializer(serializers.ModelSerializer):
         )
 
 
-class YandexOAuthSerializer(serializers.Serializer):
+class OAuthSerializer(serializers.Serializer):
     code = serializers.CharField(write_only=True)
     code_verifier = serializers.CharField(write_only=True)
+
+
+class VKOAuthSerializer(OAuthSerializer):
+    device_id = serializers.CharField(write_only=True)
+    redirect_uri = serializers.CharField(write_only=True)

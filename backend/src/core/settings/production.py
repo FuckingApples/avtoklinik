@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
-
-from dotenv import load_dotenv
 import os
+from datetime import timedelta
+from pathlib import Path
+
 import dj_database_url
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -173,5 +173,18 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_DOMAIN = "." + os.getenv("BASE_DOMAIN", "")
 
+# Setup Yandex OAuth
 OAUTH_YANDEX_CLIENT_ID = os.getenv("OAUTH_YANDEX_CLIENT_ID")
 OAUTH_YANDEX_CLIENT_SECRET = os.getenv("OAUTH_YANDEX_CLIENT_SECRET")
+
+# Setup VK OAuth
+OAUTH_VK_CLIENT_ID = os.getenv("OAUTH_VK_CLIENT_ID")
+
+# Setup S3 storage
+AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = "avtoklinik"
+AWS_S3_ENDPOINT_URL = "https://sjyvywlrtudopsghutoo.supabase.co/storage/v1/s3"
+AWS_S3_REGION_NAME = "eu-central-1"
+AWS_DEFAULT_ACL = "public-read"
+AWS_QUERYSTRING_AUTH = False

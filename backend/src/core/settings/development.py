@@ -10,13 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
-
-from django.conf.global_settings import CSRF_COOKIE_SECURE, CSRF_COOKIE_DOMAIN
-from dotenv import load_dotenv
 import os
+from datetime import timedelta
+from pathlib import Path
+
 import dj_database_url
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -195,6 +194,9 @@ CSRF_COOKIE_DOMAIN = "." + os.getenv("BASE_DOMAIN", "")
 # Setup Yandex OAuth
 OAUTH_YANDEX_CLIENT_ID = os.getenv("OAUTH_YANDEX_CLIENT_ID")
 OAUTH_YANDEX_CLIENT_SECRET = os.getenv("OAUTH_YANDEX_CLIENT_SECRET")
+
+# Setup VK OAuth
+OAUTH_VK_CLIENT_ID = os.getenv("OAUTH_VK_CLIENT_ID")
 
 # Setup S3 storage
 AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY")

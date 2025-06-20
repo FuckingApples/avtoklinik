@@ -3,14 +3,23 @@ import os
 from datetime import datetime, timedelta
 
 import requests
+from django.urls import path
 from rest_framework import permissions, status, views, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.api.serializers.oauth import OAuthProviderSerializer, YandexOAuthSerializer
+from apps.api.serializers.oauth import (
+    OAuthProviderSerializer,
+    OAuthSerializer,
+    VKOAuthSerializer,
+)
 from apps.oauth.models import OAuthProvider
 from apps.users.models import User
-from core.settings import OAUTH_YANDEX_CLIENT_ID, OAUTH_YANDEX_CLIENT_SECRET
+from core.settings import (
+    OAUTH_VK_CLIENT_ID,
+    OAUTH_YANDEX_CLIENT_ID,
+    OAUTH_YANDEX_CLIENT_SECRET,
+)
 
 
 class OAuthProviderViewSet(viewsets.ModelViewSet):
@@ -29,7 +38,7 @@ class YandexOAuthAPI(views.APIView):
     authentication_classes = ()
 
     def post(self, request):
-        serializer = YandexOAuthSerializer(data=request.data)
+        serializer = OAuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
@@ -142,3 +151,50 @@ class YandexOAuthAPI(views.APIView):
             expires=datetime.now() + timedelta(days=30),
         )
         return response
+
+
+class VKOAuthAPI(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def post(self, request):
+        serializer = VKOAuthSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+
+        # Запрашиваем токен у ВКонтакте
+        token_obtain_url = "https://id.vk.com/oauth2/auth"
+        data = {
+            "grant_type": "authorization_code",
+            "code": validated_data["code"],
+            "code_verifier": validated_data["code_verifier"],
+            "client_id": OAUTH_VK_CLIENT_ID,
+            "device_id": validated_data["device_id"],
+            # "redirect_uri": validated_data["redirect_uri"], TODO: Uncomment before push
+            "redirect_uri": "http://localhost/api/oauth",
+        }
+
+        token_response = requests.post(token_obtain_url, data=data)
+
+        if token_response.json().get("error"):
+            return Response(
+                {
+                    "code": token_response.json().get("error"),
+                    "message": token_response.json().get("error_description"),
+                },
+                status=token_response.status_code,
+            )
+
+        access_token = token_response.json().get("access_token")
+
+        # Получаем информацию о пользователе
+        user_info_url = "https://id.vk.com/oauth2/user_info"
+        data = {"client_id": OAUTH_VK_CLIENT_ID, "access_token": access_token}
+        user_response = requests.post(user_info_url, data=data)
+
+
+urlpatterns = [
+    path("yandex/", YandexOAuthAPI.as_view(), name="yandex_oauth"),
+    path("vk/", VKOAuthAPI.as_view(), name="vk_oauth"),
+]
