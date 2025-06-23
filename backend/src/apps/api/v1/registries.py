@@ -1,26 +1,28 @@
-from django.urls import path, include
+from django.urls import include, path
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 
 from apps.api.serializers.registries import (
     CategorySerializer,
-    ManufacturerSerializer,
     ColorSerializer,
-    MeasurementUnitSerializer,
-    WorkplaceSerializer,
-    HourlyWageSerializer,
     EquipmentSerializer,
+    HourlyWageSerializer,
+    ManufacturerSerializer,
+    MeasurementUnitSerializer,
+    TemplateSerializer,
+    WorkplaceSerializer,
 )
+from apps.core.views.base import BaseOrganizationDetailView, BaseOrganizationModelView
 from apps.registries.models import (
     Category,
-    Manufacturer,
     Color,
-    MeasurementUnit,
-    Workplace,
-    HourlyWage,
     Equipment,
+    HourlyWage,
+    Manufacturer,
+    MeasurementUnit,
+    Template,
+    Workplace,
 )
-from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 
 
 @extend_schema(tags=["Списки"])
@@ -292,6 +294,44 @@ class EquipmentsAPI(BaseOrganizationDetailView):
     serializer_class = EquipmentSerializer
 
 
+@extend_schema(tags=["Шаблоны"])
+@extend_schema_view(
+    post=extend_schema(
+        summary="Создание шаблона",
+        request=TemplateSerializer,
+        responses={status.HTTP_201_CREATED: TemplateSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение списка всех шаблонов организации",
+        responses={status.HTTP_200_OK: TemplateSerializer(many=True)},
+    ),
+)
+class OrganizationTemplatesAPI(BaseOrganizationModelView):
+    queryset = Template.objects.all()
+    serializer_class = TemplateSerializer
+
+
+@extend_schema(tags=["Шаблоны"])
+@extend_schema_view(
+    patch=extend_schema(
+        summary="Обновление шаблона",
+        request=TemplateSerializer,
+        responses={status.HTTP_200_OK: TemplateSerializer},
+    ),
+    get=extend_schema(
+        summary="Получение информации о шаблоне",
+        responses={status.HTTP_200_OK: TemplateSerializer},
+    ),
+    delete=extend_schema(
+        summary="Удаление шаблона",
+        responses={status.HTTP_204_NO_CONTENT: None},
+    ),
+)
+class TemplatesAPI(BaseOrganizationDetailView):
+    queryset = Template.objects.all()
+    serializer_class = TemplateSerializer
+
+
 categories_urls = [
     path(
         "",
@@ -383,6 +423,19 @@ equipments_urls = [
     ),
 ]
 
+templates_urls = [
+    path(
+        "",
+        OrganizationTemplatesAPI.as_view(),
+        name="organization_templates",
+    ),
+    path(
+        "<int:id>/",
+        TemplatesAPI.as_view(),
+        name="templates",
+    ),
+]
+
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
@@ -391,4 +444,5 @@ urlpatterns = [
     path("workplaces/", include(workplaces_urls)),
     path("hourly_wages/", include(hourly_wages_urls)),
     path("equipments/", include(equipments_urls)),
+    path("templates/", include(templates_urls)),
 ]

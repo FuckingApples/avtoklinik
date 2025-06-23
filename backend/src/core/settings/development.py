@@ -15,7 +15,6 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
-from django.conf.global_settings import CSRF_COOKIE_DOMAIN, CSRF_COOKIE_SECURE
 from dotenv import load_dotenv
 
 load_dotenv()
