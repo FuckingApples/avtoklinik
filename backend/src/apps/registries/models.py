@@ -137,3 +137,15 @@ class Equipment(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Template(models.Model):
+    organization = models.ForeignKey(
+        "organizations.Organization", on_delete=models.CASCADE, related_name="templates"
+    )
+    is_default = models.BooleanField(default=False)
+    text = models.TextField()
+    field_id = models.CharField(max_length=255)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

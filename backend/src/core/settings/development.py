@@ -15,7 +15,6 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
-from django.conf.global_settings import CSRF_COOKIE_DOMAIN, CSRF_COOKIE_SECURE
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -66,7 +65,6 @@ INSTALLED_APPS = [
     "apps.deals",
     "apps.registries",
     "apps.works",
-    "apps.template",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
     "rest_framework_simplejwt",

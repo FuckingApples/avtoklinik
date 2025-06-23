@@ -1,15 +1,16 @@
 from rest_framework import serializers
 
-from apps.core.mixins import UniqueFieldsValidatorMixin, OrganizationQuerysetMixin
+from apps.core.mixins import OrganizationQuerysetMixin, UniqueFieldsValidatorMixin
 from apps.core.serializers import BaseOrganizationModelSerializer
 from apps.registries.models import (
     Category,
-    Manufacturer,
     Color,
-    MeasurementUnit,
-    Workplace,
-    HourlyWage,
     Equipment,
+    HourlyWage,
+    Manufacturer,
+    MeasurementUnit,
+    Template,
+    Workplace,
 )
 
 
@@ -109,4 +110,15 @@ class EquipmentSerializer(UniqueFieldsValidatorMixin, BaseOrganizationModelSeria
             "name",
             "created_at",
             "updated_at",
+        )
+
+
+class TemplateSerializer(BaseOrganizationModelSerializer):
+    class Meta:
+        model = Template
+        fields = (
+            "id",
+            "is_default",
+            "text",
+            "field_id",
         )
