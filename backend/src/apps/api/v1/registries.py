@@ -1,6 +1,9 @@
 from django.urls import path, include
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.api.serializers.registries import (
     CategorySerializer,
@@ -10,6 +13,13 @@ from apps.api.serializers.registries import (
     WorkplaceSerializer,
     HourlyWageSerializer,
     EquipmentSerializer,
+)
+from apps.registries.filters import (
+    ManufacturerFilter,
+    MeasurementUnitFilter,
+    WorkplacesFilter,
+    HourlyWageFilter,
+    EquipmentFilter,
 )
 from apps.registries.models import (
     Category,
@@ -79,6 +89,14 @@ class CategoriesAPI(BaseOrganizationDetailView):
 class OrganizationColorsAPI(BaseOrganizationModelView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
+    ordering_fields = (
+        "name",
+        "code",
+    )
+    search_fields = (
+        "name",
+        "code",
+    )
 
 
 @extend_schema(tags=["Списки"])
@@ -117,6 +135,17 @@ class ColorsAPI(BaseOrganizationDetailView):
 class OrganizationMeasurementUnitsAPI(BaseOrganizationModelView):
     queryset = MeasurementUnit.objects.all()
     serializer_class = MeasurementUnitSerializer
+    filterset_class = MeasurementUnitFilter
+    ordering_fields = (
+        "unit",
+        "abbreviation",
+        "okei_code",
+    )
+    search_fields = (
+        "unit",
+        "abbreviation",
+        "okei_code",
+    )
 
 
 @extend_schema(tags=["Списки"])
@@ -155,6 +184,12 @@ class MeasurementUnitsAPI(BaseOrganizationDetailView):
 class OrganizationManufacturersAPI(BaseOrganizationModelView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
+    filterset_class = ManufacturerFilter
+    ordering_fields = ("name",)
+    search_fields = (
+        "name",
+        "description",
+    )
 
 
 @extend_schema(tags=["Списки"])
@@ -178,7 +213,7 @@ class ManufacturersAPI(BaseOrganizationDetailView):
     serializer_class = ManufacturerSerializer
 
 
-@extend_schema(tags=["Рабочие места"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     post=extend_schema(
         summary="Создание рабочего места",
@@ -193,9 +228,18 @@ class ManufacturersAPI(BaseOrganizationDetailView):
 class OrganizationWorkplacesAPI(BaseOrganizationModelView):
     queryset = Workplace.objects.all()
     serializer_class = WorkplaceSerializer
+    filterset_class = WorkplacesFilter
+    ordering_fields = (
+        "name",
+        "description",
+    )
+    search_fields = (
+        "name",
+        "description",
+    )
 
 
-@extend_schema(tags=["Рабочие места"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     patch=extend_schema(
         summary="Обновление рабочего места",
@@ -216,7 +260,7 @@ class WorkplacesAPI(BaseOrganizationDetailView):
     serializer_class = WorkplaceSerializer
 
 
-@extend_schema(tags=["Нормо-часы"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     post=extend_schema(
         summary="Создание нормо-часа",
@@ -231,9 +275,18 @@ class WorkplacesAPI(BaseOrganizationDetailView):
 class OrganizationHourlyWagesAPI(BaseOrganizationModelView):
     queryset = HourlyWage.objects.all()
     serializer_class = HourlyWageSerializer
+    filterset_class = HourlyWageFilter
+    ordering_fields = (
+        "name",
+        "wage",
+    )
+    search_fields = (
+        "name",
+        "wage",
+    )
 
 
-@extend_schema(tags=["Нормо-часы"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     patch=extend_schema(
         summary="Обновление нормо-часа",
@@ -254,7 +307,7 @@ class HourlyWagesAPI(BaseOrganizationDetailView):
     serializer_class = HourlyWageSerializer
 
 
-@extend_schema(tags=["Комплектности"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     post=extend_schema(
         summary="Создание комплектности",
@@ -269,9 +322,12 @@ class HourlyWagesAPI(BaseOrganizationDetailView):
 class OrganizationEquipmentsAPI(BaseOrganizationModelView):
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+    filterset_class = EquipmentFilter
+    ordering_fields = ("name",)
+    search_fields = ("name",)
 
 
-@extend_schema(tags=["Комплектности"])
+@extend_schema(tags=["Списки"])
 @extend_schema_view(
     patch=extend_schema(
         summary="Обновление комплектности",
@@ -290,6 +346,40 @@ class OrganizationEquipmentsAPI(BaseOrganizationModelView):
 class EquipmentsAPI(BaseOrganizationDetailView):
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+
+
+@extend_schema(tags=["Списки"])
+@extend_schema_view(
+    get=extend_schema(
+        summary="Получение количества объектов справочников по организации",
+        responses={status.HTTP_200_OK: OpenApiTypes.OBJECT},
+    ),
+)
+class RegistriesCountAPI(APIView):
+    def get(self, request, organization_id):
+        data = {
+            "categories": Category.objects.filter(
+                organization_id=organization_id, parent__isnull=True
+            ).count(),
+            "manufacturers": Manufacturer.objects.filter(
+                organization_id=organization_id
+            ).count(),
+            "colors": Color.objects.filter(organization_id=organization_id).count(),
+            "measurement-units": MeasurementUnit.objects.filter(
+                organization_id=organization_id
+            ).count(),
+            "workplaces": Workplace.objects.filter(
+                organization_id=organization_id
+            ).count(),
+            "hourly-wages": HourlyWage.objects.filter(
+                organization_id=organization_id
+            ).count(),
+            "equipments": Equipment.objects.filter(
+                organization_id=organization_id
+            ).count(),
+        }
+
+        return Response(data)
 
 
 categories_urls = [
@@ -383,6 +473,14 @@ equipments_urls = [
     ),
 ]
 
+registries_counts_urls = [
+    path(
+        "",
+        RegistriesCountAPI.as_view(),
+        name="registries_counts",
+    )
+]
+
 urlpatterns = [
     path("categories/", include(categories_urls)),
     path("manufacturers/", include(manufacturers_urls)),
@@ -391,4 +489,5 @@ urlpatterns = [
     path("workplaces/", include(workplaces_urls)),
     path("hourly_wages/", include(hourly_wages_urls)),
     path("equipments/", include(equipments_urls)),
+    path("counts/", include(registries_counts_urls)),
 ]

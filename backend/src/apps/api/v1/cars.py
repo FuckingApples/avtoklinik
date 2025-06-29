@@ -2,6 +2,7 @@ from django.urls import path
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 
+from apps.cars.filters import CarFilter
 from apps.cars.models import Car
 from apps.core.views.base import BaseOrganizationModelView, BaseOrganizationDetailView
 from apps.api.serializers.cars import CarSerializer
@@ -22,6 +23,21 @@ from apps.api.serializers.cars import CarSerializer
 class OrganizationCarsAPI(BaseOrganizationModelView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    filterset_class = CarFilter
+    ordering_fields = (
+        "vin",
+        "frame",
+        "year",
+        "mileage",
+    )
+    search_fields = (
+        "vin",
+        "frame",
+        "brand",
+        "model",
+        "year",
+        "license_plate",
+    )
 
 
 @extend_schema(tags=["Автомобили"])

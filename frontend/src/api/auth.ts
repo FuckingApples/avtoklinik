@@ -1,7 +1,7 @@
 import type { TSignInSchema } from "~/utils/validation/auth";
 import type { TEmailVerificationSchema } from "~/utils/validation/email-verification";
 import api from "~/lib/axios";
-import type { LoginResponse, OAuthResponse } from "~/types/api";
+import type { LoginResponse } from "~/types/api";
 
 export async function loginUser(data: TSignInSchema) {
   return api.post<LoginResponse>("/token/", data).then((res) => res.data);
@@ -17,10 +17,4 @@ export async function requestEmailVerification() {
 
 export async function sendEmailVerification(data: TEmailVerificationSchema) {
   return api.post<void>("/v1/user/email/verify/", data).then((res) => res.data);
-}
-
-export async function yandexOAuth(code: string) {
-  return api
-    .post<OAuthResponse>("/v1/oauth/yandex/", { code })
-    .then((res) => res.data);
 }

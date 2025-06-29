@@ -1,11 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "~/store/user";
-import { createUser, getUserInfo } from "~/api/user";
+import { createUser, getUserInfo, updateUser } from "~/api/user";
 import { loginUser } from "~/api/auth";
 import { useAuthStore } from "~/store/auth";
 import { useRouter } from "next/navigation";
 import type { AxiosError } from "axios";
 import type { LoginResponse } from "~/types/api";
+import { toast } from "sonner";
 
 export const useUser = () => {
   const { setUser } = useUserStore();
@@ -59,6 +60,19 @@ export const useLoginUser = (
       } else {
         router.push("/register/verify");
       }
+    },
+    onError,
+  });
+};
+
+export const useUpdateUser = (onError: (error: AxiosError<never>) => void) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateUser,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
+      toast.success("Данные обновлены");
     },
     onError,
   });

@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   UsersRound,
   Warehouse,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -45,6 +46,12 @@ const menuItems = (org_id: string) => [
     link: `/dashboard/org/${org_id}/warehouse`,
     icon: Warehouse,
     exact: true,
+  },
+  {
+    title: "Справочники",
+    link: `/dashboard/org/${org_id}/registries`,
+    icon: BookOpen,
+    exact: false,
   },
 ];
 

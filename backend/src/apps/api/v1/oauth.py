@@ -1,10 +1,9 @@
+import base64
 import os
 from datetime import datetime, timedelta
 
 import requests
-import base64
-
-from rest_framework import viewsets, permissions, views, status
+from rest_framework import permissions, status, views, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -33,14 +32,18 @@ class YandexOAuthAPI(views.APIView):
         serializer = YandexOAuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        code = serializer.validated_data.code
+        validated_data = serializer.validated_data
 
         # Запрашиваем токен у Яндекса
         token_obtain_url = "https://oauth.yandex.ru/token"
         auth_token = base64.b64encode(
             f"{OAUTH_YANDEX_CLIENT_ID}:{OAUTH_YANDEX_CLIENT_SECRET}".encode()
         ).decode()
-        data = {"grant_type": "authorization_code", "code": code}
+        data = {
+            "grant_type": "authorization_code",
+            "code": validated_data["code"],
+            "code_verifier": validated_data["code_verifier"],
+        }
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Authorization": f"Basic {auth_token}",
@@ -79,6 +82,9 @@ class YandexOAuthAPI(views.APIView):
         last_name = user_data.get("last_name")
         uid = user_data.get("psuid")
 
+        is_avatar_empty = user_data.get("is_avatar_empty", True)
+        default_avatar_id = user_data.get("default_avatar_id", None)
+
         if not email:
             return Response(
                 {"code": "no_email", "message": "No email provided"},
@@ -114,6 +120,8 @@ class YandexOAuthAPI(views.APIView):
             )
             user.set_unusable_password()
             user.is_email_verified = True
+            if default_avatar_id and not is_avatar_empty:
+                user.avatar = f"https://avatars.yandex.net/get-yapic/{default_avatar_id}/islands-200"
             user.save()
             OAuthProvider.objects.create(user=user, provider="yandex", uid=uid)
 

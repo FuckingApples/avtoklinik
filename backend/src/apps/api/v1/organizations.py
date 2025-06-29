@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 from apps.api.serializers.organizations import OrganizationSerializer
+from apps.core.views.base import BasePagination
 from apps.organizations.models import Organization, Role, Membership
 from apps.organizations.permissions import HasRole
 
@@ -10,6 +11,7 @@ from apps.organizations.permissions import HasRole
 class OrganizationsAPI(generics.ListCreateAPIView):
     serializer_class = OrganizationSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = BasePagination
 
     def get_queryset(self):
         return Organization.objects.filter(membership__user=self.request.user)
