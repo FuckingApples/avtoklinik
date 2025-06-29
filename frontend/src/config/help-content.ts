@@ -9,6 +9,11 @@ export const helpContent: Record<string, HelpContent> = {
         description:
           "Если у вас возникли вопросы, напишите нам на example@example.com",
       },
+      {
+        title: "Открыть документацию",
+        description: "Перейти на страницу документации",
+        url: "https://docs.example.com",
+      },
     ],
   },
   cars: {

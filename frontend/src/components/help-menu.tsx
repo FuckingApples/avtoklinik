@@ -1,4 +1,4 @@
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ExternalLink } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -34,13 +34,34 @@ export function HelpMenu({
         <div className="border-b border-blue-100 p-4">
           <h5 className="text-sm font-medium text-blue-800">{content.title}</h5>
         </div>
-        <div className="divide-y divide-blue-100 px-4 py-2">
+        <div className="divide-y divide-blue-100">
           {content.items.map((item, index) => (
-            <div key={index} className="py-2">
-              <h5 className="text-sm font-semibold text-blue-700">
-                {item.title}
-              </h5>
-              <p className="mt-1 text-xs text-blue-600">{item.description}</p>
+            <div
+              key={index}
+              className={`p-2 ${item.url ? "hover:bg-blue-100" : ""}`}
+            >
+              {item.url ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  <div className="flex items-center justify-between px-2">
+                    <h5 className="text-sm font-semibold text-blue-700">
+                      {item.title}
+                    </h5>
+                    <ExternalLink size={14} className="text-blue-600" />
+                  </div>
+                  <p className="mt-1 px-2 text-xs text-blue-600">
+                    {item.description}
+                  </p>
+                </a>
+              ) : (
+                <div className="px-2">
+                  <h5 className="text-sm font-semibold text-blue-700">
+                    {item.title}
+                  </h5>
+                  <p className="mt-1 text-xs text-blue-600">
+                    {item.description}
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>

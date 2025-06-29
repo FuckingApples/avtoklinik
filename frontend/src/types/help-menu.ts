@@ -1,6 +1,7 @@
 export interface HelpItem {
   title: string;
   description: string;
+  url?: string;
 }
 
 export interface HelpContent {
